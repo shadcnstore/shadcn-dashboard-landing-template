@@ -7,9 +7,11 @@ import { createContext, lazy, Suspense, useContext, useEffect, useMemo, useState
 
 import type { NavLink } from "../shell/types"
 import { pressedKey } from "../shortcuts/key"
+import { whenIdle } from "../ui-patterns/when-idle"
 
 // The palette (cmdk, the dialog) loads on first open: no page needs it for its first paint.
-const CommandPalette = lazy(() => import("./command-palette"))
+const loadPalette = () => import("./command-palette")
+const CommandPalette = lazy(loadPalette)
 
 export interface CommandAction {
   id: string
@@ -82,6 +84,10 @@ export function CommandMenuProvider({
   const [searching, setSearching] = useState(false)
   const router = useRouter()
   const pages = useMemo(() => flatten(links), [links])
+
+  // Fetched after first paint, so the first ⌘K opens at once and keys typed straight after it reach the input.
+  // Mounted (closed) as soon as it has loaded, like the always-mounted dialog before 1.0.7.
+  useEffect(() => whenIdle(() => void loadPalette().then(() => setMounted(true))), [])
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {

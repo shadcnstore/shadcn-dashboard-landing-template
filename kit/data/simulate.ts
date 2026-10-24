@@ -43,19 +43,20 @@ export function disableSimulatedLatency(): void {
   instant = true
 }
 
-const JITTER_WORDS = new Set(["", "on", "true", "jitter"])
+const OFF_WORDS = new Set(["0", "off", "false", "no"])
 
 function parseLatency(raw: string | null): Latency | null {
   if (raw === null) {
     return null
   }
   const value = raw.trim().toLowerCase()
-  // `?latency`, `?latency=on` is the jitter; `?latency=1500` a fixed delay; anything else (`0`, `off`, `-1`) none.
-  if (JITTER_WORDS.has(value)) {
-    return "jitter"
-  }
+  // `?latency=1500` is a fixed delay; `0`, `off`, `false` or a negative number is none; anything else
+  // (`?latency`, `?latency=on`, a typo such as `500ms`) is the 120 to 300 ms jitter.
   const ms = Number(value)
-  return ms > 0 ? Math.min(ms, MAX_LATENCY) : 0
+  if (OFF_WORDS.has(value) || ms < 0) {
+    return 0
+  }
+  return ms > 0 ? Math.min(ms, MAX_LATENCY) : "jitter"
 }
 
 function read(): Switches {

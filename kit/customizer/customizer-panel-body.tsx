@@ -81,7 +81,7 @@ function IconAction({ label, onClick, children }: { label: string; onClick: () =
   )
 }
 
-function ImportDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+export function ImportDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const set = useCustomizer((state) => state.set)
   const [css, setCss] = useState("")
   const [error, setError] = useState<string | null>(null)
@@ -137,12 +137,11 @@ function ImportDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (op
 }
 
 /** The panel's controls, loaded by `CustomizerPanel` the first time it opens. */
-export default function CustomizerPanelBody() {
+export default function CustomizerPanelBody({ onImport }: { onImport: () => void }) {
   const settings = useCustomizer((state) => state)
   const { presets, fonts } = useKitTheme()
   const fontLabel = (id: string) => fonts.find((font) => font.id === id)?.label ?? id
   const { theme, setTheme } = useTheme()
-  const [importing, setImporting] = useState(false)
   const set = (patch: Partial<CustomizerSettings>) => settings.set(patch)
   const presetValue = settings.custom ? "custom" : settings.preset
   const { copied, copy } = useCopied()
@@ -161,7 +160,7 @@ export default function CustomizerPanelBody() {
         <PopoverDescription>Saved in this browser.</PopoverDescription>
       </PopoverHeader>
       <div className="-me-1.5 -mt-1 flex items-center">
-        <IconAction label="Import theme CSS" onClick={() => setImporting(true)}>
+        <IconAction label="Import theme CSS" onClick={onImport}>
           <FileInputIcon />
         </IconAction>
         <IconAction label={copied ? "Theme CSS copied" : "Copy theme CSS"} onClick={copyTheme}>
@@ -327,7 +326,6 @@ export default function CustomizerPanelBody() {
         </Section>
       </div>
     </ScrollArea>
-      <ImportDialog open={importing} onOpenChange={setImporting} />
     </>
   )
 }

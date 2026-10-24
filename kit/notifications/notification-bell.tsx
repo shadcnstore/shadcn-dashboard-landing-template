@@ -1,10 +1,12 @@
 "use client"
 
 import { BellIcon } from "lucide-react"
-import { lazy, Suspense, useState } from "react"
+import { lazy, Suspense, useEffect, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+
+import { whenIdle } from "../ui-patterns/when-idle"
 
 export interface BellNotification {
   id: string
@@ -18,7 +20,8 @@ export interface BellNotification {
 }
 
 // The list, tabs and empty states load when the bell first opens: no page needs them to paint.
-const NotificationBellBody = lazy(() => import("./notification-bell-body"))
+const loadBody = () => import("./notification-bell-body")
+const NotificationBellBody = lazy(loadBody)
 
 export function NotificationBell({
   items,
@@ -36,6 +39,7 @@ export function NotificationBell({
   emptyDescription?: string
 }) {
   const [open, setOpen] = useState(false)
+  useEffect(() => whenIdle(() => void loadBody()), [])
   const unread = items.filter((item) => !item.read)
   const recent = items.slice(0, 12)
 

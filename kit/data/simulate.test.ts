@@ -22,6 +22,11 @@ describe("simulated latency", () => {
   it("takes a fixed delay or the jitter from the address", () => {
     address("?latency=1500")
     expect(simulatedDelay()).toBe(1500)
+    for (const jitter of ["?latency=on", "?latency", "?latency=500ms"]) {
+      resetSimulatedSwitches()
+      address(jitter)
+      expect(simulatedDelay()).toBeGreaterThanOrEqual(120)
+    }
     resetSimulatedSwitches()
     address("?latency=on")
     const jitter = simulatedDelay()
