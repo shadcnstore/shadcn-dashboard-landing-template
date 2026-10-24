@@ -1,6 +1,6 @@
 # Chronicle: free shadcn admin dashboard template
 
-**Chronicle is a free, MIT-licensed admin dashboard template for Next.js, built with shadcn/ui on Base UI, Tailwind CSS v4 and the ShadcnStore Dashboard Kit.** Clone it, run two commands, and you have an admin panel with real screens, real interactions and sample data where every number adds up.
+**Chronicle is a free, MIT-licensed admin dashboard template for Next.js, built with shadcn/ui on Base UI, Tailwind CSS v4 and the ShadcnStore Dashboard Kit.** Clone it, install, run it, and you have an admin panel with real screens, real interactions and sample data where every number adds up.
 
 [**Live demo**](https://demo.shadcnstore.com/chronicle/) · [Template page](https://shadcnstore.com/templates/dashboards/chronicle) · [Changelog](./CHANGELOG.md) · [Docs](./docs/README.md)
 
