@@ -11,7 +11,7 @@ import { workspace } from "@/data/generate"
 import type { Account } from "@/data/schema"
 import { HourBars, PillBars, StepLines } from "@/components/chronicle/charts"
 import type { HourDatum } from "@/kit/charts/hour-bars"
-import { PunchCard } from "@/kit/charts/punch-card"
+import { Heatmap } from "@/components/chronicle/heatmap"
 import { downloadCsv } from "@/kit/data/csv"
 import { change, formatMoney, formatNumber, formatPercent } from "@/kit/data/format"
 import { useKitMutation, useList } from "@/kit/data/hooks"
@@ -64,7 +64,7 @@ function MrrWidget({ metrics }: { metrics: ReturnType<typeof overviewMetrics> })
     )
 
   return (
-    <Widget className="lg:col-span-2">
+    <Widget className="xl:col-span-2">
       <WidgetHeader
         title="Monthly recurring revenue"
         icon={CreditCardIcon}
@@ -270,7 +270,7 @@ function TrialsWidget({ metrics }: { metrics: ReturnType<typeof overviewMetrics>
     <Widget>
       <WidgetHeader title="New accounts per week" icon={UsersIcon} />
       <WidgetValue value={formatNumber(trials.thisWeek)} delta={change(trials.thisWeek, trials.lastWeek)} caption={`${formatNumber(trials.open)} trials open now`} />
-      <PillBars data={trials.weekly.map((week) => ({ label: week.label, title: `Week of ${week.label}`, value: week.value }))} highlight="last" showLabels={false} className="h-28 px-(--card-spacing)" barSize={12} />
+      <PillBars data={trials.weekly.map((week) => ({ label: week.label, title: `Week of ${week.label}`, value: week.value }))} highlight="last" format={(value) => `${value} new`} className="h-32 px-(--card-spacing)" barSize={12} />
     </Widget>
   )
 }
@@ -280,14 +280,47 @@ function UsersWidget({ metrics }: { metrics: ReturnType<typeof overviewMetrics> 
   return (
     <Widget>
       <WidgetHeader title="New users, last 7 days" icon={UserPlusIcon} />
-      <WidgetValue value={formatNumber(users.newLast7)} delta={change(users.newLast7, users.newPrior7)} caption={`${formatNumber(users.active)} active in total`} />
+      <WidgetValue value={formatNumber(users.newLast7)} delta={change(users.newLast7, users.newPrior7)} caption={`vs ${formatNumber(users.newPrior7)} the 7 days before`} />
       <PillBars
-        data={users.daily.map((day) => ({ label: day.day.slice(5), title: new Date(`${day.day}T12:00:00Z`).toLocaleDateString("en-US", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }), value: day.users }))}
-        highlight="max"
-        showLabels={false}
-        className="h-28 px-(--card-spacing)"
-        barSize={6}
+        data={users.daily.map((day) => {
+          const date = new Date(`${day.day}T12:00:00Z`)
+          return {
+            label: date.toLocaleDateString("en-US", { weekday: "short", timeZone: "UTC" }),
+            title: date.toLocaleDateString("en-US", { weekday: "long", day: "numeric", month: "short", timeZone: "UTC" }),
+            value: day.users,
+          }
+        })}
+        highlight="last"
+        format={(value) => `${value} users`}
+        className="h-32 px-(--card-spacing)"
+        barSize={18}
       />
+    </Widget>
+  )
+}
+
+function SeatsWidget({ metrics }: { metrics: ReturnType<typeof overviewMetrics> }) {
+  const { seats } = metrics
+  return (
+    <Widget>
+      <WidgetHeader title="Seats in use" icon={UsersIcon} />
+      <WidgetValue value={formatPercent(seats.used / seats.paid)} delta={null} caption={`${formatNumber(seats.used)} of ${formatNumber(seats.paid)} paid seats`} />
+      <ul className="flex flex-col gap-2.5 px-(--card-spacing) text-sm" aria-label="Seats by plan">
+        {seats.byPlan.map((row, index) => (
+          <li key={row.plan} className="grid grid-cols-[4.5rem_1fr_auto] items-center gap-3">
+            <span className="text-muted-foreground">{row.name}</span>
+            <span className="h-1.5 overflow-hidden rounded-full bg-muted" aria-hidden>
+              <span className={cn("block h-full rounded-full", ["bg-chart-lead", "bg-chart-2", "bg-chart-3"][index])} style={{ width: `${Math.min(1, row.used / Math.max(1, row.paid)) * 100}%` }} />
+            </span>
+            <span className="font-mono text-xs tabular-nums">
+              {formatNumber(row.used)}/{formatNumber(row.paid)}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p className="px-(--card-spacing) text-xs text-muted-foreground">
+        <span className="font-mono text-foreground tabular-nums">{seats.overAccounts}</span> accounts use more seats than they pay for.
+      </p>
     </Widget>
   )
 }
@@ -315,7 +348,7 @@ function AttentionWidget() {
   const atRisk = sum((list.data?.rows ?? []).filter((account) => account.status === "past_due").map((account) => account.mrrCents))
 
   return (
-    <Widget className="gap-0 lg:col-span-2">
+    <Widget className="gap-0 xl:col-span-2">
       <WidgetHeader
         title={
           <span className="flex items-center gap-2">
@@ -360,7 +393,7 @@ function AttentionWidget() {
                     {account.plan[0].toUpperCase() + account.plan.slice(1)} plan · {account.industry}
                   </span>
                 </div>
-                <div className="hidden sm:block">
+                <div className="hidden lg:block">
                   {pastDue ? <StatusBadge tone="danger">Payment failed</StatusBadge> : <StatusBadge tone="warning">Over seat limit</StatusBadge>}
                 </div>
                 <div className="hidden w-24 text-end font-mono text-sm tabular-nums md:block">
@@ -390,18 +423,27 @@ function AttentionWidget() {
 // ---------------------------------------------------------------------------
 
 function UsageWidget() {
-  const cells = USAGE.flatMap((row, y) => row.map((value, x) => ({ x, y, value })))
-  const total = sum(cells.map((cell) => cell.value))
+  const total = sum(USAGE.flat())
   const weekday = sum(USAGE.slice(0, 5).flat())
+  const cells = USAGE.flatMap((row, y) => row.map((value, x) => ({ x, y, value })))
   const peak = cells.reduce((best, cell) => (cell.value > best.value ? cell : best))
   return (
     <Widget>
       <WidgetHeader title="Product usage" icon={LayersIcon} />
-      <WidgetValue value={formatNumber(total * 100, { compact: true })} delta={null} caption={`sessions, week of 12 Oct, peak ${USAGE_DAYS[peak.y]} ${USAGE_HOURS[peak.x]}`} />
-      <PunchCard cells={cells} columns={USAGE_HOURS} rows={USAGE_DAYS} format={(value) => `${formatNumber(value * 100)} sessions`} className="px-(--card-spacing)" />
-      <p className="px-(--card-spacing) text-xs text-muted-foreground">
-        Weekdays carry <span className="font-mono text-foreground tabular-nums">{formatPercent(weekday / total)}</span> of sessions.
-      </p>
+      <WidgetValue value={formatNumber(total * 100, { compact: true })} delta={null} caption="sessions, week of 12 Oct" />
+      <Heatmap rows={USAGE_DAYS} columns={USAGE_HOURS} values={USAGE} format={(value) => `${formatNumber(value * 100)} sessions`} label="Sessions by weekday and two-hour block" className="px-(--card-spacing)" />
+      <dl className="grid grid-cols-2 gap-3 px-(--card-spacing) text-xs">
+        <div className="flex flex-col gap-0.5">
+          <dt className="text-muted-foreground">Busiest</dt>
+          <dd className="font-mono tabular-nums">
+            {USAGE_DAYS[peak.y]} {USAGE_HOURS[peak.x]}
+          </dd>
+        </div>
+        <div className="flex flex-col gap-0.5">
+          <dt className="text-muted-foreground">On weekdays</dt>
+          <dd className="font-mono tabular-nums">{formatPercent(weekday / total)}</dd>
+        </div>
+      </dl>
     </Widget>
   )
 }
@@ -449,19 +491,21 @@ export function OverviewPage() {
           </>
         }
       />
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 xl:grid-cols-3">
         <MrrWidget metrics={metrics} />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+        <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-1">
           <SignupsWidget />
           <RetentionWidget metrics={metrics} />
         </div>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      {/* Four small cards: two by two until there is room for a row of four, so none is ever left alone. */}
+      <div className="grid gap-4 lg:grid-cols-2 2xl:grid-cols-4">
         <AccountsWidget metrics={metrics} />
         <TrialsWidget metrics={metrics} />
         <UsersWidget metrics={metrics} />
+        <SeatsWidget metrics={metrics} />
       </div>
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 xl:grid-cols-3">
         <AttentionWidget />
         <UsageWidget />
       </div>

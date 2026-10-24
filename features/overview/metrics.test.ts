@@ -32,6 +32,16 @@ describe("Overview figures", () => {
     expect(sum(metrics.trials.weekly.map((week) => week.value))).toBe(started)
   })
 
+  it("plots exactly the seven days its headline sums", () => {
+    expect(metrics.users.daily).toHaveLength(7)
+    expect(sum(metrics.users.daily.map((day) => day.users))).toBe(metrics.users.newLast7)
+  })
+
+  it("splits seats by plan into parts that add up", () => {
+    expect(sum(metrics.seats.byPlan.map((row) => row.used))).toBe(metrics.seats.used)
+    expect(sum(metrics.seats.byPlan.map((row) => row.paid))).toBe(metrics.seats.paid)
+  })
+
   it("keeps retention between 0 and a believable ceiling", () => {
     expect(metrics.retention.gross).toBeLessThanOrEqual(metrics.retention.net)
     expect(metrics.retention.net).toBeGreaterThan(0.9)

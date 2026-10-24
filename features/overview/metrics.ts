@@ -31,6 +31,8 @@ export interface OverviewMetrics {
   retention: { month: string; net: number; gross: number; previousNet: number }
   trials: { open: number; weekly: { label: string; value: number }[]; thisWeek: number; lastWeek: number }
   users: { active: number; newLast7: number; newPrior7: number; daily: { day: string; users: number }[] }
+  /** Seats used against seats paid, across paying accounts. */
+  seats: { used: number; paid: number; overAccounts: number; byPlan: { plan: PlanId; name: string; used: number; paid: number }[] }
 }
 
 function retentionFor(workspace: Workspace, index: number) {
@@ -73,7 +75,7 @@ export function overviewMetrics(workspace: Workspace, now: Date): OverviewMetric
     return { label, value }
   })
 
-  const daily = workspace.signupsByDay.slice(-30).map(({ day, users }) => ({ day, users }))
+  const daily = workspace.signupsByDay.slice(-7).map(({ day, users }) => ({ day, users }))
   const last14 = workspace.signupsByDay.slice(-14)
 
   return {
@@ -84,9 +86,18 @@ export function overviewMetrics(workspace: Workspace, now: Date): OverviewMetric
     accounts: { paying: paying.length, lastMonth: last.accounts, history: months.slice(-12).map(({ month, accounts }) => ({ month, accounts })) },
     retention: { month: months[lastFull].month, net: thisRetention.net, gross: thisRetention.gross, previousNet: previousRetention.net },
     trials: { open: workspace.accounts.filter((account) => account.status === "trialing").length, weekly, thisWeek: weekly[11].value, lastWeek: weekly[10].value },
+    seats: {
+      used: sum(paying.map((account) => account.seats)),
+      paid: sum(paying.map((account) => account.seatLimit)),
+      overAccounts: paying.filter((account) => account.seats > account.seatLimit).length,
+      byPlan: PLAN_IDS.map((plan) => {
+        const rows = paying.filter((account) => account.plan === plan)
+        return { plan, name: PLANS[plan].name, used: sum(rows.map((account) => account.seats)), paid: sum(rows.map((account) => account.seatLimit)) }
+      }),
+    },
     users: {
       active: workspace.users.filter((user) => user.status === "active").length,
-      newLast7: sum(last14.slice(7).map((day) => day.users)),
+      newLast7: sum(daily.map((day) => day.users)),
       newPrior7: sum(last14.slice(0, 7).map((day) => day.users)),
       daily,
     },

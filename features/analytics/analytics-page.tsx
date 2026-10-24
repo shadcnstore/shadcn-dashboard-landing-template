@@ -9,7 +9,7 @@ import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { PLANS, workspace } from "@/data/generate"
 import type { Account } from "@/data/schema"
 import { TEAM_BY_ID, TeamAvatar } from "@/features/tasks/team-avatar"
-import { PunchCard } from "@/kit/charts/punch-card"
+import { Heatmap } from "@/components/chronicle/heatmap"
 import { downloadCsv } from "@/kit/data/csv"
 import {
   change,
@@ -39,6 +39,7 @@ import { MrrMovementChart } from "@/components/chronicle/charts"
 import { MOVEMENT_CONFIG } from "./movement-config"
 import {
   busiestSlot,
+  REPORTS_OPENED,
   USAGE_CELLS,
   USAGE_DAYS,
   USAGE_HOURS,
@@ -460,17 +461,12 @@ function Usage() {
       />
       <WidgetValue
         value={formatNumber(WEEKLY_REPORTS)}
-        caption={`reports in a typical week · busiest ${peak.day} ${peak.hour}:00 UTC · ${formatPercent(WEEKDAY_SHARE, { decimals: 0 })} on weekdays`}
+        caption={`reports in a typical week, busiest ${peak.day} ${peak.hour}:00 UTC`}
       />
-      <div tabIndex={0} role="region" aria-label="Top accounts, scrolls sideways" className="overflow-x-auto rounded-md px-(--card-spacing) outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
-        <PunchCard
-          className="min-w-[44rem]"
-          cells={USAGE_CELLS}
-          columns={USAGE_HOURS}
-          rows={[...USAGE_DAYS]}
-          format={(value) => `${value} reports`}
-        />
-      </div>
+      <Heatmap rows={USAGE_DAYS} columns={USAGE_HOURS} values={REPORTS_OPENED} format={(value) => `${value} reports`} label="Reports opened by weekday and hour, UTC" className="px-(--card-spacing)" />
+      <p className="px-(--card-spacing) text-xs text-muted-foreground">
+        Weekdays carry <span className="font-mono text-foreground tabular-nums">{formatPercent(WEEKDAY_SHARE, { decimals: 0 })}</span> of reports.
+      </p>
     </Widget>
   )
 }
