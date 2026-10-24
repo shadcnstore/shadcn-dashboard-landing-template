@@ -1,6 +1,7 @@
 import { HashIcon } from "lucide-react"
 
-import { Avatar, AvatarBadge, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { avatarFor } from "@/lib/avatars"
 import { initials } from "@/kit/shell/nav-user"
 import { cn } from "@/lib/utils"
 
@@ -26,6 +27,7 @@ export function PersonAvatar({ memberId, size = "md", showPresence = false, clas
   const member = MEMBERS[memberId]
   return (
     <Avatar className={cn(size === "sm" ? "size-7" : "size-9", className)}>
+      {member && avatarFor(member.name) && <AvatarImage src={avatarFor(member.name)!} alt="" loading="lazy" />}
       <AvatarFallback className={cn("font-medium", size === "sm" ? "text-[10px]" : "text-xs", memberId === ME_ID ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary")}>
         {initials(member?.name ?? "?")}
       </AvatarFallback>

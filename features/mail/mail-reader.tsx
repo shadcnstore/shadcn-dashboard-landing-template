@@ -17,7 +17,8 @@ import {
 } from "lucide-react"
 import { useState } from "react"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { avatarFor } from "@/lib/avatars"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
@@ -216,6 +217,7 @@ export function MailReader({ mail, onBack }: { mail: Mail | null; onBack?: () =>
           <h2 className="font-heading text-xl font-semibold tracking-tight text-balance">{mail.subject}</h2>
           <div className="flex items-start gap-3">
             <Avatar className="size-9">
+              {avatarFor(mail.from.name) && <AvatarImage src={avatarFor(mail.from.name)!} alt="" loading="lazy" />}
               <AvatarFallback className="bg-primary/10 text-xs font-medium text-primary">{initials(mail.from.name)}</AvatarFallback>
             </Avatar>
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">

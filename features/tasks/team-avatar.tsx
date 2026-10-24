@@ -1,6 +1,6 @@
 import { UserRoundIcon } from "lucide-react"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   Tooltip,
   TooltipContent,
@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/tooltip"
 import { TEAM } from "@/data/names"
 import type { TeamMember } from "@/data/schema"
+import { avatarFor } from "@/lib/avatars"
 import { cn } from "@/lib/utils"
 
 export const TEAM_BY_ID = new Map(TEAM.map((member) => [member.id, member]))
@@ -40,7 +41,7 @@ function tint(id: string): string {
   return TINTS[hash % TINTS.length]
 }
 
-/** A teammate as an initials avatar, or a dashed ring when nobody is assigned. */
+/** A teammate's portrait (initials while it loads), or a dashed ring when nobody is assigned. */
 export function TeamAvatar({
   member,
   size = "sm",
@@ -61,6 +62,7 @@ export function TeamAvatar({
         !tooltip && className
       )}
     >
+      {member && avatarFor(member.name) && <AvatarImage src={avatarFor(member.name)!} alt="" loading="lazy" />}
       <AvatarFallback
         className={cn(
           "text-[10px] font-semibold",

@@ -12,9 +12,10 @@ import { formatDate, formatMoney, formatRelative } from "@/kit/data/format"
 import { useKitMutation, useRecord } from "@/kit/data/hooks"
 import { ErrorState } from "@/kit/ui-patterns/query-state"
 import { DATA_NOW } from "@/lib/clock"
+import { PersonAvatar } from "@/components/chronicle/person-avatar"
 import { adapter, type Resources } from "@/lib/data"
 
-import { Initials, PlanBadge, RoleSelect, ROLE_LABELS, SeatMeter, StatusPill } from "./user-parts"
+import { PlanBadge, RoleSelect, ROLE_LABELS, SeatMeter, StatusPill } from "./user-parts"
 
 /** One user and their account: used by the side sheet and by the /users/[id] page. */
 export function UserDetail({ id, account: known }: { id: string; account?: Account }) {
@@ -48,7 +49,7 @@ export function UserDetail({ id, account: known }: { id: string; account?: Accou
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-4">
-        <Initials name={row.name} className="size-12 text-base" />
+        <PersonAvatar name={row.name} className="size-12 text-base" />
         <div className="flex min-w-0 flex-col gap-1">
           <span className="truncate text-lg font-semibold">{row.name}</span>
           <span className="flex items-center gap-2">

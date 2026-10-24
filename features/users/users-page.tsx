@@ -25,11 +25,12 @@ import { BulkActionBar } from "@/kit/ui-patterns/bulk-action-bar"
 import { PageHeader } from "@/kit/ui-patterns/page-header"
 import { EmptyState, ErrorState } from "@/kit/ui-patterns/query-state"
 import { DATA_NOW } from "@/lib/clock"
+import { PersonAvatar } from "@/components/chronicle/person-avatar"
 import { adapter, type Resources } from "@/lib/data"
 
 import { InviteDialog } from "./invite-dialog"
 import { UserSheet } from "./user-sheet"
-import { Initials, PlanBadge, ROLE_LABELS, RoleSelect, SeatMeter, StatusPill } from "./user-parts"
+import { PlanBadge, ROLE_LABELS, RoleSelect, SeatMeter, StatusPill } from "./user-parts"
 
 const FILTERS = ["role", "status", "plan", "account", "view"] as const
 
@@ -152,7 +153,7 @@ export function UsersPage() {
         hideable: false,
         cell: (row) => (
           <div className="flex min-w-0 items-center gap-3">
-            <Initials name={row.name} />
+            <PersonAvatar name={row.name} />
             <div className="flex min-w-0 flex-col">
               <span className="truncate font-medium">{row.name}</span>
               <span className="truncate text-xs text-muted-foreground">{row.email}</span>
@@ -378,7 +379,7 @@ export function UsersPage() {
             renderMobileRow={(row, state) => (
               <div role="listitem" className="flex items-center gap-3 rounded-xl border bg-card p-3">
                 <Checkbox aria-label={`Select ${row.name}`} checked={state.selected} onCheckedChange={state.toggle} />
-                <Initials name={row.name} />
+                <PersonAvatar name={row.name} />
                 <button type="button" className="flex min-w-0 flex-1 flex-col text-start" onClick={() => setOpen(row.id)}>
                   <span className="truncate font-medium">{row.name}</span>
                   <span className="truncate text-xs text-muted-foreground">

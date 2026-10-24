@@ -12,7 +12,8 @@ import { useState } from "react"
 import { Controller, useForm, useWatch } from "react-hook-form"
 import { z } from "zod"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { avatarFor } from "@/lib/avatars"
 import {
   Field,
   FieldDescription,
@@ -59,6 +60,7 @@ function ProfileAvatar({
     (profile.initials || initialsOf(profile.name)).toUpperCase() || "?"
   return (
     <Avatar className={cn("size-16 text-lg ring-4 ring-primary/10", className)}>
+      {avatarFor(profile.name) && <AvatarImage src={avatarFor(profile.name)!} alt="" />}
       <AvatarFallback className="bg-gradient-to-br from-primary to-chart-2 font-semibold text-primary-foreground">
         {letters}
       </AvatarFallback>
