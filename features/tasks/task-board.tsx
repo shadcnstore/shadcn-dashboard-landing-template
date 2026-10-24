@@ -129,7 +129,7 @@ function Column({
     <section
       aria-label={status.label}
       className={cn(
-        "flex w-72 shrink-0 snap-start flex-col gap-2 rounded-2xl bg-muted/50 p-2 transition-colors duration-150 md:w-auto md:min-w-0 dark:bg-muted/30",
+        "flex w-72 shrink-0 snap-start flex-col gap-2 rounded-2xl bg-muted/50 p-2 transition-colors duration-150 2xl:w-auto 2xl:min-w-0 dark:bg-muted/30",
         isOver && "bg-primary/5 ring-1 ring-primary/20"
       )}
     >
@@ -278,11 +278,11 @@ export function TaskBoard({
 
   if (loading && !tasks) {
     return (
-      <div className="flex gap-3 overflow-hidden md:grid md:grid-cols-5">
+      <div className="flex gap-3 overflow-hidden 2xl:grid 2xl:grid-cols-5">
         {STATUSES.map((status) => (
           <Skeleton
             key={status.value}
-            className="h-96 w-72 shrink-0 rounded-2xl md:w-auto"
+            className="h-96 w-72 shrink-0 rounded-2xl 2xl:w-auto"
           />
         ))}
       </div>
@@ -309,8 +309,8 @@ export function TaskBoard({
         },
       }}
     >
-      <ScrollArea className="-mx-4 md:mx-0">
-        <div className="flex snap-x gap-3 px-4 pb-3 md:grid md:grid-cols-5 md:px-0">
+      <ScrollArea className="-mx-4 2xl:mx-0">
+        <div className="flex snap-x gap-3 px-4 pb-3 2xl:grid 2xl:grid-cols-5 2xl:px-0">
           {STATUSES.map((status) => (
             <Column
               key={status.value}

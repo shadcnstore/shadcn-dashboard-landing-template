@@ -163,6 +163,7 @@ export function UsersPage() {
       },
       {
         id: "account",
+        className: "hidden lg:table-cell",
         header: "Account",
         sortId: "accountName",
         cell: (row) => (
@@ -178,12 +179,12 @@ export function UsersPage() {
         className: "w-36",
         cell: (row) => <RoleSelect user={row} onChange={(role) => setRole.mutate({ ids: [row.id], role })} />,
       },
-      { id: "plan", header: "Plan", className: "w-24", cell: (row) => <PlanBadge plan={row.plan} /> },
+      { id: "plan", header: "Plan", className: "hidden w-24 xl:table-cell", cell: (row) => <PlanBadge plan={row.plan} /> },
       { id: "status", header: "Status", className: "w-28", cell: (row) => <StatusPill status={row.status} /> },
       {
         id: "seats",
         header: "Seats",
-        className: "w-32",
+        className: "w-32 hidden lg:table-cell",
         cell: (row) => {
           const account = accountById.get(row.accountId)
           return account ? <SeatMeter account={account} /> : null
@@ -194,7 +195,7 @@ export function UsersPage() {
         header: "Last active",
         sortId: "lastSeenAt",
         sortDescFirst: true,
-        className: "w-32",
+        className: "w-32 hidden xl:table-cell",
         cell: (row) => <span className="text-muted-foreground">{row.lastSeenAt ? formatRelative(row.lastSeenAt, DATA_NOW) : "Never"}</span>,
       },
       {

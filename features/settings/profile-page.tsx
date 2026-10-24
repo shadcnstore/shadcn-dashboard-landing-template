@@ -151,7 +151,8 @@ export function ProfileSettingsPage() {
       {/* `contents`, so the cards stay direct children of the settings column and keep its spacing. */}
       <form onSubmit={save} noValidate className="contents">
         <SettingsHero aside={<Preview profile={values} />}>
-          <div className="flex items-center gap-4">
+          {/* The Kit's hero puts this beside the preview from md, in two fifths of the card: stack until there is room. */}
+          <div className="flex items-center gap-4 md:flex-col md:items-start 2xl:flex-row 2xl:items-center">
             <ProfileAvatar profile={values} />
             <div className="flex min-w-0 flex-col">
               <span className="truncate text-lg font-semibold">
@@ -166,7 +167,7 @@ export function ProfileSettingsPage() {
             </div>
           </div>
           <p className="text-sm text-muted-foreground">
-            Your name, photo initials and bio appear on tasks you own, notes you
+            Your name, photo and bio appear on tasks you own, notes you
             leave on accounts and in the activity log.
           </p>
         </SettingsHero>

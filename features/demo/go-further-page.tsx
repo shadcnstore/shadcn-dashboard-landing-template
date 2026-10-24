@@ -39,7 +39,7 @@ export function GoFurtherPage() {
       </header>
 
       {featured && (
-        <section aria-labelledby="featured-heading" className="grid items-center gap-6 rounded-2xl bg-card p-4 shadow-(--surface-shadow) lg:grid-cols-[1.4fr_1fr] lg:p-6">
+        <section aria-labelledby="featured-heading" className="grid items-center gap-6 rounded-2xl bg-card p-4 shadow-(--surface-shadow) xl:grid-cols-[1.4fr_1fr] xl:p-6">
           <Screenshot template={featured} priority />
           <div className="flex flex-col gap-4">
             <div className="flex flex-wrap items-center gap-2">
@@ -80,7 +80,7 @@ export function GoFurtherPage() {
             </h2>
             <p className="text-sm text-muted-foreground">Real screens from each template. Pro owners get every one as it launches.</p>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-4">
+          <div className="grid gap-4 lg:grid-cols-2 2xl:grid-cols-4">
             {soon.map((template) => (
               <ProductCard key={template.slug} template={template} />
             ))}

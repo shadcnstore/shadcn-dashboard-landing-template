@@ -28,3 +28,4 @@ Dev server: `PORT=3300 pnpm dev`, http://localhost:3300 (not 127.0.0.1). Demo bu
 6. NotificationsInbox: `text-muted-foreground/80` labels and fixed `lg:grid-cols-5`.
 7. Adapter: no "all rows" query, no optimistic updates in useKitMutation, `useList` needs explicit generics.
 8. Shell JS weight: ⌘K (cmdk), customizer panel and notification bell load on first paint on every route; lazy-loading them is the main lever for Lighthouse 90 on dashboard routes.
+9. SettingsHero switches to two columns at the viewport `md`, so inside the settings frame (sidebar + settings nav) its two-fifths column is ~180px at 768-1279px; it should use a container query.

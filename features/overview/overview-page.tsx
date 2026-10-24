@@ -471,6 +471,8 @@ export function OverviewPage() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
+        // The greeting and two buttons share a row only when there is room for both.
+        className="sm:flex-col sm:items-start lg:flex-row lg:items-end"
         title={`${greeting}, Maya`}
         description={
           <>
