@@ -9,6 +9,7 @@ import { NAV, SECONDARY_NAV } from "@/config/nav"
 import { SITE } from "@/config/site"
 import type { User } from "@/data/schema"
 import { useDemoCommands } from "@/features/demo/demo-commands"
+import { useMail } from "@/features/mail/store"
 import { useNotifications } from "@/features/notifications/store"
 import { CommandMenuProvider, type CommandAction, type CommandSearchResult } from "@/kit/command/command-menu"
 import { NotificationBell } from "@/kit/notifications/notification-bell"
@@ -29,10 +30,11 @@ const TODO_TASKS = workspace().tasks.filter((task) => task.status === "todo" || 
 function Frame({ children }: { children: React.ReactNode }) {
   const items = useNotifications((state) => state.items)
   const markRead = useNotifications((state) => state.markRead)
+  const unreadMail = useMail((state) => state.mails.filter((mail) => !mail.read && mail.folder === "inbox").length)
   return (
     <AppShell
       config={SITE}
-      badges={{ tasks: TODO_TASKS, mail: 4 }}
+      badges={{ tasks: TODO_TASKS, mail: unreadMail }}
       actions={<NotificationBell items={items} onMarkRead={markRead} viewAllHref="/notifications" settingsHref="/settings/notifications" emptyDescription="Payments, cancellations and upgrades appear here." />}
     >
       {children}
