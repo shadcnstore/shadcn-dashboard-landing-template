@@ -34,7 +34,9 @@ import {
   type MixRow,
   type Period,
 } from "./metrics"
-import { MOVEMENT_CONFIG, MrrMovementChart } from "./mrr-movement-chart"
+import { MrrMovementChart } from "@/components/chronicle/charts"
+
+import { MOVEMENT_CONFIG } from "./movement-config"
 import {
   busiestSlot,
   USAGE_CELLS,

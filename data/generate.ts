@@ -270,16 +270,16 @@ export function generateWorkspace(seed = 20261020, now: Date = DATA_NOW): Worksp
   }
   activity.sort((a, b) => b.at.localeCompare(a.at))
 
-  // Signups per day, last 90 days.
+  // Signups per day, last 90 days: count once per record, then read the days off.
+  const usersPerDay = new Map<string, number>()
+  const accountsPerDay = new Map<string, number>()
+  for (const user of users) usersPerDay.set(user.createdAt.slice(0, 10), (usersPerDay.get(user.createdAt.slice(0, 10)) ?? 0) + 1)
+  for (const account of accounts) accountsPerDay.set(account.startedAt.slice(0, 10), (accountsPerDay.get(account.startedAt.slice(0, 10)) ?? 0) + 1)
   const signupsByDay: Workspace["signupsByDay"] = []
   const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
   for (let back = 89; back >= 0; back--) {
     const day = new Date(today - back * DAY).toISOString().slice(0, 10)
-    signupsByDay.push({
-      day,
-      users: users.filter((user) => user.createdAt.slice(0, 10) === day).length,
-      accounts: accounts.filter((account) => account.startedAt.slice(0, 10) === day).length,
-    })
+    signupsByDay.push({ day, users: usersPerDay.get(day) ?? 0, accounts: accountsPerDay.get(day) ?? 0 })
   }
 
   // Tasks: Tidewell's own product backlog.

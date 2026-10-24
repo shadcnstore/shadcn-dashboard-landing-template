@@ -9,6 +9,7 @@
 import { createServer } from "node:http"
 import { readFile, stat } from "node:fs/promises"
 import { extname, join, normalize } from "node:path"
+import { gzipSync } from "node:zlib"
 
 const ROOT = join(process.cwd(), "out")
 const BASE = "/chronicle"
@@ -80,11 +81,16 @@ createServer(async (request, response) => {
     response.end((await isFile(notFound)) ? await readFile(notFound) : "Not found")
     return
   }
+  // Compressed like the nginx vhost (gzip on for HTML, CSS, JS, JSON, SVG), so Lighthouse runs here match production.
+  const type = TYPES[extname(file)] ?? "application/octet-stream"
+  const body = await readFile(file)
+  const gzip = /gzip/.test(request.headers["accept-encoding"] ?? "") && /html|css|javascript|json|svg|component/.test(type)
   response.writeHead(200, {
-    "content-type": TYPES[extname(file)] ?? "application/octet-stream",
+    "content-type": type,
     "x-robots-tag": "noindex, follow",
+    ...(gzip ? { "content-encoding": "gzip", vary: "Accept-Encoding" } : {}),
   })
-  response.end(await readFile(file))
+  response.end(gzip ? gzipSync(body) : body)
 }).listen(PORT, () => {
   console.log(`Demo at http://localhost:${PORT}${BASE}/`)
 })

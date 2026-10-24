@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { toast } from "@/components/ui/toast"
-import { PillBars } from "@/kit/charts/pill-bars"
+import { PillBars } from "@/components/chronicle/charts"
 import { crossFade } from "@/kit/customizer/cross-fade"
 import {
   useCustomizer,

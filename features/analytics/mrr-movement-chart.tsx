@@ -14,7 +14,6 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-  type ChartConfig,
 } from "@/components/ui/chart"
 import type { MrrMonth } from "@/data/schema"
 import { formatMoney } from "@/kit/data/format"
@@ -22,13 +21,9 @@ import { cn } from "@/lib/utils"
 
 import { monthLabel } from "./metrics"
 
-export const MOVEMENT_CONFIG = {
-  newCents: { label: "New", color: "var(--chart-lead)" },
-  expansionCents: { label: "Expansion", color: "var(--chart-2)" },
-  contractionCents: { label: "Contraction", color: "var(--chart-3)" },
-  churnCents: { label: "Churn", color: "var(--destructive)" },
-  netCents: { label: "Net new", color: "var(--chart-line)" },
-} satisfies ChartConfig
+import { MOVEMENT_CONFIG } from "./movement-config"
+
+export { MOVEMENT_CONFIG }
 
 const money = (cents: number) => formatMoney(cents, { compact: true })
 

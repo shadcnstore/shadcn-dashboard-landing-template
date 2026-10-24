@@ -32,6 +32,8 @@ Open http://localhost:3000. No environment variables, no API keys, no database: 
 | **Keyboard** | ⌘K search and actions, `G` then a letter to jump between pages, `?` for every shortcut, `D` for dark mode |
 | **Licence** | MIT, including commercial use |
 
+![Chronicle Users: saved views, filters, seats per account and bulk actions](.github/screenshots/users.webp)
+
 ## Free and paid
 
 Chronicle is the free member of a family of dashboard templates built on the same Dashboard Kit. The `kit/` folder here is a vendored copy of that Kit, MIT in this repository.
