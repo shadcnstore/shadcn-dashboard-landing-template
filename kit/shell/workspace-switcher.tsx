@@ -32,7 +32,7 @@ export function WorkspaceSwitcher({ workspaces, labels = { group: "Workspaces", 
             }
           >
             <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-              <Logo />
+              <Logo className="size-4" />
             </div>
             <div className="grid flex-1 text-start text-sm leading-tight">
               <span className="truncate font-medium">{active.name}</span>
@@ -48,7 +48,7 @@ export function WorkspaceSwitcher({ workspaces, labels = { group: "Workspaces", 
                 return (
                   <DropdownMenuItem key={workspace.id} onClick={() => setActive(workspace)} className="gap-2 p-2">
                     <div className="flex size-6 items-center justify-center rounded-md border">
-                      <Icon />
+                      <Icon className="size-4" />
                     </div>
                     {workspace.name}
                     {workspace.id === active.id && <DropdownMenuShortcut>Current</DropdownMenuShortcut>}

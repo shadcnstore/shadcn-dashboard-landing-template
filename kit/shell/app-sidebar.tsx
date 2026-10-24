@@ -14,6 +14,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar"
 
 import { useCustomizer } from "../customizer/customizer-provider"
@@ -28,6 +29,7 @@ export function AppSidebar({ config, badges }: { config: ShellConfig; badges: Re
   const collapsible = useCustomizer((state) => state.sidebarCollapsible)
   const direction = useCustomizer((state) => state.direction)
   const pathname = usePathname()
+  const { setOpenMobile } = useSidebar()
 
   return (
     <Sidebar variant={variant} collapsible={collapsible} side={direction === "rtl" ? "right" : "left"}>
@@ -35,8 +37,8 @@ export function AppSidebar({ config, badges }: { config: ShellConfig; badges: Re
         <WorkspaceSwitcher workspaces={config.workspaces} labels={config.workspaceLabels} />
       </SidebarHeader>
       <SidebarContent>
-        {/* `contents` keeps the flex layout; the nav makes the links a landmark (axe "region"). */}
-        <nav aria-label="Main" className="contents">
+        {/* A real box, not display: contents (some screen readers drop those): the nav is the links' landmark. */}
+        <nav aria-label="Main" className="flex min-h-0 flex-1 flex-col">
           <NavMain groups={config.nav} badges={badges} />
           <SidebarGroup className="mt-auto">
             <SidebarGroupContent>
@@ -45,7 +47,7 @@ export function AppSidebar({ config, badges }: { config: ShellConfig; badges: Re
                   const Icon = link.icon
                   return (
                     <SidebarMenuItem key={link.href}>
-                      <SidebarMenuButton size="sm" tooltip={link.title} isActive={isActive(pathname, link.href)} render={<Link href={link.href} />}>
+                      <SidebarMenuButton size="sm" tooltip={link.title} isActive={isActive(pathname, link.href)} render={<Link href={link.href} onClick={() => setOpenMobile(false)} />}>
                         {Icon && <Icon />}
                         <span>{link.title}</span>
                       </SidebarMenuButton>

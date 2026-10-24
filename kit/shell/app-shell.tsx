@@ -2,6 +2,7 @@
 
 import { MenuIcon, SearchIcon } from "lucide-react"
 import Link from "next/link"
+import { useState } from "react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -16,7 +17,7 @@ import { useCommandMenu } from "../command/command-menu"
 import { useCustomizer } from "../customizer/customizer-provider"
 import { CustomizerPanel } from "../customizer/customizer-panel"
 import { AppSidebar } from "./app-sidebar"
-import { BreadcrumbLabelProvider, Breadcrumbs } from "./breadcrumbs"
+import { BreadcrumbLabelProvider, Breadcrumbs, titleFor } from "./breadcrumbs"
 import { ModeToggle } from "./mode-toggle"
 import { initials, UserMenuContent } from "./nav-user"
 import { TopNav } from "./top-nav"
@@ -29,7 +30,7 @@ function SearchButton() {
       variant="outline"
       className="w-9 justify-center px-0 text-muted-foreground sm:w-56 sm:justify-between sm:px-2.5"
       onClick={() => setOpen(true)}
-      aria-keyshortcuts="Meta+K"
+      aria-keyshortcuts="Meta+K Control+K"
     >
       {/* The visible word is the name (no aria-label), so the name always matches what is on screen. */}
       <span className="flex items-center gap-2">
@@ -51,7 +52,7 @@ export interface AppShellProps {
   actions?: React.ReactNode
   /** Panels rendered beside the content, e.g. an assistant side panel. */
   aside?: React.ReactNode
-  /** Breadcrumb title of the home route ("/"). Default "Overview". */
+  /** Breadcrumb title of the home route ("/"). Default: the nav entry for "/", else "Overview". */
   home?: string
   children: React.ReactNode
 }
@@ -60,12 +61,14 @@ export interface AppShellProps {
  * The frame every dashboard page sits in. Layout, sidebar style and content
  * width come from the customizer; navigation comes from `config`.
  */
-export function AppShell({ config, badges, actions, aside, home: homeTitle = "Overview", children }: AppShellProps) {
+export function AppShell({ config, badges, actions, aside, home: homeTitle, children }: AppShellProps) {
   const layout = useCustomizer((state) => state.layout)
   const contentWidth = useCustomizer((state) => state.contentWidth)
   const Brand = config.brand.logo
-  const home = { title: homeTitle, href: "/" }
   const links = [...config.nav.flatMap((group) => group.items), ...config.secondary]
+  const home = { title: homeTitle ?? titleFor("/", links) ?? "Overview", href: "/" }
+  // The shell stays mounted across routes, so the mobile menu closes itself when a link is followed.
+  const [menuOpen, setMenuOpen] = useState(false)
 
   // The sidebar layout's SidebarInset is already the page's <main>, so the content there is a <div>.
   const Content = layout === "top" ? "main" : "div"
@@ -89,7 +92,7 @@ export function AppShell({ config, badges, actions, aside, home: homeTitle = "Ov
       <BreadcrumbLabelProvider>
         <div className="flex min-h-svh flex-col">
           <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/80 md:px-6">
-            <Sheet>
+            <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
               <SheetTrigger render={<Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open navigation" />}>
                 <MenuIcon />
               </SheetTrigger>
@@ -99,7 +102,7 @@ export function AppShell({ config, badges, actions, aside, home: homeTitle = "Ov
                 </SheetHeader>
                 <nav className="flex flex-col gap-1 px-2">
                   {links.map((link) => (
-                    <Button key={link.href} variant="ghost" className="justify-start" nativeButton={false} render={<Link href={link.href} />}>
+                    <Button key={link.href} variant="ghost" className="justify-start" nativeButton={false} render={<Link href={link.href} onClick={() => setMenuOpen(false)} />}>
                       {link.icon && <link.icon data-icon="inline-start" />}
                       {link.title}
                     </Button>

@@ -36,7 +36,7 @@ export function useBreadcrumbLabel(label: string | null) {
   }, [context, label])
 }
 
-function titleFor(href: string, links: NavLink[]): string | null {
+export function titleFor(href: string, links: NavLink[]): string | null {
   for (const link of links) {
     if (link.href === href) {
       return link.title

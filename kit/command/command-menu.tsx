@@ -2,23 +2,14 @@
 
 import type { LucideIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { createContext, useContext, useEffect, useMemo, useState } from "react"
+import { createContext, lazy, Suspense, useContext, useEffect, useMemo, useState } from "react"
 
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-} from "@/components/ui/command"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Spinner } from "@/components/ui/spinner"
 
 import type { NavLink } from "../shell/types"
 import { pressedKey } from "../shortcuts/key"
+
+// The palette (cmdk, the dialog) loads on first open: no page needs it for its first paint.
+const CommandPalette = lazy(() => import("./command-palette"))
 
 export interface CommandAction {
   id: string
@@ -81,6 +72,11 @@ export function CommandMenuProvider({
   children: React.ReactNode
 }) {
   const [open, setOpen] = useState(false)
+  // Latched on first open (a render-time update, the React way to derive state), so the palette is fetched only when asked for.
+  const [mounted, setMounted] = useState(false)
+  if (open && !mounted) {
+    setMounted(true)
+  }
   const [text, setText] = useState("")
   const [results, setResults] = useState<CommandSearchResult[]>([])
   const [searching, setSearching] = useState(false)
@@ -137,80 +133,32 @@ export function CommandMenuProvider({
   return (
     <CommandContext.Provider value={{ open, setOpen }}>
       {children}
-      {/* Not ui/CommandDialog: it renders its sr-only title outside the popup, so the title is always in the page
-          (axe "region" on every route) and never labels the dialog. Here the header sits inside the popup. */}
-      <Dialog
-        open={open}
-        onOpenChange={(value) => {
-          setOpen(value)
-          if (!value) {
-            setText("")
-          }
-        }}
-      >
-        <DialogContent className="top-1/3 translate-y-0 overflow-hidden rounded-xl! p-0" showCloseButton={false}>
-          <DialogHeader className="sr-only">
-            <DialogTitle>Search and actions</DialogTitle>
-            <DialogDescription>{description}</DialogDescription>
-          </DialogHeader>
-          <Command>
-          <CommandInput placeholder="Search or type a command…" value={text} onValueChange={setText} />
-          <CommandList>
-            <CommandEmpty>{searching ? <Spinner className="mx-auto" /> : "Nothing found."}</CommandEmpty>
-            {Object.entries(groups).map(([group, items]) => (
-              <CommandGroup key={group} heading={group}>
-                {items.map((result) => {
-                  const Icon = result.icon
-                  return (
-                    <CommandItem key={result.id} value={`${result.title} ${result.subtitle ?? ""} ${text}`} onSelect={() => go(result.href)}>
-                      {Icon && <Icon />}
-                      <span>{result.title}</span>
-                      {result.subtitle && <span className="truncate text-muted-foreground">{result.subtitle}</span>}
-                    </CommandItem>
-                  )
-                })}
-              </CommandGroup>
-            ))}
-            {Object.keys(groups).length > 0 && <CommandSeparator />}
-            {Object.entries(actionGroups).map(([group, items]) => (
-              <CommandGroup key={group} heading={group}>
-                {items.map((action) => {
-                  const Icon = action.icon
-                  return (
-                    <CommandItem
-                      key={action.id}
-                      value={action.title}
-                      onSelect={() => {
-                        setOpen(false)
-                        setText("")
-                        action.run()
-                      }}
-                    >
-                      {Icon && <Icon />}
-                      <span>{action.title}</span>
-                      {action.shortcut && <CommandShortcut>{action.shortcut}</CommandShortcut>}
-                    </CommandItem>
-                  )
-                })}
-              </CommandGroup>
-            ))}
-            <CommandSeparator />
-            <CommandGroup heading="Go to">
-              {pages.map((page) => {
-                const Icon = page.icon
-                return (
-                  <CommandItem key={page.href} value={`go ${page.title}`} onSelect={() => go(page.href)}>
-                    {Icon && <Icon />}
-                    <span>{page.title}</span>
-                    {page.shortcut && <CommandShortcut>G {page.shortcut.toUpperCase()}</CommandShortcut>}
-                  </CommandItem>
-                )
-              })}
-            </CommandGroup>
-          </CommandList>
-          </Command>
-        </DialogContent>
-      </Dialog>
+      {mounted && (
+        <Suspense fallback={null}>
+          <CommandPalette
+            open={open}
+            onOpenChange={(value) => {
+              setOpen(value)
+              if (!value) {
+                setText("")
+              }
+            }}
+            description={description}
+            text={text}
+            onTextChange={setText}
+            searching={searching}
+            groups={groups}
+            actionGroups={actionGroups}
+            pages={pages}
+            go={go}
+            runAction={(action) => {
+              setOpen(false)
+              setText("")
+              action.run()
+            }}
+          />
+        </Suspense>
+      )}
     </CommandContext.Provider>
   )
 }

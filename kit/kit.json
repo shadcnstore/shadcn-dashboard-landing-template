@@ -1,6 +1,6 @@
 {
   "name": "@shadcnstore/dashboard-kit",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "The ShadcnStore Dashboard Kit: the shared base (shell, customizer, settings, data, shaders) this template is built on. It is yours to edit. This file lists what kit/ needs from the rest of the app.",
   "requires": {
     "modules": {

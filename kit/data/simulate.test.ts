@@ -27,8 +27,16 @@ describe("simulated latency", () => {
     const jitter = simulatedDelay()
     expect(jitter).toBeGreaterThanOrEqual(120)
     expect(jitter).toBeLessThanOrEqual(300)
-    resetSimulatedSwitches()
+    for (const off of ["?latency=0", "?latency=off", "?latency=false", "?latency=-1"]) {
+      resetSimulatedSwitches()
+      address(off)
+      expect(simulatedDelay()).toBe(0)
+    }
+  })
+
+  it("lets ?latency=0 switch off an opted-in delay", () => {
     address("?latency=0")
+    enableSimulatedLatency()
     expect(simulatedDelay()).toBe(0)
   })
 
@@ -47,6 +55,7 @@ describe("simulated latency", () => {
   it("is switched off entirely by disableSimulatedLatency", () => {
     address("?latency=1500")
     disableSimulatedLatency()
+    enableSimulatedLatency(400)
     expect(simulatedDelay()).toBe(0)
   })
 })

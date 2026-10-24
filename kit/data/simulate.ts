@@ -3,6 +3,7 @@
  *
  *   ?latency=1500        every request takes 1.5 s, so skeletons are visible
  *   ?latency=on          every request takes a realistic 120 to 300 ms
+ *   ?latency=0           no delay, even if the template opted in (also `off`)
  *   ?fail=orders         requests for the `orders` resource fail
  *   ?fail=all            every request fails
  *   ?empty=customers     lists for `customers` come back empty
@@ -16,8 +17,8 @@
 type Latency = number | "jitter"
 
 interface Switches {
-  /** Milliseconds per request, or "jitter" for 120 to 300 ms; 0 is instant. */
-  latency: Latency
+  /** From `?latency`: ms per request, "jitter" for 120 to 300 ms, 0 for none; null when the address does not say. */
+  latency: Latency | null
   fail: Set<string>
   empty: Set<string>
 }
@@ -25,7 +26,7 @@ interface Switches {
 const MAX_LATENCY = 10000
 
 let switches: Switches | null = null
-/** Set by `enableSimulatedLatency()`; a delay named in the address wins over it. */
+/** Set by `enableSimulatedLatency()`; `?latency` in the address wins over it, including `?latency=0`. */
 let enabled: Latency = 0
 let instant = false
 
@@ -35,21 +36,26 @@ let instant = false
  */
 export function enableSimulatedLatency(ms?: number): void {
   enabled = ms === undefined ? "jitter" : Math.max(0, Math.min(ms, MAX_LATENCY))
-  instant = false
 }
 
-/** Tests and scripts: no delay at all, even when the address asks for one. */
+/** Tests and scripts: no delay at all, even when the address or `enableSimulatedLatency()` asks for one. */
 export function disableSimulatedLatency(): void {
   instant = true
 }
 
-function parseLatency(raw: string | null): Latency {
-  if (raw === null || raw.trim() === "0") {
-    return 0
+const JITTER_WORDS = new Set(["", "on", "true", "jitter"])
+
+function parseLatency(raw: string | null): Latency | null {
+  if (raw === null) {
+    return null
   }
-  const ms = Number(raw)
-  // `?latency=1500` is a fixed delay; `?latency` with no number (`?latency`, `?latency=on`) is the jitter.
-  return ms > 0 ? Math.min(ms, MAX_LATENCY) : "jitter"
+  const value = raw.trim().toLowerCase()
+  // `?latency`, `?latency=on` is the jitter; `?latency=1500` a fixed delay; anything else (`0`, `off`, `-1`) none.
+  if (JITTER_WORDS.has(value)) {
+    return "jitter"
+  }
+  const ms = Number(value)
+  return ms > 0 ? Math.min(ms, MAX_LATENCY) : 0
 }
 
 function read(): Switches {
@@ -84,8 +90,7 @@ export function simulatedDelay(): number {
   if (instant) {
     return 0
   }
-  const fromAddress = read().latency
-  const latency = fromAddress !== 0 ? fromAddress : enabled
+  const latency = read().latency ?? enabled
   // The jitter only times a request; it never feeds a displayed value.
   return latency === "jitter" ? 120 + Math.random() * 180 : latency
 }
