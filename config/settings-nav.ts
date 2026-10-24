@@ -1,4 +1,4 @@
-import { BellIcon, PaletteIcon, ShieldCheckIcon, UserIcon } from "lucide-react"
+import { BellIcon, CreditCardIcon, KeyRoundIcon, PaletteIcon, ShieldCheckIcon, UserIcon, UsersIcon } from "lucide-react"
 
 import type { SettingsGroup } from "@/kit/settings/settings-layout"
 
@@ -26,4 +26,17 @@ export const SETTINGS_NAV: SettingsGroup[] = [
       },
     ],
   },
+  // The public demo only: previews of screens the paid templates ship (features/demo). Your build never lists them.
+  ...(process.env.NEXT_PUBLIC_DEMO === "1"
+    ? [
+        {
+          label: "In the paid templates",
+          items: [
+            { title: "Team and roles", href: "/settings/team", icon: UsersIcon },
+            { title: "Billing and plans", href: "/settings/billing", icon: CreditCardIcon },
+            { title: "API keys", href: "/settings/api-keys", icon: KeyRoundIcon },
+          ],
+        },
+      ]
+    : []),
 ]

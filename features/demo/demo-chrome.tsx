@@ -78,6 +78,8 @@ function DemoBar() {
 export function DemoChrome({ gtmId }: { gtmId?: string }) {
   return (
     <>
+      {/* Room under the last row of every page, so the floating bar never covers it. */}
+      <div aria-hidden className="h-20" />
       <DemoBar />
       {gtmId && <DemoAnalytics gtmId={gtmId} />}
     </>

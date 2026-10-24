@@ -90,7 +90,7 @@ export function GoFurtherPage() {
           <CardContent className="flex-1 text-sm">
             <p>Every paid template, including the ones that launch later, and every premium block on ShadcnStore.</p>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="border-primary-foreground/20 bg-transparent">
             <a href={PRO.href} target="_blank" rel="noopener" className={cn(buttonVariants({ size: "sm", variant: "secondary" }))} onClick={() => trackFunnel("further-pro")}>
               {PRO.label}
               <ArrowUpRightIcon data-icon="inline-end" />

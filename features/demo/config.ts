@@ -47,7 +47,7 @@ export const PAID_TEMPLATES: PaidTemplate[] = [
 ]
 
 /** Pro: every template and block on shadcnstore.com, one payment. */
-export const PRO = { href: `${STORE}/pricing`, label: "Compare plans", price: "$149", note: "one payment, every template and block" }
+export const PRO = { href: `${STORE}/pricing`, label: "Compare plans", price: "$149", note: "One payment, every template and block" }
 
 const SCREENS = "https://assets.shadcnstore.com/shadcnstore.com/templates/emporium/screens"
 
