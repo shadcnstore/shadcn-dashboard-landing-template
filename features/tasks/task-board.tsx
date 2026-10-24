@@ -97,18 +97,15 @@ function SortableTask({ task }: { task: Task }) {
     isDragging,
   } = useSortable({ id: task.id })
   return (
-    <li
-      ref={setNodeRef}
-      style={{ transform: CSS.Translate.toString(transform), transition }}
-      className={cn(
-        "cursor-grab touch-manipulation list-none rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50 active:cursor-grabbing",
-        isDragging && "opacity-40"
-      )}
-      aria-label={`${task.key}: ${task.title}`}
-      {...attributes}
-      {...listeners}
-    >
-      <TaskCard task={task} />
+    <li ref={setNodeRef} style={{ transform: CSS.Translate.toString(transform), transition }} className={cn("list-none", isDragging && "opacity-40")}>
+      <div
+        className="cursor-grab touch-manipulation rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50 active:cursor-grabbing"
+        aria-label={`${task.key}: ${task.title}`}
+        {...attributes}
+        {...listeners}
+      >
+        <TaskCard task={task} />
+      </div>
     </li>
   )
 }

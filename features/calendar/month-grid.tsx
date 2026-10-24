@@ -97,7 +97,7 @@ export function MonthGrid({ events, onCreate }: { events: CalendarEvent[]; onCre
               <span
                 className={cn(
                   "num flex size-7 shrink-0 items-center justify-center rounded-full text-xs md:size-6",
-                  outside ? "text-muted-foreground/60" : "text-foreground",
+                  outside ? "text-muted-foreground" : "text-foreground",
                   isSelected && !isToday && "bg-foreground text-background",
                   isToday && "bg-primary font-semibold text-primary-foreground"
                 )}
@@ -112,7 +112,7 @@ export function MonthGrid({ events, onCreate }: { events: CalendarEvent[]; onCre
                   ))}
                 </span>
               )}
-              <span className={cn("hidden min-w-0 flex-col gap-0.5 md:flex", outside && "opacity-60")} aria-hidden>
+              <span className={cn("hidden min-w-0 flex-col gap-0.5 md:flex", outside && "grayscale")} aria-hidden>
                 {shown.map((event) => (
                   <span
                     key={event.id}

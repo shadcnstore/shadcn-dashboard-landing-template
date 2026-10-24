@@ -77,9 +77,9 @@ export function UserDetail({ id, account: known }: { id: string; account?: Accou
       <Separator />
       {account && (
         <section aria-labelledby="account-heading" className="flex flex-col gap-3">
-          <h3 id="account-heading" className="text-sm font-medium">
+          <h2 id="account-heading" className="text-sm font-medium">
             Account
-          </h3>
+          </h2>
           <div className="grid gap-2 rounded-xl bg-muted/50 p-4 text-sm">
             <div className="flex items-center justify-between gap-3">
               <Link href={`/users?account=${account.id}`} className="font-medium hover:underline">

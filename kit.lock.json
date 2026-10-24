@@ -1,6 +1,6 @@
 {
-  "ref": "v1.0.5",
-  "commit": "b7a015cf48101a5b387498021f2b6c932d14e6a3",
+  "ref": "v1.0.6",
+  "commit": "ce7e580bda07af32039cad934af67cd8d6e3449d",
   "exclude": [
     "organization/**",
     "shader/glsl.ts",
@@ -52,7 +52,7 @@
     "data/url-state.ts": "7d7ab77fa4951dfcce8cf6cc82a431fa51b203db609e3adedd80943b5cc1a0bb",
     "data/use-route-id.ts": "29c2290ca66f5b8d9ffa267e79fbba5cf2fc25c2d3fecc0330358e8f5c3022d3",
     "kit.css": "dd0d3a4373a4b1751ecf870e6936fc99ae0b3055cc3da18cf9910c751ff71057",
-    "kit.json": "dabe1c10fb1c7f0a5c1f3cd4fd88e5e893cb9ca5b20a1a3f3e215da7f118b0de",
+    "kit.json": "f6039c9c952c58f5e4100acb371fadbb2024bb5e86b6d2232b08c11077118cae",
     "notifications/notification-bell.tsx": "5a7d0cf62c49d4a133d540c796ab2a30e4051b6e4f309cc976d5f8abcd505d9c",
     "notifications/notifications-inbox.tsx": "6b436f095209010e964479101b782b89c7968ec73d94ab8d809af63fdb5ea10e",
     "onboarding/wizard.tsx": "316ed0b6f888a88d6893b959b5edeed701c42f06e2b04175d9ca0ea98cee6dd6",
@@ -61,7 +61,7 @@
     "settings/use-draft.ts": "d2253535bc473c35024117a238ae91f123dd5b43b1bfee2aa1190509923e2813",
     "shader/colour.ts": "1f14241257b2c44a886a36fc9105145780af7fd9575b32e187006eed04b00e85",
     "shell/app-shell.tsx": "8301eec40855c358a718a2251f86a7a1f577b810e1b441ddf8a598548e09f922",
-    "shell/app-sidebar.tsx": "5d3b3e7991fdb50854ba06c969dcea64174f593a12ea10952331b319aaf5d87c",
+    "shell/app-sidebar.tsx": "e97425710412148655f8dd420f77a6571c6c11b90ae7f87bd2179c7e1bb5a6f7",
     "shell/breadcrumbs.tsx": "0e3ce48fac0abb0cd3ebb4bbf3c79e57c607f02e8b1d86fac8b90d6bd6463e90",
     "shell/demo-bar.tsx": "b1ce283b2f5b737af81610f137a05c5384ea10498d4992e1f104e52a43a3300b",
     "shell/mode-toggle.tsx": "b1e62d905f8c8e26c4ba0a8009edd50f0ee39d796e55b1b5dc0c729e6f1ab045",

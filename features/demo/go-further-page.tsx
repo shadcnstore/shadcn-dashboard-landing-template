@@ -85,7 +85,7 @@ export function GoFurtherPage() {
               <CardTitle className="text-lg">Pro</CardTitle>
               <span className="font-mono text-sm tabular-nums">{PRO.price}</span>
             </div>
-            <CardDescription className="text-primary-foreground/80">{PRO.note}</CardDescription>
+            <CardDescription className="text-primary-foreground">{PRO.note}</CardDescription>
           </CardHeader>
           <CardContent className="flex-1 text-sm">
             <p>Every paid template, including the ones that launch later, and every premium block on ShadcnStore.</p>
@@ -104,7 +104,7 @@ export function GoFurtherPage() {
           <CardTitle>What is in each</CardTitle>
           <CardDescription>Every row is true today. The paid column describes Emporium, the dashboard template on sale now.</CardDescription>
         </CardHeader>
-        <CardContent className="overflow-x-auto">
+        <CardContent tabIndex={0} role="region" aria-label="Comparison table, scrolls sideways" className="overflow-x-auto outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
           <table className="w-full min-w-[32rem] text-sm">
             <thead>
               <tr className="border-b text-xs text-muted-foreground">

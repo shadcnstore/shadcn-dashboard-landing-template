@@ -61,17 +61,17 @@
   /* The customizer swaps --font-sans for another of THEME.fonts; headings follow it (kit.css --heading-font). */
   --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
   --background: oklch(0.974 0.006 255);
-  --foreground: oklch(0.215 0.028 264);
+  --foreground: oklch(0.19 0.028 264);
   --card: oklch(0.997 0.002 255);
-  --card-foreground: oklch(0.215 0.028 264);
+  --card-foreground: oklch(0.19 0.028 264);
   --popover: oklch(0.997 0.002 255);
-  --popover-foreground: oklch(0.215 0.028 264);
+  --popover-foreground: oklch(0.19 0.028 264);
   --primary: oklch(0.515 0.19 263);
   --primary-foreground: oklch(0.985 0.006 255);
   --secondary: oklch(0.948 0.01 255);
-  --secondary-foreground: oklch(0.215 0.028 264);
+  --secondary-foreground: oklch(0.19 0.028 264);
   --muted: oklch(0.955 0.008 255);
-  --muted-foreground: oklch(0.495 0.03 262);
+  --muted-foreground: oklch(0.445 0.03 262);
   --accent: oklch(0.948 0.024 262);
   --accent-foreground: oklch(0.42 0.17 263);
   --destructive: oklch(0.53 0.2 25);
@@ -101,11 +101,11 @@
   --auth-panel-rating: oklch(0.85 0.13 85);
   --auth-panel-image: oklch(0.97 0.01 255);
   --sidebar: oklch(0.962 0.008 255);
-  --sidebar-foreground: oklch(0.215 0.028 264);
+  --sidebar-foreground: oklch(0.19 0.028 264);
   --sidebar-primary: oklch(0.515 0.19 263);
   --sidebar-primary-foreground: oklch(0.985 0.006 255);
   --sidebar-accent: oklch(0.93 0.014 258);
-  --sidebar-accent-foreground: oklch(0.215 0.028 264);
+  --sidebar-accent-foreground: oklch(0.19 0.028 264);
   --sidebar-border: oklch(0.905 0.012 258);
   --sidebar-ring: oklch(0.515 0.19 263);
 }
@@ -125,7 +125,7 @@
   --muted-foreground: oklch(0.72 0.025 258);
   --accent: oklch(0.28 0.05 263);
   --accent-foreground: oklch(0.86 0.07 262);
-  --destructive: oklch(0.67 0.18 24);
+  --destructive: oklch(0.72 0.17 24);
   --border: oklch(0.29 0.02 264);
   --input: oklch(0.32 0.022 264);
   --ring: oklch(0.67 0.16 262);

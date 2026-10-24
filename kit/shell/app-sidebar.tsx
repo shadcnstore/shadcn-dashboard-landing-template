@@ -35,24 +35,27 @@ export function AppSidebar({ config, badges }: { config: ShellConfig; badges: Re
         <WorkspaceSwitcher workspaces={config.workspaces} labels={config.workspaceLabels} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain groups={config.nav} badges={badges} />
-        <SidebarGroup className="mt-auto">
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {config.secondary.map((link) => {
-                const Icon = link.icon
-                return (
-                  <SidebarMenuItem key={link.href}>
-                    <SidebarMenuButton size="sm" tooltip={link.title} isActive={isActive(pathname, link.href)} render={<Link href={link.href} />}>
-                      {Icon && <Icon />}
-                      <span>{link.title}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                )
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {/* `contents` keeps the flex layout; the nav makes the links a landmark (axe "region"). */}
+        <nav aria-label="Main" className="contents">
+          <NavMain groups={config.nav} badges={badges} />
+          <SidebarGroup className="mt-auto">
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {config.secondary.map((link) => {
+                  const Icon = link.icon
+                  return (
+                    <SidebarMenuItem key={link.href}>
+                      <SidebarMenuButton size="sm" tooltip={link.title} isActive={isActive(pathname, link.href)} render={<Link href={link.href} />}>
+                        {Icon && <Icon />}
+                        <span>{link.title}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </nav>
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={config.user} />

@@ -250,6 +250,7 @@ export function TaskTable({
           const priority = PRIORITY_BY_VALUE.get(task.priority)!
           return (
             <Item
+              role="listitem"
               variant="muted"
               className="items-start rounded-xl bg-card shadow-(--surface-shadow)"
             >

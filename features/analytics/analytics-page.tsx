@@ -366,7 +366,7 @@ function Cohorts({ cohorts }: { cohorts: Cohort[] }) {
         value={sixMonth === null ? "n/a" : formatPercent(sixMonth)}
         caption="of accounts still paying six months after they start, averaged across cohorts"
       />
-      <div className="overflow-x-auto px-(--card-spacing) pb-1">
+      <div tabIndex={0} role="region" aria-label="Retention table, scrolls sideways" className="overflow-x-auto rounded-md px-(--card-spacing) pb-1 outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
         <table
           className="w-full min-w-[40rem] table-fixed border-separate border-spacing-0.5 text-xs"
           aria-label="Share of each signup cohort still paying, by month since signup"
@@ -405,17 +405,16 @@ function Cohorts({ cohorts }: { cohorts: Cohort[] }) {
                   // The scale starts at the lowest retention on screen, so small differences still read.
                   const strength =
                     floor >= 1
-                      ? 1
-                      : 0.12 + ((value - floor) / (1 - floor)) * 0.88
+                      ? 0.55
+                      : 0.1 + ((value - floor) / (1 - floor)) * 0.45
                   return (
                     <td
                       key={index}
                       title={`${monthLabel(cohort.month, true)}, month ${index}: ${formatPercent(value)}`}
                       className={cn(
                         "h-8 rounded-md text-center font-mono tabular-nums",
-                        strength > 0.6
-                          ? "text-primary-foreground"
-                          : "text-foreground"
+                        // The scale stops at 55% so text in the theme's own colour stays readable in both modes.
+                        "text-foreground"
                       )}
                       style={{
                         backgroundColor: `color-mix(in oklch, var(--chart-lead) ${Math.round(strength * 100)}%, var(--muted))`,
@@ -463,7 +462,7 @@ function Usage() {
         value={formatNumber(WEEKLY_REPORTS)}
         caption={`reports in a typical week · busiest ${peak.day} ${peak.hour}:00 UTC · ${formatPercent(WEEKDAY_SHARE, { decimals: 0 })} on weekdays`}
       />
-      <div className="overflow-x-auto px-(--card-spacing)">
+      <div tabIndex={0} role="region" aria-label="Top accounts, scrolls sideways" className="overflow-x-auto rounded-md px-(--card-spacing) outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
         <PunchCard
           className="min-w-[44rem]"
           cells={USAGE_CELLS}

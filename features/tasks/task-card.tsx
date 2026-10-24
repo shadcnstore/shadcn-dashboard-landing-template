@@ -89,7 +89,7 @@ export function TaskCard({
         "flex flex-col gap-2.5 rounded-xl bg-card p-3 text-start shadow-(--surface-shadow) ring-1 ring-foreground/5 transition-shadow duration-150",
         raised &&
           "rotate-[1.5deg] shadow-(--surface-shadow-raised) ring-primary/30",
-        task.status === "done" && "opacity-80",
+        
         className
       )}
     >

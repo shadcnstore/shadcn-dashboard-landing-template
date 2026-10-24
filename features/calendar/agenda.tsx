@@ -26,7 +26,7 @@ function EventRow({ event }: { event: CalendarEvent }) {
   const past = event.date < TODAY || (event.date === TODAY && event.end !== null && minutes(event.end) <= NOW_MINUTES)
   const live = event.date === TODAY && event.start !== null && event.end !== null && minutes(event.start) <= NOW_MINUTES && minutes(event.end) > NOW_MINUTES
   return (
-    <li className={cn("group/event relative flex gap-3 rounded-xl p-2.5 transition-colors hover:bg-muted/50", past && "opacity-60")}>
+    <li className={cn("group/event relative flex gap-3 rounded-xl p-2.5 transition-colors hover:bg-muted/50", past && "[&_.font-medium]:text-muted-foreground")}>
       <div className="flex w-12 shrink-0 flex-col pt-0.5">
         {event.start && event.end ? (
           <>

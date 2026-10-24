@@ -203,9 +203,10 @@ export function UsersPage() {
       },
       {
         id: "actions",
-        header: "",
+        // Named for screen readers; the heading text is transparent so the column stays a quiet icon column.
+        header: "Actions",
         hideable: false,
-        className: "w-10",
+        className: "w-16 [th&]:text-transparent",
         cell: (row) => (
           <DropdownMenu>
             <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label={`Actions for ${row.name}`} onClick={(event) => event.stopPropagation()} />}>
@@ -372,7 +373,7 @@ export function UsersPage() {
             onHiddenColumnsChange={setHidden}
             onRowClick={(row) => setOpen(row.id)}
             renderMobileRow={(row, state) => (
-              <div className="flex items-center gap-3 rounded-xl border bg-card p-3">
+              <div role="listitem" className="flex items-center gap-3 rounded-xl border bg-card p-3">
                 <Checkbox aria-label={`Select ${row.name}`} checked={state.selected} onCheckedChange={state.toggle} />
                 <Initials name={row.name} />
                 <button type="button" className="flex min-w-0 flex-1 flex-col text-start" onClick={() => setOpen(row.id)}>
