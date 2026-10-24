@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/chronicle/person-avatar"
 
 import { Section, SectionHeading } from "./section-heading"
 
@@ -15,34 +15,27 @@ const QUOTES = [
     quote: "Cohorts split by plan showed us annual customers retain twice as well. We changed our pricing page the same week.",
   },
   {
-    name: "Hannah Osei",
+    name: "Rosa Osei",
     role: "Founder, Quillmark",
     quote: "I connected billing on a Sunday night and had a board-ready revenue chart before breakfast.",
   },
   {
-    name: "Mateo Alvarez",
+    name: "Samuel Alvarez",
     role: "RevOps Lead, Marrowby",
     quote:
       "Versioned metric definitions ended the argument about what counts as churn. When finance changes a rule, everyone sees the before and after, and nobody has to rebuild a spreadsheet.",
   },
   {
-    name: "Grace Whitfield",
+    name: "Isla Whitfield",
     role: "CFO, Tessellate",
     quote: "Multi-currency used to be a quarterly headache. Now it is a setting.",
   },
   {
-    name: "Owen Brennan",
+    name: "Daniel Brennan",
     role: "Data Lead, Juniper Row",
     quote: "The exports balance to the cent. Our auditors asked which tool we used, which has never happened before.",
   },
 ]
-
-function initials(name: string) {
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-}
 
 export function Testimonials() {
   return (
@@ -54,9 +47,7 @@ export function Testimonials() {
             <figure className="flex flex-col gap-5 rounded-xl border bg-card p-6 shadow-(--surface-shadow)">
               <blockquote className="text-pretty">&ldquo;{item.quote}&rdquo;</blockquote>
               <figcaption className="flex items-center gap-3">
-                <Avatar className="size-9">
-                  <AvatarFallback className="text-xs font-medium">{initials(item.name)}</AvatarFallback>
-                </Avatar>
+                <PersonAvatar name={item.name} className="size-9" />
                 <div className="flex flex-col">
                   <span className="text-sm font-medium">{item.name}</span>
                   <span className="text-xs text-muted-foreground">{item.role}</span>

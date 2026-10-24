@@ -26,6 +26,7 @@ import type { TileTone } from "@/kit/ui-patterns/icon-tile"
 import { SaveBar } from "@/kit/ui-patterns/save-bar"
 import { cn } from "@/lib/utils"
 
+import { FIT_HERO, SETTINGS_PAGE } from "./fit-hero"
 import {
   DEFAULT_PREFS,
   useSettingsStore,
@@ -197,8 +198,9 @@ export function NotificationSettingsPage() {
   }
 
   return (
-    <>
+    <div className={SETTINGS_PAGE}>
       <SettingsHero
+        className={FIT_HERO}
         aside={
           <div className="flex flex-col gap-4">
             {CHANNELS.map((channel) => {
@@ -340,6 +342,6 @@ export function NotificationSettingsPage() {
         onSave={() => void onSave()}
         onDiscard={reset}
       />
-    </>
+    </div>
   )
 }

@@ -56,9 +56,10 @@ export function Heatmap({
             key={column}
             className={cn(
               "mt-1.5 overflow-visible text-center font-mono text-[10px] whitespace-nowrap text-muted-foreground",
-              x % wide !== 0 && "hidden",
-              x % wide !== 0 && x % mid === 0 && "@sm:block",
-              x % wide !== 0 && x % mid !== 0 && x % all === 0 && "@xl:block"
+              // invisible, not hidden: a thinned label keeps its column, so the others stay under their own cells.
+              x % wide !== 0 && "invisible",
+              x % wide !== 0 && x % mid === 0 && "@sm:visible",
+              x % wide !== 0 && x % mid !== 0 && x % all === 0 && "@xl:visible"
             )}
           >
             {column}

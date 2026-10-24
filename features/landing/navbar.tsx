@@ -40,7 +40,7 @@ export function LandingNavbar() {
           <TidewellLogo />
         </a>
 
-        <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
+        <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
           {NAV_LINKS.map((link) => (
             <a
               key={link.href}
@@ -52,7 +52,7 @@ export function LandingNavbar() {
           ))}
         </nav>
 
-        <div className="ms-auto hidden items-center gap-1 md:flex">
+        <div className="ms-auto hidden items-center gap-1 lg:flex">
           <ThemeToggle />
           <Link href="/sign-in" className={buttonVariants({ variant: "ghost" })}>
             Sign in
@@ -62,7 +62,7 @@ export function LandingNavbar() {
           </Link>
         </div>
 
-        <div className="ms-auto flex items-center gap-1 md:hidden">
+        <div className="ms-auto flex items-center gap-1 lg:hidden">
           <ThemeToggle />
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger render={<Button variant="ghost" size="icon" aria-label="Open menu" />}>

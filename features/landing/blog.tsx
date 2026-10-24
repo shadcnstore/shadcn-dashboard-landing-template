@@ -37,13 +37,14 @@ export function Blog() {
       <ul className="mt-14 grid gap-4 lg:grid-cols-3">
         {POSTS.map((post) => (
           <li key={post.title}>
-            <article className="flex h-full flex-col overflow-hidden rounded-xl border bg-card shadow-(--surface-shadow)">
-              <div aria-hidden className="flex aspect-[2/1] items-end gap-1.5 border-b bg-accent/60 px-6 pt-6">
+            {/* One per row between 640 and 1024px, so the cover sits beside the text instead of filling a screen-wide 2:1 block. */}
+            <article className="flex h-full flex-col overflow-hidden rounded-xl border bg-card shadow-(--surface-shadow) sm:flex-row lg:flex-col">
+              <div aria-hidden className="flex aspect-[2/1] items-end gap-1.5 border-b bg-accent/60 px-6 pt-6 sm:aspect-auto sm:min-h-44 sm:w-2/5 sm:shrink-0 sm:border-e sm:border-b-0 lg:aspect-[2/1] lg:min-h-0 lg:w-auto lg:border-e-0 lg:border-b">
                 {post.bars.map((height, index) => (
                   <span key={index} className="flex-1 rounded-t-sm bg-primary/70" style={{ height: `${height}%`, opacity: 0.35 + index * 0.08 }} />
                 ))}
               </div>
-              <div className="flex flex-1 flex-col gap-3 p-6">
+              <div className="flex flex-1 flex-col gap-3 p-6 sm:justify-center lg:justify-start">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Badge variant="secondary">{post.category}</Badge>
                   <span>

@@ -16,5 +16,14 @@ export const DATA_NOW: Date = DEMO_NOW ?? new Date()
 const loadedAt = Date.now()
 
 export function currentTime(): Date {
-  return DEMO_NOW ? new Date(DEMO_NOW.getTime() + (Date.now() - loadedAt)) : new Date()
+  if (!DEMO_NOW) {
+    return new Date()
+  }
+  // The server renders at DEMO_NOW exactly. A long-lived dev or build process
+  // would otherwise run its clock hours ahead of the browser's, so "7 hours
+  // ago" rendered on the server would hydrate as "8 hours ago".
+  if (typeof window === "undefined") {
+    return new Date(DEMO_NOW.getTime())
+  }
+  return new Date(DEMO_NOW.getTime() + (Date.now() - loadedAt))
 }

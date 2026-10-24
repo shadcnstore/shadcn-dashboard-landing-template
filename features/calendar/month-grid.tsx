@@ -20,7 +20,7 @@ function sameDayInMonth(key: string, by: number): string {
 /**
  * The month: six Monday-first weeks. Each day is one button (arrow keys move
  * between days, Page Up and Page Down change month, double-click creates an
- * event). Wide screens list up to three events per day; phones show dots.
+ * event). A grid wider than 672px lists up to three events per day; a narrower one shows dots.
  */
 export function MonthGrid({ events, onCreate }: { events: CalendarEvent[]; onCreate: (date: string) => void }) {
   const cursor = useCalendar((state) => state.cursor)
@@ -61,12 +61,12 @@ export function MonthGrid({ events, onCreate }: { events: CalendarEvent[]; onCre
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="@container flex flex-col">
       <div className="grid grid-cols-7 border-b" aria-hidden>
         {WEEKDAYS.map((day) => (
-          <div key={day} className="px-2 py-2 text-center text-[11px] font-medium tracking-wide text-muted-foreground uppercase md:text-start md:ps-3">
-            <span className="md:hidden">{day.slice(0, 1)}</span>
-            <span className="hidden md:inline">{day}</span>
+          <div key={day} className="px-2 py-2 text-center text-[11px] font-medium tracking-wide text-muted-foreground uppercase @2xl:text-start @2xl:ps-3">
+            <span className="@md:hidden">{day.slice(0, 1)}</span>
+            <span className="hidden @md:inline">{day}</span>
           </div>
         ))}
       </div>
@@ -89,14 +89,14 @@ export function MonthGrid({ events, onCreate }: { events: CalendarEvent[]; onCre
               onClick={() => selectDay(key)}
               onDoubleClick={() => onCreate(key)}
               className={cn(
-                "group/day relative flex h-14 min-w-0 flex-col items-center gap-1 border-e border-b p-1 text-start transition-colors outline-none hover:bg-muted/50 focus-visible:z-10 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:ring-inset md:h-auto md:min-h-28 md:items-stretch md:p-1.5",
+                "group/day relative flex h-14 min-w-0 flex-col items-center gap-1 border-e border-b p-1 text-start transition-colors outline-none hover:bg-muted/50 focus-visible:z-10 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:ring-inset @md:h-16 @2xl:h-auto @2xl:min-h-28 @2xl:items-stretch @2xl:p-1.5",
                 outside && "bg-muted/30",
                 isSelected && "bg-accent/60 hover:bg-accent/60"
               )}
             >
               <span
                 className={cn(
-                  "num flex size-7 shrink-0 items-center justify-center rounded-full text-xs md:size-6",
+                  "num flex size-7 shrink-0 items-center justify-center rounded-full text-xs @2xl:size-6",
                   outside ? "text-muted-foreground" : "text-foreground",
                   isSelected && !isToday && "bg-foreground text-background",
                   isToday && "bg-primary font-semibold text-primary-foreground"
@@ -104,15 +104,15 @@ export function MonthGrid({ events, onCreate }: { events: CalendarEvent[]; onCre
               >
                 {dayOfMonth(key)}
               </span>
-              {/* Phones: a dot per calendar with events that day. */}
+              {/* Narrow grids (phones, or a tablet beside the sidebar): a dot per calendar with events that day. */}
               {dayEvents.length > 0 && (
-                <span className="flex gap-0.5 md:hidden" aria-hidden>
+                <span className="flex gap-0.5 @2xl:hidden" aria-hidden>
                   {[...new Set(dayEvents.map((event) => event.calendar))].slice(0, 3).map((calendar) => (
                     <span key={calendar} className={cn("size-1 rounded-full", CALENDAR_BY_ID[calendar].dot, outside && "opacity-50")} />
                   ))}
                 </span>
               )}
-              <span className={cn("hidden min-w-0 flex-col gap-0.5 md:flex", outside && "grayscale")} aria-hidden>
+              <span className={cn("hidden min-w-0 flex-col gap-0.5 @2xl:flex", outside && "grayscale")} aria-hidden>
                 {shown.map((event) => (
                   <span
                     key={event.id}

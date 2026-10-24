@@ -39,7 +39,7 @@ function Summary() {
     0
   )
   return (
-    <div className="flex flex-col gap-4 lg:sticky lg:top-20">
+    <div className="flex flex-col gap-4 xl:sticky xl:top-20">
       <Widget>
         <WidgetHeader
           title="Revenue in these alerts"
@@ -101,9 +101,9 @@ export function NotificationsView() {
           </Button>
         }
       />
-      <div className="grid items-start gap-4 lg:grid-cols-12">
+      <div className="grid items-start gap-4 xl:grid-cols-12">
         {/* Two categories, so the filter cards share the row. */}
-        <div className="min-w-0 lg:col-span-8 [&_[aria-label='Filter_by_category']]:grid-cols-2 lg:[&_[aria-label='Filter_by_category']]:grid-cols-2">
+        <div className="min-w-0 xl:col-span-8 [&_[aria-label='Filter_by_category']]:grid-cols-2">
           <NotificationsInbox
             items={items}
             categories={CATEGORIES}
@@ -111,7 +111,7 @@ export function NotificationsView() {
             onMarkRead={markRead}
           />
         </div>
-        <div className="lg:col-span-4">
+        <div className="xl:col-span-4">
           <Summary />
         </div>
       </div>

@@ -94,7 +94,10 @@ export function Agenda({ events, allEvents, onCreate }: { events: CalendarEvent[
   const booked = timed.reduce((sum, event) => sum + minutes(event.end as string) - minutes(event.start as string), 0)
 
   return (
-    <aside aria-label="Agenda" className="flex flex-col gap-4 rounded-2xl bg-card p-4 shadow-(--surface-shadow) xl:sticky xl:top-20">
+    // Beside the grid (1280px and up) this is one narrow column. Stacked under the grid it is wide, so the calendars move to a column of their own.
+    <aside aria-label="Agenda" className="@container rounded-2xl bg-card p-4 shadow-(--surface-shadow) xl:sticky xl:top-20">
+      <div className="grid gap-4 @2xl:grid-cols-[minmax(0,1fr)_15rem] @2xl:gap-6">
+      <div className="flex min-w-0 flex-col gap-4">
       <div className="flex items-start justify-between gap-2">
         <div className="flex flex-col gap-0.5">
           <span className="text-xs font-medium text-muted-foreground">{selected === TODAY ? "Today" : "Agenda"}</span>
@@ -137,7 +140,9 @@ export function Agenda({ events, allEvents, onCreate }: { events: CalendarEvent[
           ))}
         </ul>
       )}
-      <Separator />
+      </div>
+      <div className="flex flex-col gap-4 @2xl:border-s @2xl:ps-6">
+      <Separator className="@2xl:hidden" />
       <fieldset className="flex flex-col gap-1">
         <legend className="mb-2 text-xs font-medium text-muted-foreground">Calendars</legend>
         {CALENDARS.map((calendar) => {
@@ -153,6 +158,8 @@ export function Agenda({ events, allEvents, onCreate }: { events: CalendarEvent[
           )
         })}
       </fieldset>
+      </div>
+      </div>
     </aside>
   )
 }

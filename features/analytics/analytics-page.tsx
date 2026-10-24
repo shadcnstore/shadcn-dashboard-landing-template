@@ -732,7 +732,7 @@ export function AnalyticsPage() {
       <Headline figures={figures} />
       <div className="grid gap-4 xl:grid-cols-12">
         <Movement metrics={metrics} period={period} />
-        <div className="grid gap-4 md:grid-cols-2 xl:col-span-4 xl:grid-cols-1">
+        <div className="grid gap-4 lg:grid-cols-2 xl:col-span-4 xl:grid-cols-1">
           <Mix
             title="Revenue by plan"
             rows={metrics.plans}

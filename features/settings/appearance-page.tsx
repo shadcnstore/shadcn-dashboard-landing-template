@@ -48,6 +48,8 @@ import { Segmented } from "@/kit/ui-patterns/segmented"
 import { Delta } from "@/kit/widgets/widget"
 import { cn } from "@/lib/utils"
 
+import { FIT_HERO, SETTINGS_PAGE } from "./fit-hero"
+
 /**
  * The header customizer at full size: the same settings store, so a change
  * here shows in the header panel and the other way round. Changes apply at
@@ -90,14 +92,19 @@ function Row({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex flex-col gap-2 border-b py-4 first:pt-0 last:border-b-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-      <div className="flex flex-col gap-0.5">
-        <span className="text-sm font-medium">{label}</span>
-        {description && (
-          <span className="text-sm text-muted-foreground">{description}</span>
-        )}
+    // Label and control share a line only when the card leaves the label room (576px), not by screen width: beside the sidebar and the settings menu a 1024px screen leaves under 500px.
+    <div className="@container/row border-b py-4 first:pt-0 last:border-b-0 last:pb-0">
+      <div className="flex flex-col gap-2 @xl/row:flex-row @xl/row:items-center @xl/row:justify-between @xl/row:gap-6">
+        <div className="flex flex-col gap-0.5">
+          <span className="text-sm font-medium">{label}</span>
+          {description && (
+            <span className="text-sm text-muted-foreground">
+              {description}
+            </span>
+          )}
+        </div>
+        <div className="w-full shrink-0 @xl/row:w-80">{children}</div>
       </div>
-      <div className="w-full shrink-0 sm:w-80">{children}</div>
     </div>
   )
 }
@@ -180,8 +187,8 @@ export function AppearanceSettingsPage() {
   }
 
   return (
-    <>
-      <SettingsHero aside={<LivePreview />}>
+    <div className={SETTINGS_PAGE}>
+      <SettingsHero aside={<LivePreview />} className={FIT_HERO}>
         <div className="flex items-center justify-between gap-3">
           <span className="text-sm text-muted-foreground">Current look</span>
           <Button
@@ -241,9 +248,10 @@ export function AppearanceSettingsPage() {
         title="Theme"
         description="Colours for every surface, chart and status. Each theme brings its own corner radius."
       >
-        <div className="flex flex-col gap-5">
+        <div className="@container/presets flex flex-col gap-5">
+          {/* Nine presets: a list on phones, then always three across (stacked tiles while narrow), so no row is left with one. */}
           <div
-            className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3"
+            className="grid gap-2 @sm/presets:grid-cols-3"
             role="radiogroup"
             aria-label="Theme preset"
           >
@@ -265,13 +273,13 @@ export function AppearanceSettingsPage() {
                     )
                   }
                   className={cn(
-                    "group/preset flex items-center gap-3 rounded-xl bg-muted/40 p-2.5 text-start ring-1 ring-transparent transition-[background-color,box-shadow] duration-150 outline-none hover:bg-muted/70 focus-visible:ring-3 focus-visible:ring-ring/50",
+                    "group/preset relative flex items-center gap-3 rounded-xl @sm/presets:flex-col @sm/presets:items-stretch @sm/presets:gap-2 @3xl/presets:flex-row @3xl/presets:items-center @3xl/presets:gap-3 bg-muted/40 p-2.5 text-start ring-1 ring-transparent transition-[background-color,box-shadow] duration-150 outline-none hover:bg-muted/70 focus-visible:ring-3 focus-visible:ring-ring/50",
                     selected &&
                       "bg-card shadow-(--surface-shadow) ring-2 ring-primary hover:bg-card"
                   )}
                 >
                   <span
-                    className="flex h-9 w-16 shrink-0 overflow-hidden rounded-md ring-1 ring-foreground/10"
+                    className="flex h-9 w-16 shrink-0 overflow-hidden rounded-md ring-1 ring-foreground/10 @sm/presets:h-8 @sm/presets:w-full @3xl/presets:h-9 @3xl/presets:w-16"
                     aria-hidden
                   >
                     {preset.swatches.map((color, index) => (
@@ -282,16 +290,19 @@ export function AppearanceSettingsPage() {
                       />
                     ))}
                   </span>
-                  <span className="min-w-0 flex-1 truncate text-sm font-medium">
-                    {preset.name}
-                  </span>
-                  <span
-                    className={cn(
-                      "flex size-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-[opacity,scale] duration-150",
-                      selected ? "scale-100 opacity-100" : "scale-75 opacity-0"
-                    )}
-                  >
-                    <CheckIcon className="size-3" strokeWidth={3} />
+                  <span className="flex min-w-0 flex-1 items-center gap-2">
+                    <span className="min-w-0 flex-1 truncate text-sm font-medium">
+                      {preset.name}
+                    </span>
+                    <span
+                      className={cn(
+                        // Stacked tiles carry the tick on the swatch, so the name keeps the full width.
+                        "flex size-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-card transition-[opacity,scale] duration-150 @sm/presets:absolute @sm/presets:end-4 @sm/presets:top-4.5 @3xl/presets:static @3xl/presets:ring-0",
+                        selected ? "scale-100 opacity-100" : "scale-75 opacity-0"
+                      )}
+                    >
+                      <CheckIcon className="size-3" strokeWidth={3} />
+                    </span>
                   </span>
                 </button>
               )
@@ -468,6 +479,6 @@ export function AppearanceSettingsPage() {
           </Row>
         </div>
       </SettingsCard>
-    </>
+    </div>
   )
 }

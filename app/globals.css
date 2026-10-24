@@ -180,3 +180,11 @@
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
+
+/* The header trail shows only the current page below lg, so it never wraps beside the header buttons. */
+@media (width < 64rem) {
+  header [data-slot="breadcrumb-item"]:not(:last-child),
+  header [data-slot="breadcrumb-separator"] {
+    display: none;
+  }
+}
