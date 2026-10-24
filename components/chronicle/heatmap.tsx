@@ -43,7 +43,7 @@ export function Heatmap({
             {row.map((value, x) => (
               <span key={x} className="flex justify-center" title={`${rows[y]} ${columns[x]}: ${format(value)}`}>
                 <span
-                  className="aspect-square w-full max-w-6 rounded-[4px]"
+                  className="aspect-square w-full max-w-8 rounded-[4px]"
                   style={{ backgroundColor: value === 0 ? "var(--muted)" : `color-mix(in oklch, var(--chart-lead) ${Math.round(12 + (value / max) * 88)}%, var(--muted))` }}
                 />
               </span>

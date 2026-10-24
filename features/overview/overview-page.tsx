@@ -431,7 +431,7 @@ function UsageWidget() {
     <Widget>
       <WidgetHeader title="Product usage" icon={LayersIcon} />
       <WidgetValue value={formatNumber(total * 100, { compact: true })} delta={null} caption="sessions, week of 12 Oct" />
-      <Heatmap rows={USAGE_DAYS} columns={USAGE_HOURS} values={USAGE} format={(value) => `${formatNumber(value * 100)} sessions`} label="Sessions by weekday and two-hour block" className="px-(--card-spacing)" />
+      <Heatmap rows={USAGE_DAYS} columns={USAGE_HOURS} values={USAGE} format={(value) => `${formatNumber(value * 100)} sessions`} label="Sessions by weekday and two-hour block" className="max-w-2xl px-(--card-spacing)" />
       <dl className="grid grid-cols-2 gap-3 px-(--card-spacing) text-xs">
         <div className="flex flex-col gap-0.5">
           <dt className="text-muted-foreground">Busiest</dt>
