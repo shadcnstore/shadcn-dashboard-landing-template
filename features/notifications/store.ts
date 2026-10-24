@@ -28,7 +28,8 @@ function seedNotifications(): InboxNotification[] {
         id: entry.id,
         title,
         body: `${entry.detail}${money}`,
-        href: `/users?account=${entry.accountId}`,
+        // A cancelled account has no users left, so its alert opens Analytics instead.
+        href: entry.kind === "churn" ? "/analytics" : `/users?account=${entry.accountId}`,
         read: index >= 6,
         at: entry.at,
         category: entry.kind === "payment_failed" || entry.kind === "churn" ? "risk" : "revenue",

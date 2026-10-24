@@ -8,7 +8,7 @@
 // then the placeholder page for dynamic routes (`<route>/_`), then 404.
 import { createServer } from "node:http"
 import { readFile, stat } from "node:fs/promises"
-import { extname, join, normalize } from "node:path"
+import { extname, join, normalize, sep } from "node:path"
 import { gzipSync } from "node:zlib"
 
 const ROOT = join(process.cwd(), "out")
@@ -60,7 +60,7 @@ async function resolve(path) {
   }
   for (const candidate of candidates) {
     const file = normalize(join(ROOT, candidate))
-    if (file.startsWith(ROOT) && (await isFile(file))) {
+    if ((file === ROOT || file.startsWith(ROOT + sep)) && (await isFile(file))) {
       return file
     }
   }
@@ -73,7 +73,13 @@ createServer(async (request, response) => {
     response.writeHead(302, { location: `${BASE}/` }).end()
     return
   }
-  const path = decodeURIComponent(url.pathname.slice(BASE.length)) || "/"
+  let path
+  try {
+    path = decodeURIComponent(url.pathname.slice(BASE.length)) || "/"
+  } catch {
+    response.writeHead(400).end("Bad request")
+    return
+  }
   const file = await resolve(path)
   if (!file) {
     const notFound = join(ROOT, "404.html")

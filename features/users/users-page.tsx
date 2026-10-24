@@ -115,7 +115,8 @@ export function UsersPage() {
   )
 
   const removeUsers = async (ids: string[]) => {
-    const rows = (users.data?.rows ?? []).filter((row) => ids.includes(row.id) && row.role !== "owner")
+    // Read each user from the adapter, not the visible page: a selection can span pages.
+    const rows = (await Promise.all(ids.map((id) => adapter.get("users", id)))).filter((row) => row.role !== "owner")
     if (rows.length === 0) {
       toast.add({ type: "error", title: "Owners cannot be removed", description: "Transfer ownership first." })
       return

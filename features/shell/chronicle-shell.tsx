@@ -15,8 +15,8 @@ import { CommandMenuProvider, type CommandAction, type CommandSearchResult } fro
 import { NotificationBell } from "@/kit/notifications/notification-bell"
 import { AppShell } from "@/kit/shell/app-shell"
 import { ShortcutsProvider, useShortcutsHelp } from "@/kit/shortcuts/shortcuts"
-import { adapter } from "@/lib/data"
-import { workspace } from "@/data/generate"
+import { useList } from "@/kit/data/hooks"
+import { adapter, type Resources } from "@/lib/data"
 
 /**
  * Chronicle's frame: the Dashboard Kit shell (sidebar or top nav, customizer,
@@ -24,17 +24,20 @@ import { workspace } from "@/data/generate"
  * it shows comes from config/nav.ts, config/site.ts and lib/data.ts.
  */
 
+const OPEN_TASKS = { pageSize: 1, filters: { status: ["todo", "in_progress"] } }
+
 const LINKS = [...NAV.flatMap((group) => group.items), ...SECONDARY_NAV]
-const TODO_TASKS = workspace().tasks.filter((task) => task.status === "todo" || task.status === "in_progress").length
 
 function Frame({ children }: { children: React.ReactNode }) {
   const items = useNotifications((state) => state.items)
   const markRead = useNotifications((state) => state.markRead)
+  // Open work, through the adapter like every screen, so it follows the board.
+  const openTasks = useList<Resources, "tasks">("tasks", OPEN_TASKS).data?.total ?? 0
   const unreadMail = useMail((state) => state.mails.filter((mail) => !mail.read && mail.folder === "inbox").length)
   return (
     <AppShell
       config={SITE}
-      badges={{ tasks: TODO_TASKS, mail: unreadMail }}
+      badges={{ tasks: openTasks, mail: unreadMail }}
       actions={<NotificationBell items={items} onMarkRead={markRead} viewAllHref="/notifications" settingsHref="/settings/notifications" emptyDescription="Payments, cancellations and upgrades appear here." />}
     >
       {children}

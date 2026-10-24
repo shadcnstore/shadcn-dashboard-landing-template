@@ -44,7 +44,8 @@ export const useChat = create<ChatState>((set, get) => ({
       return
     }
     const reply = AUTO_REPLIES[conversation.messages.length % AUTO_REPLIES.length]
-    setTimeout(() => set((state) => ({ typing: [...state.typing, conversationId] })), 600)
+    // Mark the reply as pending at once, so a second quick message does not schedule another.
+    set((state) => ({ typing: [...state.typing, conversationId] }))
     setTimeout(() => {
       set((state) => ({
         typing: state.typing.filter((id) => id !== conversationId),

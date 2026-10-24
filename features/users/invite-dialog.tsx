@@ -27,7 +27,10 @@ export function InviteDialog({ open, onOpenChange, accounts }: { open: boolean; 
 
   const invite = useKitMutation(
     () => {
-      const account = choices.find((candidate) => candidate.id === (accountId || choices[0]?.id))!
+      const account = choices.find((candidate) => candidate.id === (accountId || choices[0]?.id))
+      if (!account) {
+        return Promise.reject(new Error("The accounts are still loading. Try again in a moment."))
+      }
       return adapter.create("users", {
         name: name.trim(),
         email: email.trim().toLowerCase(),
@@ -56,6 +59,8 @@ export function InviteDialog({ open, onOpenChange, accounts }: { open: boolean; 
       onSuccess: () => {
         setName("")
         setEmail("")
+        setAccountId("")
+        setRole("member")
         setSubmitted(false)
         onOpenChange(false)
       },

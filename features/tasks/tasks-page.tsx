@@ -75,7 +75,9 @@ export function TasksPage() {
   const table = useList<Resources, "tasks">("tasks", list.query)
 
   const patch = useKitMutation(
-    ({ id, patch }: TaskPatch) => adapter.update("tasks", id, patch),
+    // A status change goes through tasks.move (to the end of the new column) so both columns are renumbered, as on the board.
+    ({ id, patch }: TaskPatch) =>
+      patch.status ? adapter.action<Task>("tasks", "move", { id, status: patch.status, index: Number.MAX_SAFE_INTEGER }) : adapter.update("tasks", id, patch),
     {
       invalidate: ["tasks"],
       success: (task, input) => ({
