@@ -1,0 +1,143 @@
+/*
+ * Dashboard Kit styles. Import once in the template's globals.css, after
+ * Tailwind and before the template's own theme blocks:
+ *
+ *   @import "tailwindcss";
+ *   @import "tw-animate-css";
+ *   @import "shadcn/tailwind.css";
+ *   @import "../kit/kit.css";
+ *
+ * Three things live here:
+ * 1. Utilities for the tokens the Kit adds to shadcn's (status colours, chart
+ *    lead and line, the page canvas, the heading font). The soft card shadow is
+ *    used as `shadow-(--surface-shadow)`, an arbitrary-variable class, because
+ *    tailwind-merge reads a named `shadow-surface` as a colour and would keep
+ *    it beside an override such as `shadow-md`.
+ * 2. Defaults for the surface tokens, so a template only sets what it changes.
+ *    A template's `:root` and `.dark` blocks come later and win.
+ * 3. The motion tokens and keyframes every Kit micro-interaction uses.
+ *
+ * Colours themselves never live here: the template's globals.css owns them.
+ * See docs/theming.md for the whole contract.
+ */
+
+@theme inline {
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-chart-lead: var(--chart-lead);
+  --color-chart-line: var(--chart-line);
+  --color-page: var(--page);
+  --color-auth-panel: var(--auth-panel);
+  --color-auth-panel-foreground: var(--auth-panel-foreground);
+  --color-auth-panel-live: var(--auth-panel-live);
+  --color-auth-panel-rating: var(--auth-panel-rating);
+  --color-auth-panel-image: var(--auth-panel-image);
+  /* Owned here. A template must not redefine --font-heading in its own @theme
+     (shadcn init writes one): set --heading-font instead. checkGlobalsCss() in
+     kit/theme/contract.ts fails on the override, which would silently win. */
+  --font-heading: var(--heading-font);
+}
+
+:root {
+  /* The lead chart series is the primary colour unless a theme sets it. */
+  --chart-lead: var(--primary);
+  /* A line over lead columns: the lead hue pulled halfway to the text colour. */
+  --chart-line: color-mix(in oklab, var(--chart-lead) 50%, var(--foreground));
+  /* The content canvas behind cards. */
+  --page: color-mix(in oklab, var(--muted) 40%, transparent);
+  /* The soft card shadow (Tailwind's shadow-xs). Set it to none for flat, bordered themes. */
+  --surface-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  /* A raised card, such as the highlighted plan. Set it to none with --surface-shadow for a flat theme. */
+  --surface-shadow-raised: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  /* Page, card and hero titles. Point it at a display face to restyle every heading. */
+  --heading-font: var(--font-sans);
+  /* The auth brand panel: its own small palette, dark by default, sitting on the shader. */
+  --auth-panel: #000;
+  --auth-panel-foreground: #fff;
+  --auth-panel-live: oklch(76.5% 0.177 163.223);
+  --auth-panel-rating: oklch(87.9% 0.169 91.605);
+  --auth-panel-image: #fff;
+}
+
+/*
+ * Motion. One set of tokens for every micro-interaction (transitions.dev
+ * values): 250ms smooth-out for position and size, 150ms for swaps, a soft
+ * bounce for things that pop in. prefers-reduced-motion turns them off.
+ */
+@theme {
+  --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.34, 1.36, 0.64, 1);
+  --animate-shake: shake 320ms var(--ease-smooth-out);
+  --animate-pop: pop 250ms var(--ease-pop);
+  --animate-rise: rise 200ms var(--ease-smooth-out);
+  /* Like button (transitions.dev "like-button"): a squash-and-spring pop and an 8-dot burst. Hearts stay red in every theme. */
+  --color-like: oklch(0.63 0.24 8);
+  --animate-like-pop: like-pop 350ms cubic-bezier(0.34, 1.96, 0.64, 1);
+  --animate-like-burst: like-burst 600ms ease-out forwards;
+
+  /* Auth showcase: feeds that loop seamlessly (content is doubled; half a gap closes the seam) and a headline that rises in. */
+  @keyframes auth-marquee-y {
+    to { translate: 0 calc(-50% - 6px); }
+  }
+  @keyframes auth-marquee-x {
+    to { translate: calc(-50% - 6px) 0; }
+  }
+  @keyframes auth-headline {
+    from { opacity: 0; translate: 0 12px; filter: blur(6px); }
+  }
+  @keyframes like-pop {
+    0% { scale: 1; }
+    30% { scale: 0.82; }
+    100% { scale: 1; }
+  }
+  @keyframes like-burst {
+    0% { opacity: 0; transform: translate(0, 0) scale(0.4); }
+    20% { opacity: 1; transform: translate(calc(var(--px) * 0.25), calc(var(--py) * 0.25)) scale(1); }
+    100% { opacity: 0; transform: translate(var(--px), var(--py)) scale(var(--p-end-scale, 0.6)); }
+  }
+
+  @keyframes shake {
+    0%, 100% { translate: 0; }
+    20%, 60% { translate: -4px; }
+    40%, 80% { translate: 4px; }
+  }
+  @keyframes pop {
+    from { scale: 0.4; opacity: 0; }
+  }
+  @keyframes rise {
+    from { translate: 0 3px; opacity: 0; }
+  }
+}
+
+@layer base {
+  /* A field shakes once each time it becomes invalid, so a failed submit is felt as well as read. */
+  [aria-invalid="true"] {
+    @apply animate-shake;
+  }
+  /* Theme and mode changes cross-fade (see kit/customizer); everything else switches instantly. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 250ms;
+    animation-timing-function: var(--ease-smooth-out);
+  }
+  /* The open customizer is not cross-faded: its new state shows at once, so the pill under the click slides. */
+  ::view-transition-old(customizer) {
+    display: none;
+  }
+  ::view-transition-new(customizer) {
+    animation: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

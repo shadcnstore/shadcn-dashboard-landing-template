@@ -1,0 +1,182 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "../kit/kit.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Chronicle's theme: cool slate neutrals with one cobalt accent. Every surface
+ * carries the slate hue (page, card, muted, border, sidebar, charts), so the
+ * theme reads as its own world, not shadcn neutral with a blue button.
+ * Charts: the lead series is --chart-lead, then --chart-2 and --chart-3.
+ * config/theme.test.ts checks every token pair against the Kit contract.
+ */
+
+@theme inline {
+    --font-sans: var(--font-sans);
+    --font-mono: var(--font-mono);
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --radius: 0.625rem;
+  /* The customizer swaps --font-sans for another of THEME.fonts; headings follow it (kit.css --heading-font). */
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --background: oklch(0.974 0.006 255);
+  --foreground: oklch(0.215 0.028 264);
+  --card: oklch(0.997 0.002 255);
+  --card-foreground: oklch(0.215 0.028 264);
+  --popover: oklch(0.997 0.002 255);
+  --popover-foreground: oklch(0.215 0.028 264);
+  --primary: oklch(0.515 0.19 263);
+  --primary-foreground: oklch(0.985 0.006 255);
+  --secondary: oklch(0.948 0.01 255);
+  --secondary-foreground: oklch(0.215 0.028 264);
+  --muted: oklch(0.955 0.008 255);
+  --muted-foreground: oklch(0.495 0.03 262);
+  --accent: oklch(0.948 0.024 262);
+  --accent-foreground: oklch(0.42 0.17 263);
+  --destructive: oklch(0.53 0.2 25);
+  --border: oklch(0.905 0.012 258);
+  --input: oklch(0.88 0.014 258);
+  --ring: oklch(0.515 0.19 263);
+  --success: oklch(0.455 0.115 155);
+  --success-foreground: oklch(0.985 0.006 255);
+  --warning: oklch(0.56 0.12 68);
+  --warning-foreground: oklch(0.4 0.09 62);
+  --info: oklch(0.455 0.12 240);
+  --info-foreground: oklch(0.985 0.006 255);
+  --chart-1: oklch(0.515 0.19 263);
+  --chart-2: oklch(0.62 0.12 228);
+  --chart-3: oklch(0.72 0.06 262);
+  --chart-4: oklch(0.8 0.04 255);
+  --chart-5: oklch(0.88 0.02 255);
+  --chart-lead: var(--primary);
+  --chart-line: color-mix(in oklch, var(--chart-lead) 60%, var(--foreground));
+  /* Kit surface tokens: a slate canvas and white cards with a hairline lift. */
+  --page: var(--background);
+  --surface-shadow: 0 0 0 1px color-mix(in oklch, var(--foreground) 5%, transparent), 0 1px 2px color-mix(in oklch, var(--foreground) 6%, transparent);
+  --surface-shadow-raised: 0 0 0 1px color-mix(in oklch, var(--foreground) 6%, transparent), 0 12px 28px -18px color-mix(in oklch, oklch(0.3 0.08 263) 55%, transparent);
+  --auth-panel: oklch(0.24 0.06 264);
+  --auth-panel-foreground: oklch(0.97 0.01 255);
+  --auth-panel-live: oklch(0.78 0.14 160);
+  --auth-panel-rating: oklch(0.85 0.13 85);
+  --auth-panel-image: oklch(0.97 0.01 255);
+  --sidebar: oklch(0.962 0.008 255);
+  --sidebar-foreground: oklch(0.215 0.028 264);
+  --sidebar-primary: oklch(0.515 0.19 263);
+  --sidebar-primary-foreground: oklch(0.985 0.006 255);
+  --sidebar-accent: oklch(0.93 0.014 258);
+  --sidebar-accent-foreground: oklch(0.215 0.028 264);
+  --sidebar-border: oklch(0.905 0.012 258);
+  --sidebar-ring: oklch(0.515 0.19 263);
+}
+
+.dark {
+  --background: oklch(0.165 0.016 264);
+  --foreground: oklch(0.95 0.008 255);
+  --card: oklch(0.205 0.019 264);
+  --card-foreground: oklch(0.95 0.008 255);
+  --popover: oklch(0.225 0.02 264);
+  --popover-foreground: oklch(0.95 0.008 255);
+  --primary: oklch(0.67 0.16 262);
+  --primary-foreground: oklch(0.16 0.03 264);
+  --secondary: oklch(0.255 0.02 264);
+  --secondary-foreground: oklch(0.95 0.008 255);
+  --muted: oklch(0.245 0.019 264);
+  --muted-foreground: oklch(0.72 0.025 258);
+  --accent: oklch(0.28 0.05 263);
+  --accent-foreground: oklch(0.86 0.07 262);
+  --destructive: oklch(0.67 0.18 24);
+  --border: oklch(0.29 0.02 264);
+  --input: oklch(0.32 0.022 264);
+  --ring: oklch(0.67 0.16 262);
+  --success: oklch(0.76 0.13 155);
+  --success-foreground: oklch(0.17 0.03 155);
+  --warning: oklch(0.8 0.12 78);
+  --warning-foreground: oklch(0.2 0.03 78);
+  --info: oklch(0.76 0.1 235);
+  --info-foreground: oklch(0.17 0.03 235);
+  --chart-1: oklch(0.67 0.16 262);
+  --chart-2: oklch(0.74 0.11 225);
+  --chart-3: oklch(0.6 0.06 262);
+  --chart-4: oklch(0.47 0.04 262);
+  --chart-5: oklch(0.38 0.03 262);
+  --surface-shadow: 0 0 0 1px color-mix(in oklch, white 6%, transparent), 0 1px 2px color-mix(in oklch, black 40%, transparent);
+  --surface-shadow-raised: 0 0 0 1px color-mix(in oklch, white 8%, transparent), 0 16px 36px -20px color-mix(in oklch, black 75%, transparent);
+  --auth-panel: oklch(0.2 0.04 264);
+  --sidebar: oklch(0.15 0.015 264);
+  --sidebar-foreground: oklch(0.95 0.008 255);
+  --sidebar-primary: oklch(0.67 0.16 262);
+  --sidebar-primary-foreground: oklch(0.16 0.03 264);
+  --sidebar-accent: oklch(0.245 0.02 264);
+  --sidebar-accent-foreground: oklch(0.95 0.008 255);
+  --sidebar-border: oklch(0.27 0.02 264);
+  --sidebar-ring: oklch(0.67 0.16 262);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+    /* Matches the Kit customizer's default scale (md, 16px), so the server HTML and the hydrated page agree. */
+    font-size: 16px;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+}
+
+@utility num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
