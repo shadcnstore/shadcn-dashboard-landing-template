@@ -16,7 +16,7 @@ Dev server: `PORT=3300 pnpm dev`, http://localhost:3300 (not 127.0.0.1). Demo bu
 - [x] Website (local commits): nginx 301s, v3 sales page migration, keyword map, seeder, JSON-LD.
 
 ## Next
-- [ ] Code review (high) findings, then one medium pass
+- [x] Code review (high): 8 of 10 fixed (7fac96a), 2 kept with reasons in the plan; medium confirming pass
 - [ ] Final screenshots review; plan and issue sync
 
 ## Kit findings (for upstream)
