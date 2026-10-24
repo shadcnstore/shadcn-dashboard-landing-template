@@ -14,7 +14,7 @@ export const DEMO_NOW: Date | null = new Date("2026-10-20T12:00:00Z")
 export const DATA_NOW: Date = DEMO_NOW ?? new Date()
 
 /** Set by startClock() once the page has hydrated; until then the clock reads DEMO_NOW exactly. */
-let startedAt: number | null = null
+let startedAt: number | null = typeof window !== "undefined" && (window as { __chronicleClock?: number }).__chronicleClock ? Date.now() : null
 
 /**
  * Lets the demo clock run on from now. Called once after hydration
@@ -23,6 +23,8 @@ let startedAt: number | null = null
  */
 export function startClock(): void {
   startedAt ??= Date.now()
+  // Remembered on the window, so a hot reload of this module in development keeps the clock running.
+  ;(window as { __chronicleClock?: number }).__chronicleClock = startedAt
 }
 
 export function currentTime(): Date {

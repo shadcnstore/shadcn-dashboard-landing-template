@@ -84,14 +84,22 @@ export function MrrMovementChart({
   // is merged into its neighbour on the same side: each stack still adds up to the real total
   // (and to the net line), and the tooltip lists every movement on its own.
   const tallest = Math.max(1, ...raw.map((row) => Math.max(row.newCents + row.expansionCents, -(row.contractionCents + row.churnCents))))
-  const thin = (cents: number) => Math.abs(cents) < tallest * 0.012
+  const thin = (cents: number) => cents !== 0 && Math.abs(cents) < tallest * 0.012
+  /** Two segments on one side: a thin one joins the other, unless the other is empty (then it is the whole bar). */
+  const merge = <A extends string, B extends string>(a: A, aCents: number, b: B, bCents: number) => {
+    if (thin(aCents) && bCents !== 0 && !thin(bCents)) {
+      return { [a]: 0, [b]: aCents + bCents } as Record<A | B, number>
+    }
+    if (thin(bCents) && aCents !== 0 && !thin(aCents)) {
+      return { [a]: aCents + bCents, [b]: 0 } as Record<A | B, number>
+    }
+    return { [a]: aCents, [b]: bCents } as Record<A | B, number>
+  }
   const data = months.map((month, index) => {
     const { newCents, expansionCents, contractionCents, churnCents } = raw[index]
     const plotted = {
-      newCents: thin(expansionCents) ? newCents + expansionCents : newCents,
-      expansionCents: thin(expansionCents) ? 0 : expansionCents,
-      contractionCents: thin(contractionCents) ? 0 : contractionCents,
-      churnCents: thin(contractionCents) ? churnCents + contractionCents : churnCents,
+      ...merge("newCents", newCents, "expansionCents", expansionCents),
+      ...merge("contractionCents", contractionCents, "churnCents", churnCents),
     }
     return {
       label: monthLabel(month.month),

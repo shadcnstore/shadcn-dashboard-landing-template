@@ -35,6 +35,9 @@ const NAMED: Record<string, number> = {
   "Priya Raman": 14, "Tomas Lindqvist": 28, "Rosa Osei": 17, "Samuel Alvarez": 20, "Isla Whitfield": 16, "Daniel Brennan": 18,
 }
 
+/** Portraits reserved for named people, so a generated customer never wears a teammate's face. */
+const RESERVED = new Set(Object.values(NAMED))
+
 function hash(text: string): number {
   let value = 2166136261
   for (let index = 0; index < text.length; index++) {
@@ -51,7 +54,7 @@ export function avatarFor(name: string): string | null {
     return path(named)
   }
   const first = name.trim().split(/\s+/)[0] ?? ""
-  const pool = FEMININE.has(first) ? POOLS.f : MASCULINE.has(first) ? POOLS.m : EITHER.has(first) ? [...POOLS.f, ...POOLS.m] : null
+  const pool = (FEMININE.has(first) ? POOLS.f : MASCULINE.has(first) ? POOLS.m : EITHER.has(first) ? [...POOLS.f, ...POOLS.m] : null)?.filter((number) => !RESERVED.has(number))
   if (!pool || pool.length === 0) {
     return null
   }

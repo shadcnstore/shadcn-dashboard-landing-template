@@ -60,7 +60,7 @@ export function GoFurtherPage() {
             </ul>
             <div className="flex flex-wrap gap-2">
               <OutLink href={featured.href} placement="further-featured" target={featured.slug}>
-                See {featured.name}, {featured.price}
+                See {featured.name}, ${featured.price}
               </OutLink>
               {featured.demo && (
                 <OutLink href={featured.demo} placement="further-demo" target={featured.slug} variant="outline">

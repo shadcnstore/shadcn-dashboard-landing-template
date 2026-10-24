@@ -49,7 +49,7 @@ const schema = z.object({
     .regex(/^[A-Za-z]{0,2}$/, "Use one or two letters, or leave it empty."),
 })
 
-/** The signed-in user's photo (config/site.ts). It does not change with the name field; the initials show where there is no photo. */
+/** The signed-in user's photo (config/site.ts). Initials typed in the form replace it; clear them to bring the photo back. */
 const PHOTO = SITE.user.avatar
 
 function ProfileAvatar({
@@ -63,7 +63,7 @@ function ProfileAvatar({
     (profile.initials || initialsOf(profile.name)).toUpperCase() || "?"
   return (
     <Avatar className={cn("size-16 text-lg ring-4 ring-primary/10", className)}>
-      {PHOTO && <AvatarImage src={PHOTO} alt="" />}
+      {PHOTO && !profile.initials.trim() && <AvatarImage src={PHOTO} alt="" />}
       <AvatarFallback className="bg-gradient-to-br from-primary to-chart-2 font-semibold text-primary-foreground">
         {letters}
       </AvatarFallback>
@@ -236,7 +236,7 @@ export function ProfileSettingsPage() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
                   <FieldLabel htmlFor="profile-initials">
-                    Initials (shown without a photo)
+                    Initials instead of a photo
                   </FieldLabel>
                   <Input
                     id="profile-initials"

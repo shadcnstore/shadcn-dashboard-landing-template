@@ -38,7 +38,7 @@ export function OutLink({
 export function StatusBadge({ template }: { template: PaidTemplate }) {
   return template.status === "live" ? (
     <Badge variant="secondary" className="font-mono tabular-nums">
-      {template.price} one-time
+      ${template.price} one-time
     </Badge>
   ) : (
     <Badge variant="outline">Coming soon · in Pro</Badge>
@@ -120,7 +120,7 @@ type Cell = boolean | string
 
 /** The cheapest live template, read from the config, so launching a cheaper one updates the table. */
 const FROM_PRICE = (() => {
-  const prices = PAID_TEMPLATES.filter((template) => template.status === "live" && template.price).map((template) => Number(template.price!.replace(/[^0-9.]/g, "")))
+  const prices = PAID_TEMPLATES.flatMap((template) => (template.status === "live" && template.price ? [template.price] : []))
   return prices.length ? `From $${Math.min(...prices)}` : "Coming soon"
 })()
 

@@ -48,6 +48,7 @@ import { EmptyState, ErrorState } from "@/kit/ui-patterns/query-state"
 import { DATA_NOW } from "@/lib/clock"
 import { PersonAvatar } from "@/components/chronicle/person-avatar"
 import { adapter, type Resources } from "@/lib/data"
+import { cn } from "@/lib/utils"
 
 import { InviteDialog } from "./invite-dialog"
 import { UserSheet } from "./user-sheet"
@@ -77,32 +78,46 @@ const VIEW_DESCRIPTIONS: Record<string, string> = {
   "over-limit": "people in accounts using more seats than they pay for",
 }
 
-type WidthBand = "narrow" | "medium" | "wide"
-
-const DEFAULT_HIDDEN: Record<WidthBand, string[]> = {
-  narrow: ["createdAt", "account", "seats", "plan", "lastSeenAt"],
-  medium: ["createdAt", "plan", "lastSeenAt"],
-  wide: ["createdAt"],
+/**
+ * Columns that start hidden on narrower screens. CSS hides them for the first
+ * paint (before any script runs); after hydration the same columns are part of
+ * the table's hidden list, so the column menu tells the truth, and showing one
+ * from the menu overrides the CSS.
+ */
+const RESPONSIVE: Record<string, string> = {
+  account: "hidden lg:table-cell",
+  seats: "hidden lg:table-cell",
+  plan: "hidden xl:table-cell",
+  lastSeenAt: "hidden xl:table-cell",
 }
 
+type WidthBand = "narrow" | "medium" | "wide"
+
+const BAND_HIDDEN: Record<WidthBand, string[]> = {
+  narrow: ["account", "seats", "plan", "lastSeenAt"],
+  medium: ["plan", "lastSeenAt"],
+  wide: [],
+}
+
+const WIDE = "(min-width: 1280px)"
+const MEDIUM = "(min-width: 1024px)"
+
 function band(): WidthBand {
-  return window.matchMedia("(min-width: 1280px)").matches
+  return window.matchMedia(WIDE).matches
     ? "wide"
-    : window.matchMedia("(min-width: 1024px)").matches
+    : window.matchMedia(MEDIUM).matches
       ? "medium"
       : "narrow"
 }
 
 function subscribe(onChange: () => void) {
-  const queries = ["(min-width: 1280px)", "(min-width: 1024px)"].map((query) =>
-    window.matchMedia(query)
-  )
+  const queries = [WIDE, MEDIUM].map((query) => window.matchMedia(query))
   queries.forEach((query) => query.addEventListener("change", onChange))
   return () =>
     queries.forEach((query) => query.removeEventListener("change", onChange))
 }
 
-/** The viewport's width band; the server assumes a wide screen. */
+/** The viewport's width band (Tailwind's lg and xl); the server assumes wide, and the CSS covers the first paint. */
 function useWidthBand(): WidthBand {
   return useSyncExternalStore(subscribe, band, () => "wide")
 }
@@ -137,14 +152,31 @@ export function UsersPage() {
   const params = useSearchParams()
   const list = useListState({ filters: FILTERS, defaultSort: "-lastSeenAt" })
   const [selection, setSelection] = useState<string[]>([])
-  // Columns start hidden by width (the sidebar leaves little room below lg); the column menu can still show them.
   const width = useWidthBand()
-  const [hiddenByBand, setHiddenByBand] = useState<
-    Partial<Record<WidthBand, string[]>>
-  >({})
-  const hidden = hiddenByBand[width] ?? DEFAULT_HIDDEN[width]
-  const setHidden = (next: string[]) =>
-    setHiddenByBand((current) => ({ ...current, [width]: next }))
+  const [userHidden, setUserHidden] = useState<string[]>(["createdAt"])
+  // Responsive columns the person chose to show from the column menu: they win over the width default.
+  const [shown, setShown] = useState<string[]>([])
+  const hidden = [
+    ...new Set([
+      ...userHidden,
+      ...BAND_HIDDEN[width].filter((id) => !shown.includes(id)),
+    ]),
+  ]
+  const setHidden = (next: string[]) => {
+    setShown((current) => [
+      ...new Set([
+        ...current.filter((id) => !next.includes(id)),
+        ...hidden.filter((id) => id in RESPONSIVE && !next.includes(id)),
+      ]),
+    ])
+    setUserHidden(
+      next.filter(
+        (id) => !(BAND_HIDDEN[width].includes(id) && !shown.includes(id))
+      )
+    )
+  }
+  const responsive = (id: string) =>
+    shown.includes(id) ? "table-cell" : RESPONSIVE[id]
   const [open, setOpen] = useState<string | null>(null)
   const [inviting, setInviting] = useState(params.get("invite") === "1")
 
@@ -319,6 +351,7 @@ export function UsersPage() {
       },
       {
         id: "account",
+        className: responsive("account"),
         header: "Account",
         sortId: "accountName",
         cell: (row) => (
@@ -346,7 +379,7 @@ export function UsersPage() {
       {
         id: "plan",
         header: "Plan",
-        className: "w-24",
+        className: cn("w-24", responsive("plan")),
         cell: (row) => <PlanBadge plan={row.plan} />,
       },
       {
@@ -358,7 +391,7 @@ export function UsersPage() {
       {
         id: "seats",
         header: "Seats",
-        className: "w-32",
+        className: cn("w-32", responsive("seats")),
         cell: (row) => {
           const account = accountById.get(row.accountId)
           return account ? <SeatMeter account={account} /> : null
@@ -369,7 +402,7 @@ export function UsersPage() {
         header: "Last active",
         sortId: "lastSeenAt",
         sortDescFirst: true,
-        className: "w-32",
+        className: cn("w-32", responsive("lastSeenAt")),
         cell: (row) => (
           <span className="text-muted-foreground">
             {row.lastSeenAt
@@ -462,9 +495,9 @@ export function UsersPage() {
         ),
       },
     ],
-    // The mutations are stable objects from TanStack; the table only needs to rebuild when seats change.
+    // The mutations are stable objects from TanStack; the table rebuilds when seats or the shown columns change.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [accountById]
+    [accountById, shown]
   )
 
   const view = currentView(list.filters)

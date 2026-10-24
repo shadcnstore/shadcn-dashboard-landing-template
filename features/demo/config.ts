@@ -22,8 +22,8 @@ export interface PaidTemplate {
   href: string
   /** "live" shows the price and the live demo; "soon" shows "Coming soon, included in Pro". */
   status: TemplateStatus
-  /** One-time price, live templates only. */
-  price?: string
+  /** One-time price in US dollars, live templates only. */
+  price?: number
   demo?: string
   /** A real screenshot, bundled for the demo (public/demo/products). */
   image: string
@@ -44,7 +44,7 @@ export const PAID_TEMPLATES: PaidTemplate[] = [
     adds: ["Orders, returns and fulfilment", "Products, inventory and collections", "A store assistant that drafts changes for your approval", "Team, billing and API-key settings"],
     href: `${STORE}/templates/dashboards/emporium`,
     status: "live",
-    price: "$79",
+    price: 79,
     demo: "https://demo.shadcnstore.com/emporium/",
     image: `${IMAGES}/emporium.webp`,
   },
