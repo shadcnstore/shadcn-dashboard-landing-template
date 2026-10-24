@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { PageHeader } from "@/kit/ui-patterns/page-header"
+import { EmptyState } from "@/kit/ui-patterns/query-state"
 
 import { PAID_SCREENS, STORE, type PaidScreen } from "./config"
 import { trackFunnel } from "./track"
@@ -29,10 +30,7 @@ export function PaidScreenPreview({ screen }: { screen: PaidScreen }) {
             // eslint-disable-next-line @next/next/no-img-element
             <img src={info.image} alt={info.alt} width={1280} height={800} loading="lazy" className="w-full rounded-xl border" />
           ) : (
-            <div className="flex aspect-[16/7] items-center justify-center rounded-xl border border-dashed text-sm text-muted-foreground">
-              <LockKeyholeIcon className="me-2 size-4" aria-hidden />
-              No preview image for this screen yet
-            </div>
+            <EmptyState icon={LockKeyholeIcon} className="border border-dashed" title="Not in the free template" description="Open Emporium's live demo to try this screen." />
           )}
           <div className="flex flex-wrap gap-2">
             <Link href="/go-further" className={buttonVariants()} onClick={() => trackFunnel("preview-further", { target: screen })}>

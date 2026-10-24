@@ -1,5 +1,6 @@
 "use client"
 
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { PLANS } from "@/data/generate"
@@ -18,9 +19,9 @@ export function Initials({ name, className }: { name: string; className?: string
     .slice(0, 2)
     .join("")
   return (
-    <span aria-hidden className={cn("flex size-8 shrink-0 items-center justify-center rounded-full bg-accent text-xs font-semibold text-accent-foreground", className)}>
-      {letters}
-    </span>
+    <Avatar aria-hidden className={cn("size-8", className)}>
+      <AvatarFallback className="bg-accent text-xs font-semibold text-accent-foreground">{letters}</AvatarFallback>
+    </Avatar>
   )
 }
 

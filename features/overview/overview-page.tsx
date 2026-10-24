@@ -1,6 +1,6 @@
 "use client"
 
-import { CreditCardIcon, DownloadIcon, LayersIcon, RefreshCwIcon, UsersIcon, UserPlusIcon } from "lucide-react"
+import { CheckCircle2Icon, CreditCardIcon, DownloadIcon, LayersIcon, RefreshCwIcon, UsersIcon, UserPlusIcon } from "lucide-react"
 import Link from "next/link"
 import { useMemo, useState, useSyncExternalStore } from "react"
 
@@ -17,7 +17,8 @@ import { downloadCsv } from "@/kit/data/csv"
 import { change, formatMoney, formatNumber, formatPercent } from "@/kit/data/format"
 import { useKitMutation, useList } from "@/kit/data/hooks"
 import { PageHeader } from "@/kit/ui-patterns/page-header"
-import { ErrorState } from "@/kit/ui-patterns/query-state"
+import { EmptyState, ErrorState } from "@/kit/ui-patterns/query-state"
+import { Initials } from "@/features/users/user-parts"
 import { Segmented } from "@/kit/ui-patterns/segmented"
 import { StatusBadge } from "@/kit/ui-patterns/status-badge"
 import { PeriodHeader, Widget, WidgetHeader, WidgetValue } from "@/kit/widgets/widget"
@@ -343,7 +344,7 @@ function AttentionWidget() {
           ))}
         </div>
       ) : list.data.rows.length === 0 ? (
-        <p className="px-(--card-spacing) pb-(--card-spacing) text-sm text-muted-foreground">Nothing needs you. Every card went through and every account is within its seats.</p>
+        <EmptyState icon={CheckCircle2Icon} className="mx-(--card-spacing) mb-(--card-spacing)" title="Nothing needs you" description="Every card went through and every account is within its seats." />
       ) : (
         <ul className="flex flex-col border-t">
           {list.data.rows.map((account) => {
@@ -351,12 +352,7 @@ function AttentionWidget() {
             const pending = (pastDue ? retry : raise).isPending && (pastDue ? retry : raise).variables?.id === account.id
             return (
               <li key={account.id} className="flex items-center gap-3 border-b px-(--card-spacing) py-3 last:border-b-0">
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted font-mono text-xs font-medium">
-                  {account.name
-                    .split(" ")
-                    .map((word) => word[0])
-                    .join("")}
-                </span>
+                <Initials name={account.name} className="size-9" />
                 <div className="flex min-w-0 flex-1 flex-col">
                   <Link href={`/users?account=${account.id}`} className="truncate text-sm font-medium hover:underline">
                     {account.name}

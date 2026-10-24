@@ -237,10 +237,12 @@ export function UsersPage() {
               {row.role !== "owner" && (
                 <>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem variant="destructive" onClick={() => removeUsers([row.id])}>
-                    <Trash2Icon />
-                    Remove
-                  </DropdownMenuItem>
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem variant="destructive" onClick={() => removeUsers([row.id])}>
+                      <Trash2Icon />
+                      Remove
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
                 </>
               )}
             </DropdownMenuContent>
