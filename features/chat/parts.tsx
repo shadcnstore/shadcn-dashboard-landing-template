@@ -25,9 +25,10 @@ export function conversationTitle(conversation: Conversation): string {
 
 export function PersonAvatar({ memberId, size = "md", showPresence = false, className }: { memberId: string; size?: "sm" | "md"; showPresence?: boolean; className?: string }) {
   const member = MEMBERS[memberId]
+  const photo = member ? avatarFor(member.name) : null
   return (
     <Avatar className={cn(size === "sm" ? "size-7" : "size-9", className)}>
-      {member && avatarFor(member.name) && <AvatarImage src={avatarFor(member.name)!} alt="" loading="lazy" />}
+      {photo && <AvatarImage src={photo} alt="" loading="lazy" />}
       <AvatarFallback className={cn("font-medium", size === "sm" ? "text-[10px]" : "text-xs", memberId === ME_ID ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary")}>
         {initials(member?.name ?? "?")}
       </AvatarFallback>

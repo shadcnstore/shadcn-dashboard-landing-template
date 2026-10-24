@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-import { PRO, type PaidTemplate } from "./config"
+import { PAID_TEMPLATES, PRO, type PaidTemplate } from "./config"
 import { trackFunnel } from "./track"
 
 /** A link out to shadcnstore.com that records where it was clicked. */
@@ -118,6 +118,12 @@ export function ProBand({ className }: { className?: string }) {
 
 type Cell = boolean | string
 
+/** The cheapest live template, read from the config, so launching a cheaper one updates the table. */
+const FROM_PRICE = (() => {
+  const prices = PAID_TEMPLATES.filter((template) => template.status === "live" && template.price).map((template) => Number(template.price!.replace(/[^0-9.]/g, "")))
+  return prices.length ? `From $${Math.min(...prices)}` : "Coming soon"
+})()
+
 const ROWS: { label: string; free: Cell; single: Cell; pro: Cell }[] = [
   { label: "Shell, customizer, ⌘K, data adapter, tables, charts", free: true, single: true, pro: true },
   { label: "A complete business: its screens and a dataset that reconciles", free: false, single: "One", pro: "All" },
@@ -125,7 +131,7 @@ const ROWS: { label: string; free: Cell; single: Cell; pro: Cell }[] = [
   { label: "Team and roles, billing and plans, API keys", free: false, single: "Dashboards", pro: true },
   { label: "Templates released later", free: false, single: false, pro: true },
   { label: "Premium blocks and the Figma UI kit", free: false, single: false, pro: true },
-  { label: "Price", free: "Free, MIT", single: "From $79", pro: `${PRO.price} one-time` },
+  { label: "Price", free: "Free, MIT", single: FROM_PRICE, pro: `${PRO.price} one-time` },
 ]
 
 function Mark({ value, label }: { value: Cell; label: string }) {

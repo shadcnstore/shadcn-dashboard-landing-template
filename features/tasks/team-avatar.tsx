@@ -53,6 +53,7 @@ export function TeamAvatar({
   tooltip?: boolean
   className?: string
 }) {
+  const photo = member ? avatarFor(member.name) : null
   const avatar = (
     <Avatar
       size={size}
@@ -62,7 +63,7 @@ export function TeamAvatar({
         !tooltip && className
       )}
     >
-      {member && avatarFor(member.name) && <AvatarImage src={avatarFor(member.name)!} alt="" loading="lazy" />}
+      {photo && <AvatarImage src={photo} alt="" loading="lazy" />}
       <AvatarFallback
         className={cn(
           "text-[10px] font-semibold",

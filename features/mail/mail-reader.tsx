@@ -143,6 +143,7 @@ export function MailReader({ mail, onBack }: { mail: Mail | null; onBack?: () =>
   }
 
   const outgoing = mail.folder === "sent" || mail.folder === "drafts"
+  const photo = avatarFor(mail.from.name)
 
   return (
     <article aria-label={mail.subject} className="flex h-full min-h-0 flex-col">
@@ -217,7 +218,7 @@ export function MailReader({ mail, onBack }: { mail: Mail | null; onBack?: () =>
           <h2 className="font-heading text-xl font-semibold tracking-tight text-balance">{mail.subject}</h2>
           <div className="flex items-start gap-3">
             <Avatar className="size-9">
-              {avatarFor(mail.from.name) && <AvatarImage src={avatarFor(mail.from.name)!} alt="" loading="lazy" />}
+              {photo && <AvatarImage src={photo} alt="" loading="lazy" />}
               <AvatarFallback className="bg-primary/10 text-xs font-medium text-primary">{initials(mail.from.name)}</AvatarFallback>
             </Avatar>
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">

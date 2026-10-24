@@ -25,6 +25,16 @@ const POOLS: Record<"f" | "m", number[]> = {
   m: [1, 3, 6, 8, 10, 12, 13, 15, 18, 20, 21, 23, 26, 28, 30, 32],
 }
 
+/**
+ * Named people get a portrait chosen by hand, so no two of them share a face:
+ * Tidewell's team (data/names.ts) and the people on the landing page.
+ */
+const NAMED: Record<string, number> = {
+  "Maya Okafor": 7, "Soren Lindqvist": 3, "Priya Iyer": 4, "Diego Marquez": 6, "Hana Sato": 2, "Tariq Haddad": 26, "Freya Dahl": 22, "Emeka Bello": 1,
+  "Mei Chen": 19, "Rafael Rodriguez": 23, "Ines Moreau": 9, "Kenji Mori": 8, "Maren Thompson": 5, "Felix Mitchell": 15, "Amara Nwosu": 25, "Lucia Garcia": 31,
+  "Priya Raman": 14, "Tomas Lindqvist": 28, "Rosa Osei": 17, "Samuel Alvarez": 20, "Isla Whitfield": 16, "Daniel Brennan": 18,
+}
+
 function hash(text: string): number {
   let value = 2166136261
   for (let index = 0; index < text.length; index++) {
@@ -36,11 +46,18 @@ function hash(text: string): number {
 
 /** The photo for a sample person, or null when there is none (initials are shown instead). */
 export function avatarFor(name: string): string | null {
+  const named = NAMED[name.trim()]
+  if (named) {
+    return path(named)
+  }
   const first = name.trim().split(/\s+/)[0] ?? ""
   const pool = FEMININE.has(first) ? POOLS.f : MASCULINE.has(first) ? POOLS.m : EITHER.has(first) ? [...POOLS.f, ...POOLS.m] : null
   if (!pool || pool.length === 0) {
     return null
   }
-  const number = pool[hash(name) % pool.length]
+  return path(pool[hash(name) % pool.length])
+}
+
+function path(number: number): string {
   return `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/avatars/avatar-${String(number).padStart(2, "0")}.webp`
 }

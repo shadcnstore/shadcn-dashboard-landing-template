@@ -80,16 +80,18 @@ export function MrrMovementChart({
     contractionCents: -month.contractionCents,
     churnCents: -month.churnCents,
   }))
-  // A segment under 1.2% of the tallest stack would draw as a sliver of a pixel or two:
-  // it is left out of the drawing (the tooltip still lists it) so each stack reads as one bar.
+  // A segment under 1.2% of the tallest stack would draw as a sliver of a pixel or two, so it
+  // is merged into its neighbour on the same side: each stack still adds up to the real total
+  // (and to the net line), and the tooltip lists every movement on its own.
   const tallest = Math.max(1, ...raw.map((row) => Math.max(row.newCents + row.expansionCents, -(row.contractionCents + row.churnCents))))
-  const visible = (cents: number) => (Math.abs(cents) < tallest * 0.012 ? 0 : cents)
+  const thin = (cents: number) => Math.abs(cents) < tallest * 0.012
   const data = months.map((month, index) => {
+    const { newCents, expansionCents, contractionCents, churnCents } = raw[index]
     const plotted = {
-      newCents: visible(raw[index].newCents),
-      expansionCents: visible(raw[index].expansionCents),
-      contractionCents: visible(raw[index].contractionCents),
-      churnCents: visible(raw[index].churnCents),
+      newCents: thin(expansionCents) ? newCents + expansionCents : newCents,
+      expansionCents: thin(expansionCents) ? 0 : expansionCents,
+      contractionCents: thin(contractionCents) ? 0 : contractionCents,
+      churnCents: thin(contractionCents) ? churnCents + contractionCents : churnCents,
     }
     return {
       label: monthLabel(month.month),

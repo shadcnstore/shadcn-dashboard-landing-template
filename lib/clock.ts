@@ -13,17 +13,21 @@ export const DEMO_NOW: Date | null = new Date("2026-10-20T12:00:00Z")
 /** The moment the sample data is built from. Never moves. */
 export const DATA_NOW: Date = DEMO_NOW ?? new Date()
 
-const loadedAt = Date.now()
+/** Set by startClock() once the page has hydrated; until then the clock reads DEMO_NOW exactly. */
+let startedAt: number | null = null
+
+/**
+ * Lets the demo clock run on from now. Called once after hydration
+ * (components/data-provider.tsx), so the server render and the first client
+ * render both read DEMO_NOW exactly and relative times ("2 hours ago") match.
+ */
+export function startClock(): void {
+  startedAt ??= Date.now()
+}
 
 export function currentTime(): Date {
   if (!DEMO_NOW) {
     return new Date()
   }
-  // The server renders at DEMO_NOW exactly. A long-lived dev or build process
-  // would otherwise run its clock hours ahead of the browser's, so "7 hours
-  // ago" rendered on the server would hydrate as "8 hours ago".
-  if (typeof window === "undefined") {
-    return new Date(DEMO_NOW.getTime())
-  }
-  return new Date(DEMO_NOW.getTime() + (Date.now() - loadedAt))
+  return new Date(DEMO_NOW.getTime() + (startedAt === null ? 0 : Date.now() - startedAt))
 }

@@ -1,14 +1,35 @@
 "use client"
 
-import { BanIcon, DownloadIcon, MailIcon, MoreHorizontalIcon, SearchIcon, ShieldIcon, Trash2Icon, UserPlusIcon, UsersIcon } from "lucide-react"
+import {
+  BanIcon,
+  DownloadIcon,
+  MailIcon,
+  MoreHorizontalIcon,
+  SearchIcon,
+  ShieldIcon,
+  Trash2Icon,
+  UserPlusIcon,
+  UsersIcon,
+} from "lucide-react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { useMemo, useState } from "react"
+import { useMemo, useState, useSyncExternalStore } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group"
 import { toast } from "@/components/ui/toast"
 import { PLANS } from "@/data/generate"
 import type { Account, User, UserRole } from "@/data/schema"
@@ -30,7 +51,13 @@ import { adapter, type Resources } from "@/lib/data"
 
 import { InviteDialog } from "./invite-dialog"
 import { UserSheet } from "./user-sheet"
-import { PlanBadge, ROLE_LABELS, RoleSelect, SeatMeter, StatusPill } from "./user-parts"
+import {
+  PlanBadge,
+  ROLE_LABELS,
+  RoleSelect,
+  SeatMeter,
+  StatusPill,
+} from "./user-parts"
 
 const FILTERS = ["role", "status", "plan", "account", "view"] as const
 
@@ -50,12 +77,47 @@ const VIEW_DESCRIPTIONS: Record<string, string> = {
   "over-limit": "people in accounts using more seats than they pay for",
 }
 
+type WidthBand = "narrow" | "medium" | "wide"
+
+const DEFAULT_HIDDEN: Record<WidthBand, string[]> = {
+  narrow: ["createdAt", "account", "seats", "plan", "lastSeenAt"],
+  medium: ["createdAt", "plan", "lastSeenAt"],
+  wide: ["createdAt"],
+}
+
+function band(): WidthBand {
+  return window.matchMedia("(min-width: 1280px)").matches
+    ? "wide"
+    : window.matchMedia("(min-width: 1024px)").matches
+      ? "medium"
+      : "narrow"
+}
+
+function subscribe(onChange: () => void) {
+  const queries = ["(min-width: 1280px)", "(min-width: 1024px)"].map((query) =>
+    window.matchMedia(query)
+  )
+  queries.forEach((query) => query.addEventListener("change", onChange))
+  return () =>
+    queries.forEach((query) => query.removeEventListener("change", onChange))
+}
+
+/** The viewport's width band; the server assumes a wide screen. */
+function useWidthBand(): WidthBand {
+  return useSyncExternalStore(subscribe, band, () => "wide")
+}
+
 type Filters = Record<(typeof FILTERS)[number], string[]>
 
 /** Which built-in view the current filters are, or "all" for anything custom. */
 function currentView(filters: Filters): string {
   const only = (key: keyof Filters, values: string[]) =>
-    FILTERS.every((other) => (other === key ? filters[other].length === values.length && values.every((value) => filters[other].includes(value)) : filters[other].length === 0))
+    FILTERS.every((other) =>
+      other === key
+        ? filters[other].length === values.length &&
+          values.every((value) => filters[other].includes(value))
+        : filters[other].length === 0
+    )
   if (only("view", ["over-limit"])) return "over-limit"
   if (only("role", ["owner", "admin"])) return "admins"
   if (only("status", ["invited"])) return "invited"
@@ -75,42 +137,98 @@ export function UsersPage() {
   const params = useSearchParams()
   const list = useListState({ filters: FILTERS, defaultSort: "-lastSeenAt" })
   const [selection, setSelection] = useState<string[]>([])
-  const [hidden, setHidden] = useState<string[]>(["createdAt"])
+  // Columns start hidden by width (the sidebar leaves little room below lg); the column menu can still show them.
+  const width = useWidthBand()
+  const [hiddenByBand, setHiddenByBand] = useState<
+    Partial<Record<WidthBand, string[]>>
+  >({})
+  const hidden = hiddenByBand[width] ?? DEFAULT_HIDDEN[width]
+  const setHidden = (next: string[]) =>
+    setHiddenByBand((current) => ({ ...current, [width]: next }))
   const [open, setOpen] = useState<string | null>(null)
   const [inviting, setInviting] = useState(params.get("invite") === "1")
 
   // Every account, to show seats beside each user and to resolve the "over seat limit" view.
-  const accounts = useList<Resources, "accounts">("accounts", { pageSize: 100_000 })
-  const accountById = useMemo(() => new Map((accounts.data?.rows ?? []).map((account) => [account.id, account])), [accounts.data])
-  const overLimitIds = useMemo(() => (accounts.data?.rows ?? []).filter((account) => account.seats > account.seatLimit).map((account) => account.id), [accounts.data])
+  const accounts = useList<Resources, "accounts">("accounts", {
+    pageSize: 100_000,
+  })
+  const accountById = useMemo(
+    () =>
+      new Map(
+        (accounts.data?.rows ?? []).map((account) => [account.id, account])
+      ),
+    [accounts.data]
+  )
+  const overLimitIds = useMemo(
+    () =>
+      (accounts.data?.rows ?? [])
+        .filter((account) => account.seats > account.seatLimit)
+        .map((account) => account.id),
+    [accounts.data]
+  )
 
   const overLimitView = list.filters.view.includes("over-limit")
   const query = useMemo(() => {
     const { view: _view, ...rest } = list.query.filters ?? {}
     void _view
     // The view is not a column: it narrows to the accounts that are over their limit right now.
-    const account = overLimitView ? (list.filters.account.length ? list.filters.account.filter((id) => overLimitIds.includes(id)) : overLimitIds) : rest.account
-    return { ...list.query, filters: { ...rest, account: overLimitView && account?.length === 0 ? ["none"] : account } }
+    const account = overLimitView
+      ? list.filters.account.length
+        ? list.filters.account.filter((id) => overLimitIds.includes(id))
+        : overLimitIds
+      : rest.account
+    return {
+      ...list.query,
+      filters: {
+        ...rest,
+        account: overLimitView && account?.length === 0 ? ["none"] : account,
+      },
+    }
   }, [list.query, list.filters.account, overLimitView, overLimitIds])
 
   const users = useList<Resources, "users">("users", query)
   const waiting = users.isPending || (overLimitView && accounts.isPending)
 
-  const setRole = useKitMutation((input: { ids: string[]; role: UserRole }) => adapter.action<{ changed: number }>("users", "setRole", input), {
-    success: (output, input) => ({ title: `${output.changed} ${output.changed === 1 ? "user is" : "users are"} now ${ROLE_LABELS[input.role].toLowerCase()}s`, description: output.changed < input.ids.length ? "Owners keep their role." : undefined }),
-    error: "Could not change roles",
-    invalidate: ["users"],
-  })
-  const suspend = useKitMutation((ids: string[]) => Promise.all(ids.map((id) => adapter.update("users", id, { status: "suspended" }))), {
-    success: (rows) => ({ title: `Suspended ${rows.length} ${rows.length === 1 ? "user" : "users"}`, description: "They can no longer sign in." }),
-    error: "Could not suspend",
-    invalidate: ["users"],
-  })
-  const restore = useKitMutation((rows: User[]) => Promise.all(rows.map((row) => adapter.create("users", row))), { invalidate: ["users"] })
+  const setRole = useKitMutation(
+    (input: { ids: string[]; role: UserRole }) =>
+      adapter.action<{ changed: number }>("users", "setRole", input),
+    {
+      success: (output, input) => ({
+        title: `${output.changed} ${output.changed === 1 ? "user is" : "users are"} now ${ROLE_LABELS[input.role].toLowerCase()}s`,
+        description:
+          output.changed < input.ids.length
+            ? "Owners keep their role."
+            : undefined,
+      }),
+      error: "Could not change roles",
+      invalidate: ["users"],
+    }
+  )
+  const suspend = useKitMutation(
+    (ids: string[]) =>
+      Promise.all(
+        ids.map((id) => adapter.update("users", id, { status: "suspended" }))
+      ),
+    {
+      success: (rows) => ({
+        title: `Suspended ${rows.length} ${rows.length === 1 ? "user" : "users"}`,
+        description: "They can no longer sign in.",
+      }),
+      error: "Could not suspend",
+      invalidate: ["users"],
+    }
+  )
+  const restore = useKitMutation(
+    (rows: User[]) =>
+      Promise.all(rows.map((row) => adapter.create("users", row))),
+    { invalidate: ["users"] }
+  )
   const remove = useKitMutation(
     async (ids: string[]) => {
       // Read each user from the adapter, not the visible page: a selection can span pages.
-      const rows = (await Promise.all(ids.map((id) => adapter.get("users", id)))).filter((row) => row.role !== "owner")
+      const rows = (
+        await Promise.all(ids.map((id) => adapter.get("users", id)))
+      ).filter((row) => row.role !== "owner")
       await Promise.all(rows.map((row) => adapter.remove("users", row.id)))
       return rows
     },
@@ -126,22 +244,58 @@ export function UsersPage() {
         setSelection([])
         toast.add(
           rows.length === 0
-            ? { type: "error", title: "Owners cannot be removed", description: "Transfer ownership first." }
-            : { type: "success", title: `Removed ${rows.length} ${rows.length === 1 ? "user" : "users"}`, actionProps: { children: "Undo", onClick: () => restore.mutate(rows) } }
+            ? {
+                type: "error",
+                title: "Owners cannot be removed",
+                description: "Transfer ownership first.",
+              }
+            : {
+                type: "success",
+                title: `Removed ${rows.length} ${rows.length === 1 ? "user" : "users"}`,
+                actionProps: {
+                  children: "Undo",
+                  onClick: () => restore.mutate(rows),
+                },
+              }
         )
       },
     })
   }
 
   const exportCsv = async (ids?: string[]) => {
-    const all = await adapter.list("users", { ...query, page: 1, pageSize: 100_000 })
+    const all = await adapter.list("users", {
+      ...query,
+      page: 1,
+      pageSize: 100_000,
+    })
     const rows = ids ? all.rows.filter((row) => ids.includes(row.id)) : all.rows
     downloadCsv(
       "tidewell-users.csv",
-      ["Name", "Email", "Account", "Role", "Plan", "Status", "Created", "Last active"],
-      rows.map((row) => [row.name, row.email, row.accountName, ROLE_LABELS[row.role], PLANS[row.plan].name, row.status, row.createdAt, row.lastSeenAt])
+      [
+        "Name",
+        "Email",
+        "Account",
+        "Role",
+        "Plan",
+        "Status",
+        "Created",
+        "Last active",
+      ],
+      rows.map((row) => [
+        row.name,
+        row.email,
+        row.accountName,
+        ROLE_LABELS[row.role],
+        PLANS[row.plan].name,
+        row.status,
+        row.createdAt,
+        row.lastSeenAt,
+      ])
     )
-    toast.add({ type: "success", title: `Exported ${formatNumber(rows.length)} ${rows.length === 1 ? "user" : "users"}` })
+    toast.add({
+      type: "success",
+      title: `Exported ${formatNumber(rows.length)} ${rows.length === 1 ? "user" : "users"}`,
+    })
   }
 
   const columns = useMemo<DataColumn<User>[]>(
@@ -156,18 +310,23 @@ export function UsersPage() {
             <PersonAvatar name={row.name} />
             <div className="flex min-w-0 flex-col">
               <span className="truncate font-medium">{row.name}</span>
-              <span className="truncate text-xs text-muted-foreground">{row.email}</span>
+              <span className="truncate text-xs text-muted-foreground">
+                {row.email}
+              </span>
             </div>
           </div>
         ),
       },
       {
         id: "account",
-        className: "hidden lg:table-cell",
         header: "Account",
         sortId: "accountName",
         cell: (row) => (
-          <Link href={`/users?account=${row.accountId}`} onClick={(event) => event.stopPropagation()} className="truncate hover:underline">
+          <Link
+            href={`/users?account=${row.accountId}`}
+            onClick={(event) => event.stopPropagation()}
+            className="truncate hover:underline"
+          >
             {row.accountName}
           </Link>
         ),
@@ -177,14 +336,29 @@ export function UsersPage() {
         header: "Role",
         sortId: "role",
         className: "w-36",
-        cell: (row) => <RoleSelect user={row} onChange={(role) => setRole.mutate({ ids: [row.id], role })} />,
+        cell: (row) => (
+          <RoleSelect
+            user={row}
+            onChange={(role) => setRole.mutate({ ids: [row.id], role })}
+          />
+        ),
       },
-      { id: "plan", header: "Plan", className: "hidden w-24 xl:table-cell", cell: (row) => <PlanBadge plan={row.plan} /> },
-      { id: "status", header: "Status", className: "w-28", cell: (row) => <StatusPill status={row.status} /> },
+      {
+        id: "plan",
+        header: "Plan",
+        className: "w-24",
+        cell: (row) => <PlanBadge plan={row.plan} />,
+      },
+      {
+        id: "status",
+        header: "Status",
+        className: "w-28",
+        cell: (row) => <StatusPill status={row.status} />,
+      },
       {
         id: "seats",
         header: "Seats",
-        className: "w-32 hidden lg:table-cell",
+        className: "w-32",
         cell: (row) => {
           const account = accountById.get(row.accountId)
           return account ? <SeatMeter account={account} /> : null
@@ -195,8 +369,14 @@ export function UsersPage() {
         header: "Last active",
         sortId: "lastSeenAt",
         sortDescFirst: true,
-        className: "w-32 hidden xl:table-cell",
-        cell: (row) => <span className="text-muted-foreground">{row.lastSeenAt ? formatRelative(row.lastSeenAt, DATA_NOW) : "Never"}</span>,
+        className: "w-32",
+        cell: (row) => (
+          <span className="text-muted-foreground">
+            {row.lastSeenAt
+              ? formatRelative(row.lastSeenAt, DATA_NOW)
+              : "Never"}
+          </span>
+        ),
       },
       {
         id: "createdAt",
@@ -204,7 +384,11 @@ export function UsersPage() {
         sortId: "createdAt",
         sortDescFirst: true,
         className: "w-32",
-        cell: (row) => <span className="text-muted-foreground">{formatRelative(row.createdAt, DATA_NOW)}</span>,
+        cell: (row) => (
+          <span className="text-muted-foreground">
+            {formatRelative(row.createdAt, DATA_NOW)}
+          </span>
+        ),
       },
       {
         id: "actions",
@@ -214,7 +398,16 @@ export function UsersPage() {
         className: "w-16 [th&]:text-transparent",
         cell: (row) => (
           <DropdownMenu>
-            <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label={`Actions for ${row.name}`} onClick={(event) => event.stopPropagation()} />}>
+            <DropdownMenuTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  aria-label={`Actions for ${row.name}`}
+                  onClick={(event) => event.stopPropagation()}
+                />
+              }
+            >
               <MoreHorizontalIcon />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-44">
@@ -226,7 +419,17 @@ export function UsersPage() {
                 {row.status === "invited" && (
                   <DropdownMenuItem
                     onClick={() =>
-                      adapter.action<{ email: string }>("users", "resendInvite", { id: row.id }).then((result) => toast.add({ type: "success", title: "Invitation sent again", description: result.email }))
+                      adapter
+                        .action<{ email: string }>("users", "resendInvite", {
+                          id: row.id,
+                        })
+                        .then((result) =>
+                          toast.add({
+                            type: "success",
+                            title: "Invitation sent again",
+                            description: result.email,
+                          })
+                        )
                     }
                   >
                     <MailIcon />
@@ -244,7 +447,10 @@ export function UsersPage() {
                 <>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
-                    <DropdownMenuItem variant="destructive" onClick={() => removeUsers([row.id])}>
+                    <DropdownMenuItem
+                      variant="destructive"
+                      onClick={() => removeUsers([row.id])}
+                    >
                       <Trash2Icon />
                       Remove
                     </DropdownMenuItem>
@@ -263,7 +469,10 @@ export function UsersPage() {
 
   const view = currentView(list.filters)
   const filtered = list.activeFilterCount > 0
-  const accountFilterName = list.filters.account.length === 1 ? accountById.get(list.filters.account[0])?.name : undefined
+  const accountFilterName =
+    list.filters.account.length === 1
+      ? accountById.get(list.filters.account[0])?.name
+      : undefined
 
   return (
     <>
@@ -272,7 +481,14 @@ export function UsersPage() {
         description={
           users.data ? (
             <>
-              <span className="font-mono tabular-nums">{formatNumber(users.data.total)}</span> {VIEW_DESCRIPTIONS[view] && view !== "all" ? VIEW_DESCRIPTIONS[view] : filtered ? "matching" : VIEW_DESCRIPTIONS.all}
+              <span className="font-mono tabular-nums">
+                {formatNumber(users.data.total)}
+              </span>{" "}
+              {VIEW_DESCRIPTIONS[view] && view !== "all"
+                ? VIEW_DESCRIPTIONS[view]
+                : filtered
+                  ? "matching"
+                  : VIEW_DESCRIPTIONS.all}
             </>
           ) : (
             "Everyone who can sign in to a customer account."
@@ -280,7 +496,11 @@ export function UsersPage() {
         }
         actions={
           <>
-            <Button variant="outline" onClick={() => exportCsv()} disabled={waiting}>
+            <Button
+              variant="outline"
+              onClick={() => exportCsv()}
+              disabled={waiting}
+            >
               <DownloadIcon data-icon="inline-start" />
               Export
             </Button>
@@ -298,7 +518,18 @@ export function UsersPage() {
           current={view}
           onViewChange={(value) => {
             setSelection([])
-            list.applySnapshot({ search: "", sort: list.snapshot.sort, filters: { role: [], status: [], plan: [], account: [], view: [], ...VIEW_FILTERS[value] } })
+            list.applySnapshot({
+              search: "",
+              sort: list.snapshot.sort,
+              filters: {
+                role: [],
+                status: [],
+                plan: [],
+                account: [],
+                view: [],
+                ...VIEW_FILTERS[value],
+              },
+            })
           }}
           snapshot={list.snapshot}
           onApply={(snapshot) => {
@@ -312,13 +543,21 @@ export function UsersPage() {
             <InputGroupAddon>
               <SearchIcon />
             </InputGroupAddon>
-            <InputGroupInput aria-label="Search users" placeholder="Name, email or account" value={list.searchInput} onChange={(event) => list.setSearch(event.target.value)} />
+            <InputGroupInput
+              aria-label="Search users"
+              placeholder="Name, email or account"
+              value={list.searchInput}
+              onChange={(event) => list.setSearch(event.target.value)}
+            />
           </InputGroup>
           <FacetedFilter
             title="Role"
             value={list.filters.role}
             onChange={(value) => list.setFilter("role", value)}
-            options={(Object.keys(ROLE_LABELS) as UserRole[]).map((role) => ({ value: role, label: ROLE_LABELS[role] }))}
+            options={(Object.keys(ROLE_LABELS) as UserRole[]).map((role) => ({
+              value: role,
+              label: ROLE_LABELS[role],
+            }))}
           />
           <FacetedFilter
             title="Status"
@@ -334,10 +573,18 @@ export function UsersPage() {
             title="Plan"
             value={list.filters.plan}
             onChange={(value) => list.setFilter("plan", value)}
-            options={Object.values(PLANS).map((plan) => ({ value: plan.id, label: plan.name }))}
+            options={Object.values(PLANS).map((plan) => ({
+              value: plan.id,
+              label: plan.name,
+            }))}
           />
           {accountFilterName && (
-            <Button variant="secondary" size="sm" onClick={() => list.setFilter("account", [])} aria-label={`Remove the account filter ${accountFilterName}`}>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => list.setFilter("account", [])}
+              aria-label={`Remove the account filter ${accountFilterName}`}
+            >
               {accountFilterName}
               <span aria-hidden>×</span>
             </Button>
@@ -355,7 +602,11 @@ export function UsersPage() {
             </Button>
           )}
           <div className="ms-auto hidden md:block">
-            <ColumnMenu columns={columns} hidden={hidden} onHiddenChange={setHidden} />
+            <ColumnMenu
+              columns={columns}
+              hidden={hidden}
+              onHiddenChange={setHidden}
+            />
           </div>
         </div>
       </div>
@@ -378,10 +629,21 @@ export function UsersPage() {
             onHiddenColumnsChange={setHidden}
             onRowClick={(row) => setOpen(row.id)}
             renderMobileRow={(row, state) => (
-              <div role="listitem" className="flex items-center gap-3 rounded-xl border bg-card p-3">
-                <Checkbox aria-label={`Select ${row.name}`} checked={state.selected} onCheckedChange={state.toggle} />
+              <div
+                role="listitem"
+                className="flex items-center gap-3 rounded-xl border bg-card p-3"
+              >
+                <Checkbox
+                  aria-label={`Select ${row.name}`}
+                  checked={state.selected}
+                  onCheckedChange={state.toggle}
+                />
                 <PersonAvatar name={row.name} />
-                <button type="button" className="flex min-w-0 flex-1 flex-col text-start" onClick={() => setOpen(row.id)}>
+                <button
+                  type="button"
+                  className="flex min-w-0 flex-1 flex-col text-start"
+                  onClick={() => setOpen(row.id)}
+                >
                   <span className="truncate font-medium">{row.name}</span>
                   <span className="truncate text-xs text-muted-foreground">
                     {ROLE_LABELS[row.role]} · {row.accountName}
@@ -395,7 +657,11 @@ export function UsersPage() {
                 icon={UsersIcon}
                 className="border bg-card"
                 title={filtered ? "No users match" : "No users yet"}
-                description={filtered ? "Try another view, or clear the search and filters." : "Invite someone to get started."}
+                description={
+                  filtered
+                    ? "Try another view, or clear the search and filters."
+                    : "Invite someone to get started."
+                }
               />
             }
           />
@@ -422,25 +688,57 @@ export function UsersPage() {
           <DropdownMenuContent align="center" side="top" className="min-w-40">
             <DropdownMenuGroup>
               {(["admin", "member", "viewer"] as const).map((role) => (
-                <DropdownMenuItem key={role} onClick={() => setRole.mutate({ ids: selection, role }, { onSettled: () => setSelection([]) })}>
+                <DropdownMenuItem
+                  key={role}
+                  onClick={() =>
+                    setRole.mutate(
+                      { ids: selection, role },
+                      { onSettled: () => setSelection([]) }
+                    )
+                  }
+                >
                   {ROLE_LABELS[role]}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-        <Button variant="outline" size="sm" onClick={() => exportCsv(selection)}>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => exportCsv(selection)}
+        >
           <DownloadIcon data-icon="inline-start" />
           Export CSV
         </Button>
-        <Button variant="outline" size="sm" onClick={() => removeUsers(selection)} className="text-destructive">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => removeUsers(selection)}
+          className="text-destructive"
+        >
           <Trash2Icon data-icon="inline-start" />
           Remove
         </Button>
       </BulkActionBar>
 
-      <UserSheet id={open} onOpenChange={(next) => !next && setOpen(null)} account={open ? accountById.get((users.data?.rows ?? []).find((row) => row.id === open)?.accountId ?? "") : undefined} />
-      <InviteDialog open={inviting} onOpenChange={setInviting} accounts={accounts.data?.rows ?? []} />
+      <UserSheet
+        id={open}
+        onOpenChange={(next) => !next && setOpen(null)}
+        account={
+          open
+            ? accountById.get(
+                (users.data?.rows ?? []).find((row) => row.id === open)
+                  ?.accountId ?? ""
+              )
+            : undefined
+        }
+      />
+      <InviteDialog
+        open={inviting}
+        onOpenChange={setInviting}
+        accounts={accounts.data?.rows ?? []}
+      />
     </>
   )
 }

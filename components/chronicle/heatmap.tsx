@@ -29,22 +29,71 @@ export function Heatmap({
   const wide = Math.max(1, Math.ceil(n / 4))
   const mid = Math.max(1, Math.ceil(n / 8))
   const all = n <= 12 ? 1 : 2
-  const peak = values.flatMap((row, y) => row.map((value, x) => ({ value, x, y }))).reduce((best, cell) => (cell.value > best.value ? cell : best))
+  const cells = values.flatMap((row, y) =>
+    row.map((value, x) => ({ value, x, y }))
+  )
+  if (cells.length === 0) {
+    return null
+  }
+  const peak = cells.reduce(
+    (best, cell) => (cell.value > best.value ? cell : best),
+    cells[0]
+  )
 
   return (
     <figure className={cn("@container w-full", className)}>
       <figcaption className="sr-only">
         {label}. Peak {rows[peak.y]} {columns[peak.x]}, {format(peak.value)}.
       </figcaption>
-      <div className="grid items-center gap-[3px]" style={{ gridTemplateColumns: `2.25rem repeat(${n}, minmax(0, 1fr))` }} aria-hidden>
+      {/* Every value for screen readers; the grid below is drawn for the eye. */}
+      <div className="sr-only">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Day</th>
+              {columns.map((column) => (
+                <th key={column} scope="col">
+                  {column}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {values.map((row, y) => (
+              <tr key={rows[y]}>
+                <th scope="row">{rows[y]}</th>
+                {row.map((value, x) => (
+                  <td key={x}>{format(value)}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div
+        className="grid items-center gap-[3px]"
+        style={{ gridTemplateColumns: `2.25rem repeat(${n}, minmax(0, 1fr))` }}
+        aria-hidden
+      >
         {values.map((row, y) => (
           <div key={rows[y]} className="contents">
-            <span className="pe-2 font-mono text-[11px] text-muted-foreground">{rows[y]}</span>
+            <span className="pe-2 font-mono text-[11px] text-muted-foreground">
+              {rows[y]}
+            </span>
             {row.map((value, x) => (
-              <span key={x} className="flex justify-center" title={`${rows[y]} ${columns[x]}: ${format(value)}`}>
+              <span
+                key={x}
+                className="flex justify-center"
+                title={`${rows[y]} ${columns[x]}: ${format(value)}`}
+              >
                 <span
                   className="aspect-square w-full max-w-8 rounded-[4px]"
-                  style={{ backgroundColor: value === 0 ? "var(--muted)" : `color-mix(in oklch, var(--chart-lead) ${Math.round(12 + (value / max) * 88)}%, var(--muted))` }}
+                  style={{
+                    backgroundColor:
+                      value === 0
+                        ? "var(--muted)"
+                        : `color-mix(in oklch, var(--chart-lead) ${Math.round(12 + (value / max) * 88)}%, var(--muted))`,
+                  }}
                 />
               </span>
             ))}
@@ -66,10 +115,19 @@ export function Heatmap({
           </span>
         ))}
       </div>
-      <div className="mt-3 flex items-center justify-end gap-1.5 text-[11px] text-muted-foreground" aria-hidden>
+      <div
+        className="mt-3 flex items-center justify-end gap-1.5 text-[11px] text-muted-foreground"
+        aria-hidden
+      >
         Less
         {[0.15, 0.4, 0.65, 0.9].map((share) => (
-          <span key={share} className="size-2.5 rounded-[3px]" style={{ backgroundColor: `color-mix(in oklch, var(--chart-lead) ${Math.round(12 + share * 88)}%, var(--muted))` }} />
+          <span
+            key={share}
+            className="size-2.5 rounded-[3px]"
+            style={{
+              backgroundColor: `color-mix(in oklch, var(--chart-lead) ${Math.round(12 + share * 88)}%, var(--muted))`,
+            }}
+          />
         ))}
         More
       </div>
