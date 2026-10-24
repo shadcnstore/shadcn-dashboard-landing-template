@@ -19,6 +19,14 @@ Dev server: `PORT=3300 pnpm dev`, http://localhost:3300 (not 127.0.0.1). Demo bu
 - [x] Code review (high): 8 of 10 fixed (7fac96a), 2 kept with reasons in the plan; medium confirming pass: 9 findings, fixed in 14a3e7d (cap reached, no further rounds)
 - [x] Branch pushed; plan and issue synced. Remaining: owner decisions and LAUNCH.md
 
+## Owner review round 1 (2026-10-24): done
+- [x] Heatmap rebuilt (components/chronicle/heatmap.tsx), Overview small cards 2x2/1x4 with axes, 7-day users card reconciles, Seats card, MRR movement outer-end rounding and thin-segment merge
+- [x] 32 Codex portraits in public/avatars, lib/avatars.ts (named people hand-mapped, others hashed in pools)
+- [x] Go further: direction A Showcase built (25 vs 22), one config in features/demo/config.ts
+- [x] Sweep of every route at 375/768/1024/1440 light and dark; Kit v1.0.8
+- [x] Code review high (10, 9 fixed) and one medium pass (10, fixed); cap reached
+- Lighthouse mobile (demo build, gzip, Kit 1.0.8): / 82-83, /landing 91, /users 82-83, /go-further 87; a11y 100 on all four
+
 ## Kit findings (for upstream)
 1. `customizer-provider` imports `shader/colour`; colour parsing belongs in `theme/`.
 2. `auth-forms` imports `auth-layout` (AuthHeading, useAuthCopy), which imports the shader showcase.
