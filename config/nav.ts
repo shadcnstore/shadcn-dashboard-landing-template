@@ -7,6 +7,7 @@ import {
   MailIcon,
   MessagesSquareIcon,
   SettingsIcon,
+  SparklesIcon,
   UsersIcon,
 } from "lucide-react"
 
@@ -44,4 +45,6 @@ export const NAV: NavGroup[] = [
 export const SECONDARY_NAV: NavLink[] = [
   { title: "Notifications", href: "/notifications", icon: BellIcon, shortcut: "n" },
   { title: "Settings", href: "/settings", icon: SettingsIcon, shortcut: "s" },
+  // The public demo only: what the paid templates add (features/demo). Your build never shows it.
+  ...(process.env.NEXT_PUBLIC_DEMO === "1" ? [{ title: "Go further", href: "/go-further", icon: SparklesIcon }] : []),
 ]

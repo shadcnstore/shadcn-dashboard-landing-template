@@ -1,0 +1,145 @@
+name: Deploy demo
+
+# Builds the static demo (DEMO_BUILD=1, basePath /chronicle) and publishes it
+# to demo.shadcnstore.com/chronicle/ or demo-staging.shadcnstore.com/chronicle/.
+#
+# Server layout (set up once by deployment-scripts/setup-demo-host.sh in the
+# shadcnstore-website repo; no nginx change per template):
+#   /var/www/shadcnstore/<demos|demos-staging>/chronicle/releases/<release>
+#   /var/www/shadcnstore/<demos|demos-staging>/chronicle/current -> releases/<release>
+#   /var/www/shadcnstore/<demos|demos-staging>/_web/chronicle   -> ../chronicle/current
+#
+# Manual dispatch only: pushing a branch or a tag never deploys.
+#
+# Needs one repository secret: DEPLOY_SSH_KEY (the github-deploy user's key,
+# already set in this repository).
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Where to publish the demo
+        required: true
+        default: staging
+        type: choice
+        options:
+          - staging
+          - production
+
+concurrency:
+  group: deploy-demo-${{ inputs.environment }}
+  cancel-in-progress: false
+
+env:
+  SLUG: chronicle
+  DEPLOY_HOST: 46.202.179.245
+  DEPLOY_PORT: 4388
+  DEPLOY_USER: github-deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Where this goes
+        id: target
+        run: |
+          if [ "${{ inputs.environment }}" = "production" ]; then
+            echo "root=/var/www/shadcnstore/demos" >> "$GITHUB_OUTPUT"
+            echo "host=demo.shadcnstore.com" >> "$GITHUB_OUTPUT"
+          else
+            echo "root=/var/www/shadcnstore/demos-staging" >> "$GITHUB_OUTPUT"
+            echo "host=demo-staging.shadcnstore.com" >> "$GITHUB_OUTPUT"
+          fi
+          echo "release=$(date -u +%Y%m%d_%H%M%S)_${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.2
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # The demo is what buyers judge, so it only ships when the checks pass.
+      - name: Lint
+        run: pnpm lint
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Test
+        run: pnpm test
+      - name: Kit is unedited
+        run: pnpm kit:check
+
+      - name: Build the static demo
+        env:
+          DEMO_BUILD: "1"
+          # GTM container for the demo_bar_click GA4 event. Empty (the default) loads no tracking.
+          NEXT_PUBLIC_GTM_ID: ${{ vars.DEMO_GTM_ID || secrets.VITE_GTM_ID }}
+        run: |
+          pnpm build
+          test -f out/index.html
+          grep -q 'name="robots" content="noindex, follow"' out/index.html
+          printf 'commit=%s\nrelease=%s\nbuilt=%s\n' "$GITHUB_SHA" "${{ steps.target.outputs.release }}" "$(date -u)" > out/build-info.txt
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$DEPLOY_PORT" "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+          cat >> ~/.ssh/config <<CONFIG
+          Host deploy-server
+            HostName $DEPLOY_HOST
+            Port $DEPLOY_PORT
+            User $DEPLOY_USER
+            IdentityFile ~/.ssh/deploy_key
+            IdentitiesOnly yes
+          CONFIG
+          chmod 600 ~/.ssh/config
+
+      - name: Upload and switch
+        env:
+          ROOT: ${{ steps.target.outputs.root }}
+          RELEASE: ${{ steps.target.outputs.release }}
+        run: |
+          ssh deploy-server "mkdir -p '$ROOT/$SLUG/releases/$RELEASE'"
+          rsync -az --delete out/ "deploy-server:$ROOT/$SLUG/releases/$RELEASE/"
+          ssh deploy-server "
+            set -e
+            cd '$ROOT/$SLUG'
+            chmod -R a+rX 'releases/$RELEASE'
+            ln -sfn 'releases/$RELEASE' current.next && mv -T current.next current
+            ln -sfn '../$SLUG/current' '$ROOT/_web/$SLUG.next' && mv -T '$ROOT/_web/$SLUG.next' '$ROOT/_web/$SLUG'
+            # Keep the last five releases for a quick rollback.
+            ls -1dt releases/* | tail -n +6 | xargs -r rm -rf
+          "
+
+      - name: Health check
+        env:
+          HOST: ${{ steps.target.outputs.host }}
+        run: |
+          sleep 3
+          url="https://$HOST/$SLUG/"
+          status=$(curl -s -o /dev/null -w '%{http_code}' "$url")
+          # Staging sits behind Basic Auth, so 401 there still means nginx found the site.
+          if [ "${{ inputs.environment }}" = "staging" ] && [ "$status" = "401" ]; then
+            echo "Staging answers behind Basic Auth: $url"
+            exit 0
+          fi
+          if [ "$status" != "200" ]; then
+            echo "Health check failed: $url returned $status"
+            exit 1
+          fi
+          curl -sI "$url" | grep -qi '^x-robots-tag: noindex, follow' || { echo "Missing X-Robots-Tag noindex header"; exit 1; }
+          detail=$(curl -s -o /dev/null -w '%{http_code}' "https://$HOST/$SLUG/users/usr_00042")
+          [ "$detail" = "200" ] || { echo "Detail page placeholder failed: $detail"; exit 1; }
+          echo "Live: $url"

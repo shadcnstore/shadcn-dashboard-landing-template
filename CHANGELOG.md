@@ -1,6 +1,33 @@
 # Changelog
 
-## 2.0.0 — 2026-10-08
+## 3.0.0 (unreleased)
+
+Chronicle is rebuilt on the ShadcnStore Dashboard Kit, the base of ShadcnStore's paid dashboard templates, and becomes one Next.js app at the root of the repository.
+
+### Highlights
+
+- **A new look:** cool slate and cobalt in light and dark, Hanken Grotesk with JetBrains Mono numbers, soft cards on a tinted page. Eight more presets restyle every surface.
+- **Real data that adds up:** one fictional company, Tidewell, generated from a seed and pinned to 20 October 2026. Tests prove MRR, plans, seats and sign-ups reconcile.
+- **One data adapter for every screen** (`lib/data.ts`): swap the in-memory adapter for your API and the screens keep working.
+- **Users workbench:** saved views, faceted filters and search in the address bar, inline role editing, bulk actions with undo, CSV export, a record sheet and a detail page.
+- **Overview rebuilt** around MRR, retention, sign-ups, accounts that need attention (with working actions) and product usage.
+- **Kit shell:** sidebar or top navigation, inset or floating sidebar, RTL, ⌘K search and actions, `G` shortcuts, notifications, customizer.
+- **Tasks** as a board with drag and drop and as a table, on the same adapter.
+
+### Changed
+
+- The app now lives at the repository root. `nextjs-version/` and `vite-version/` are gone from 3.0; both remain in [v2.0.0](https://github.com/shadcnstore/shadcn-dashboard-landing-template/tree/v2.0.0).
+- **Next.js only.** The Vite version stays on 2.x, because the Kit uses the Next.js router.
+- Sign-in pages are one calm set (sign-in, sign-up, forgot password) instead of three variants each.
+- The documentation is plain Markdown in `docs/`.
+- Routes: `/dashboard` is now `/`, `/dashboard-2` is `/analytics`, `/auth/sign-in` is `/sign-in`, `/settings/user` is `/settings/profile`.
+- Next.js 16.4.3.
+
+### Removed
+
+- The Vite version, the second and third sign-in, sign-up and forgot-password variants, the pricing and FAQ pages inside the app, and the VitePress docs site. The landing page keeps its pricing and FAQ sections.
+
+## 2.0.0 : 2026-10-08
 
 The template moves from Radix UI to [Base UI](https://base-ui.com) and every dependency is on its latest release. Both the Vite and the Next.js versions get the same changes.
 

@@ -1,0 +1,27 @@
+name: CI
+
+# Checks every pull request. Never deploys (see deploy-demo.yml, manual only).
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm kit:check
+      - run: pnpm build
+      - name: Static demo build
+        run: DEMO_BUILD=1 pnpm build && test -f out/index.html

@@ -46,5 +46,31 @@ export const PAID_TEMPLATES: PaidTemplate[] = [
   },
 ]
 
-/** Pro: every template and block on shadcnstore.com. */
-export const PRO = { href: `${STORE}/pricing`, label: "Compare plans" }
+/** Pro: every template and block on shadcnstore.com, one payment. */
+export const PRO = { href: `${STORE}/pricing`, label: "Compare plans", price: "$149", note: "one payment, every template and block" }
+
+const SCREENS = "https://assets.shadcnstore.com/shadcnstore.com/templates/emporium/screens"
+
+/** Screens that exist in the paid templates and not in Chronicle. Shown as previews in the demo's settings. */
+export const PAID_SCREENS = {
+  team: {
+    title: "Team and roles",
+    body: "Invite teammates, set roles with a permission matrix, and see who has access. Emporium and Rapport ship it, wired to their own data.",
+    image: `${SCREENS}/team.1280w.3e3b13.webp`,
+    alt: "The Team settings screen in Emporium: members, roles and a permission matrix",
+  },
+  billing: {
+    title: "Billing and plans",
+    body: "Plan cards, usage meters, the payment method, invoices and a change-plan flow with a proration summary.",
+    image: `${SCREENS}/plans.1280w.e99699.webp`,
+    alt: "The Plans screen in Emporium: current plan, usage and plan comparison",
+  },
+  "api-keys": {
+    title: "API keys",
+    body: "Create keys with scopes, show the secret once, revoke, and watch each key's last use. Part of the paid templates' organisation settings.",
+    image: null,
+    alt: "",
+  },
+} as const
+
+export type PaidScreen = keyof typeof PAID_SCREENS
