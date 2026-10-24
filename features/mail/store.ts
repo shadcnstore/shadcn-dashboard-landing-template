@@ -32,8 +32,7 @@ interface MailState {
 let sentCount = 0
 
 export const useMail = create<MailState>((set) => ({
-  // The message open on load counts as read, like any other opened message.
-  mails: MAILS.map((mail) => (mail.id === "m01" ? { ...mail, read: true } : mail)),
+  mails: MAILS,
   view: "inbox",
   label: null,
   unreadOnly: false,

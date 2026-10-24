@@ -76,8 +76,14 @@ export function TasksPage() {
 
   const patch = useKitMutation(
     // A status change goes through tasks.move (to the end of the new column) so both columns are renumbered, as on the board.
-    ({ id, patch }: TaskPatch) =>
-      patch.status ? adapter.action<Task>("tasks", "move", { id, status: patch.status, index: Number.MAX_SAFE_INTEGER }) : adapter.update("tasks", id, patch),
+    async ({ id, patch }: TaskPatch) => {
+      if (!patch.status) {
+        return adapter.update("tasks", id, patch)
+      }
+      // The end of the new column: its current size.
+      const column = await adapter.list("tasks", { pageSize: 1, filters: { status: [patch.status] } })
+      return adapter.action<Task>("tasks", "move", { id, status: patch.status, index: column.total })
+    },
     {
       invalidate: ["tasks"],
       success: (task, input) => ({

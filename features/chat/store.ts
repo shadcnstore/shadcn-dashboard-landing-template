@@ -28,6 +28,9 @@ function append(conversations: Conversation[], id: string, senderId: string, tex
   )
 }
 
+/** Conversations with an auto-reply already scheduled. */
+const pendingReplies = new Set<string>()
+
 export const useChat = create<ChatState>((set, get) => ({
   conversations: CONVERSATIONS.map((conversation) => (conversation.id === "c_renewals" ? { ...conversation, unread: 0 } : conversation)),
   selectedId: "c_renewals",
@@ -44,9 +47,14 @@ export const useChat = create<ChatState>((set, get) => ({
       return
     }
     const reply = AUTO_REPLIES[conversation.messages.length % AUTO_REPLIES.length]
-    // Mark the reply as pending at once, so a second quick message does not schedule another.
-    set((state) => ({ typing: [...state.typing, conversationId] }))
+    if (pendingReplies.has(conversationId)) {
+      return
+    }
+    // One reply per burst: a second quick message does not schedule another.
+    pendingReplies.add(conversationId)
+    setTimeout(() => set((state) => ({ typing: [...state.typing, conversationId] })), 600)
     setTimeout(() => {
+      pendingReplies.delete(conversationId)
       set((state) => ({
         typing: state.typing.filter((id) => id !== conversationId),
         conversations: append(state.conversations, conversationId, responder, reply).map((candidate) =>

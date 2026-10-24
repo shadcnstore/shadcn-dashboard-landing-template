@@ -10,6 +10,7 @@ import type { InboxNotification } from "@/kit/notifications/notifications-inbox"
  * six start unread.
  */
 function seedNotifications(): InboxNotification[] {
+  const churned = new Set(workspace().accounts.filter((account) => account.status === "churned").map((account) => account.id))
   return workspace()
     .activity.slice(0, 24)
     .map((entry, index) => {
@@ -28,8 +29,8 @@ function seedNotifications(): InboxNotification[] {
         id: entry.id,
         title,
         body: `${entry.detail}${money}`,
-        // A cancelled account has no users left, so its alert opens Analytics instead.
-        href: entry.kind === "churn" ? "/analytics" : `/users?account=${entry.accountId}`,
+        // A cancelled account has no users left, so any alert about it opens Analytics instead.
+        href: churned.has(entry.accountId) ? "/analytics" : `/users?account=${entry.accountId}`,
         read: index >= 6,
         at: entry.at,
         category: entry.kind === "payment_failed" || entry.kind === "churn" ? "risk" : "revenue",

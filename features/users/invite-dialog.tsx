@@ -29,7 +29,7 @@ export function InviteDialog({ open, onOpenChange, accounts }: { open: boolean; 
     () => {
       const account = choices.find((candidate) => candidate.id === (accountId || choices[0]?.id))
       if (!account) {
-        return Promise.reject(new Error("The accounts are still loading. Try again in a moment."))
+        return Promise.reject(new Error("There is no account to invite this person to."))
       }
       return adapter.create("users", {
         name: name.trim(),

@@ -9,6 +9,7 @@ import { NAV, SECONDARY_NAV } from "@/config/nav"
 import { SITE } from "@/config/site"
 import type { User } from "@/data/schema"
 import { useDemoCommands } from "@/features/demo/demo-commands"
+import { workspace } from "@/data/generate"
 import { useMail } from "@/features/mail/store"
 import { useNotifications } from "@/features/notifications/store"
 import { CommandMenuProvider, type CommandAction, type CommandSearchResult } from "@/kit/command/command-menu"
@@ -24,7 +25,10 @@ import { adapter, type Resources } from "@/lib/data"
  * it shows comes from config/nav.ts, config/site.ts and lib/data.ts.
  */
 
-const OPEN_TASKS = { pageSize: 1, filters: { status: ["todo", "in_progress"] } }
+/** Open means not done, the same as the Tasks page header. */
+const OPEN_TASKS = { pageSize: 1, filters: { status: ["backlog", "todo", "in_progress", "review"] } }
+/** The seed's count, so the badge is in the first HTML and does not pop in. */
+const SEED_OPEN_TASKS = workspace().tasks.filter((task) => task.status !== "done").length
 
 const LINKS = [...NAV.flatMap((group) => group.items), ...SECONDARY_NAV]
 
@@ -32,7 +36,7 @@ function Frame({ children }: { children: React.ReactNode }) {
   const items = useNotifications((state) => state.items)
   const markRead = useNotifications((state) => state.markRead)
   // Open work, through the adapter like every screen, so it follows the board.
-  const openTasks = useList<Resources, "tasks">("tasks", OPEN_TASKS).data?.total ?? 0
+  const openTasks = useList<Resources, "tasks">("tasks", OPEN_TASKS).data?.total ?? SEED_OPEN_TASKS
   const unreadMail = useMail((state) => state.mails.filter((mail) => !mail.read && mail.folder === "inbox").length)
   return (
     <AppShell

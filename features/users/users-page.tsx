@@ -107,26 +107,28 @@ export function UsersPage() {
   })
   const restore = useKitMutation((rows: User[]) => Promise.all(rows.map((row) => adapter.create("users", row))), { invalidate: ["users"] })
   const remove = useKitMutation(
-    async (rows: User[]) => {
+    async (ids: string[]) => {
+      // Read each user from the adapter, not the visible page: a selection can span pages.
+      const rows = (await Promise.all(ids.map((id) => adapter.get("users", id)))).filter((row) => row.role !== "owner")
       await Promise.all(rows.map((row) => adapter.remove("users", row.id)))
       return rows
     },
     { error: "Could not remove", invalidate: ["users"] }
   )
 
-  const removeUsers = async (ids: string[]) => {
-    // Read each user from the adapter, not the visible page: a selection can span pages.
-    const rows = (await Promise.all(ids.map((id) => adapter.get("users", id)))).filter((row) => row.role !== "owner")
-    if (rows.length === 0) {
-      toast.add({ type: "error", title: "Owners cannot be removed", description: "Transfer ownership first." })
+  const removeUsers = (ids: string[]) => {
+    if (remove.isPending) {
       return
     }
-    await remove.mutateAsync(rows)
-    setSelection([])
-    toast.add({
-      type: "success",
-      title: `Removed ${rows.length} ${rows.length === 1 ? "user" : "users"}`,
-      actionProps: { children: "Undo", onClick: () => restore.mutate(rows) },
+    remove.mutate(ids, {
+      onSuccess: (rows) => {
+        setSelection([])
+        toast.add(
+          rows.length === 0
+            ? { type: "error", title: "Owners cannot be removed", description: "Transfer ownership first." }
+            : { type: "success", title: `Removed ${rows.length} ${rows.length === 1 ? "user" : "users"}`, actionProps: { children: "Undo", onClick: () => restore.mutate(rows) } }
+        )
+      },
     })
   }
 
