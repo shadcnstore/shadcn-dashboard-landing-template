@@ -24,7 +24,7 @@ Open http://localhost:3000. No environment variables, no API keys, no database: 
 | | |
 |---|---|
 | **Stack** | Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, shadcn/ui (`base-nova` style on Base UI, no Radix), TanStack Query and Table, Recharts, nuqs, zustand |
-| **Screens** | {{SCREEN_COUNT}} routes: Overview, Analytics, Users (list and detail), Tasks (board and table), Mail, Chat, Calendar, Notifications, Settings (profile, account, appearance, notifications), sign-in, sign-up, forgot password, five error pages, and a full SaaS landing page |
+| **Screens** | 22 pages: Overview, Analytics, Users (list and detail), Tasks (board and table), Mail, Chat, Calendar, Notifications, Settings (profile, account, appearance, notifications), sign-in, sign-up, forgot password, five error pages, and a full SaaS landing page |
 | **Signature screen** | Users: saved views, faceted filters and search kept in the address bar, sort, column menu, inline role editing, bulk actions with undo, CSV export, a record sheet |
 | **Theme** | Slate and cobalt, light and dark, plus eight more presets that restyle every surface. A customizer changes preset, radius, font, scale, sidebar style, layout (sidebar or top nav) and direction (LTR or RTL) live |
 | **Data** | One fictional company, Tidewell, generated from a seed and pinned to 20 October 2026, so the dashboard looks the same every day. Tests prove the totals equal the sum of their rows |
