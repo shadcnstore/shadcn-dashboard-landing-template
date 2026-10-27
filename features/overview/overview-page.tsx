@@ -7,8 +7,8 @@ import { useMemo, useState, useSyncExternalStore } from "react"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { Skeleton } from "@/components/ui/skeleton"
-import { workspace } from "@/data/generate"
-import type { Account } from "@/data/schema"
+import { accountContacts, PLANS, workspace } from "@/data/generate"
+import type { Account, User } from "@/data/schema"
 import { HourBars, PillBars, StepLines } from "@/components/chronicle/charts"
 import type { HourDatum } from "@/kit/charts/hour-bars"
 import { Heatmap } from "@/components/chronicle/heatmap"
@@ -17,13 +17,14 @@ import { change, formatMoney, formatNumber, formatPercent } from "@/kit/data/for
 import { useKitMutation, useList } from "@/kit/data/hooks"
 import { PageHeader } from "@/kit/ui-patterns/page-header"
 import { EmptyState, ErrorState } from "@/kit/ui-patterns/query-state"
-import { Initials } from "@/features/users/user-parts"
+import { PersonAvatar } from "@/components/chronicle/person-avatar"
 import { Segmented } from "@/kit/ui-patterns/segmented"
 import { StatusBadge } from "@/kit/ui-patterns/status-badge"
 import { PeriodHeader, Widget, WidgetHeader, WidgetValue } from "@/kit/widgets/widget"
 import { priceCents } from "@/data/generate"
 import { DATA_NOW, currentTime } from "@/lib/clock"
 import { adapter, type Resources } from "@/lib/data"
+import { customerAvatarFor } from "@/lib/avatars"
 import { cn } from "@/lib/utils"
 
 import { SIGNUPS_LAST_24H, SIGNUPS_PREVIOUS_24H, USAGE, USAGE_DAYS, USAGE_HOURS } from "./fixed"
@@ -329,6 +330,24 @@ function SeatsWidget({ metrics }: { metrics: ReturnType<typeof overviewMetrics> 
 // Needs attention: live through the data adapter
 // ---------------------------------------------------------------------------
 
+/**
+ * Who to show for each account: its owner, or an admin when the owner's
+ * portrait is already on a row above, so a short list never repeats a face.
+ */
+function pickContacts(accounts: Account[]): Map<string, User> {
+  const shown = new Set<string | null>()
+  const picked = new Map<string, User>()
+  for (const account of accounts) {
+    const candidates = accountContacts(account.id)
+    const contact = candidates.find((candidate) => !shown.has(customerAvatarFor(candidate.name))) ?? candidates[0]
+    if (contact) {
+      shown.add(customerAvatarFor(contact.name))
+      picked.set(account.id, contact)
+    }
+  }
+  return picked
+}
+
 function AttentionWidget() {
   const query = { filters: { attention: ["past-due", "over-limit"] }, sort: [{ id: "mrrCents", desc: true }], pageSize: 6 }
   const list = useList<Resources, "accounts">("accounts", query)
@@ -346,6 +365,7 @@ function AttentionWidget() {
     }
   )
   const atRisk = sum((list.data?.rows ?? []).filter((account) => account.status === "past_due").map((account) => account.mrrCents))
+  const contacts = useMemo(() => pickContacts(list.data?.rows ?? []), [list.data])
 
   return (
     <Widget className="gap-0 xl:col-span-2">
@@ -382,15 +402,18 @@ function AttentionWidget() {
           {list.data.rows.map((account) => {
             const pastDue = account.status === "past_due"
             const pending = (pastDue ? retry : raise).isPending && (pastDue ? retry : raise).variables?.id === account.id
+            const contact = contacts.get(account.id)
             return (
               <li key={account.id} className="flex items-center gap-3 border-b px-(--card-spacing) py-3 last:border-b-0">
-                <Initials name={account.name} className="size-9" />
+                <PersonAvatar name={contact?.name ?? account.name} customer className="size-9" />
                 <div className="flex min-w-0 flex-1 flex-col">
                   <Link href={`/users?account=${account.id}`} className="truncate text-sm font-medium hover:underline">
                     {account.name}
                   </Link>
                   <span className="truncate text-xs text-muted-foreground">
-                    {account.plan[0].toUpperCase() + account.plan.slice(1)} plan · {account.industry}
+                    {contact && <span className="text-foreground/80">{contact.name}</span>}
+                    {contact && " · "}
+                    {PLANS[account.plan].name} plan · {account.industry}
                   </span>
                 </div>
                 <div className="hidden lg:block">

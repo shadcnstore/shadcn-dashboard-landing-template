@@ -339,7 +339,7 @@ export function UsersPage() {
         hideable: false,
         cell: (row) => (
           <div className="flex min-w-0 items-center gap-3">
-            <PersonAvatar name={row.name} />
+            <PersonAvatar name={row.name} customer />
             <div className="flex min-w-0 flex-col">
               <span className="truncate font-medium">{row.name}</span>
               <span className="truncate text-xs text-muted-foreground">
@@ -671,7 +671,7 @@ export function UsersPage() {
                   checked={state.selected}
                   onCheckedChange={state.toggle}
                 />
-                <PersonAvatar name={row.name} />
+                <PersonAvatar name={row.name} customer />
                 <button
                   type="button"
                   className="flex min-w-0 flex-1 flex-col text-start"

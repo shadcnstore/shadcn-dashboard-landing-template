@@ -316,3 +316,31 @@ export function workspace(): Workspace {
   cached ??= generateWorkspace()
   return cached
 }
+
+let contacts: Map<string, User[]> | null = null
+
+/**
+ * The people you would email about a customer account: its owner first, then
+ * its active admins. Empty for a churned account, which has no users left.
+ */
+export function accountContacts(accountId: string): User[] {
+  if (!contacts) {
+    contacts = new Map()
+    for (const user of workspace().users) {
+      if (user.role === "owner" || (user.role === "admin" && user.status === "active")) {
+        const list = contacts.get(user.accountId) ?? []
+        list.push(user)
+        contacts.set(user.accountId, list)
+      }
+    }
+    for (const list of contacts.values()) {
+      list.sort((a, b) => Number(b.role === "owner") - Number(a.role === "owner"))
+    }
+  }
+  return contacts.get(accountId) ?? []
+}
+
+/** The customer's owner: the main contact for the account. */
+export function accountContact(accountId: string): User | undefined {
+  return accountContacts(accountId)[0]
+}

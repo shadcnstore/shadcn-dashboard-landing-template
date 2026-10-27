@@ -1,10 +1,14 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { avatarFor } from "@/lib/avatars"
+import { avatarFor, customerAvatarFor } from "@/lib/avatars"
 import { cn } from "@/lib/utils"
 
-/** A person's portrait, with their initials while it loads or when there is none. */
-export function PersonAvatar({ name, className, decorative = true }: { name: string; className?: string; decorative?: boolean }) {
-  const src = avatarFor(name)
+/**
+ * A person's portrait, with their initials while it loads or when there is none.
+ * Pass `customer` for people at customer accounts, so a customer who shares a
+ * teammate's name never gets the teammate's face.
+ */
+export function PersonAvatar({ name, className, decorative = true, customer = false }: { name: string; className?: string; decorative?: boolean; customer?: boolean }) {
+  const src = customer ? customerAvatarFor(name) : avatarFor(name)
   const initials = name
     .split(/\s+/)
     .map((part) => part[0])

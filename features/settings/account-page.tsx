@@ -3,7 +3,7 @@
 import { CheckIcon, EyeIcon, EyeOffIcon, KeyRoundIcon, LaptopIcon, LogOutIcon, MonitorSmartphoneIcon, ShieldCheckIcon, SmartphoneIcon, TabletIcon, TriangleAlertIcon, UserIcon } from "lucide-react"
 import { useState } from "react"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
@@ -12,11 +12,11 @@ import { Switch } from "@/components/ui/switch"
 import { toast } from "@/components/ui/toast"
 import { cn } from "@/lib/utils"
 
-import { StrengthMeter } from "../auth/password-strength"
-import type { ShellUser } from "../shell/types"
-import { IconTile } from "../ui-patterns/icon-tile"
-import { StatusBadge } from "../ui-patterns/status-badge"
-import { Widget } from "../widgets/widget"
+import { StrengthMeter } from "@/kit/auth/password-strength"
+import type { ShellUser } from "@/kit/shell/types"
+import { IconTile } from "@/kit/ui-patterns/icon-tile"
+import { StatusBadge } from "@/kit/ui-patterns/status-badge"
+import { Widget } from "@/kit/widgets/widget"
 
 const MIN_PASSWORD = 12
 
@@ -66,6 +66,10 @@ const DEFAULT_SESSIONS: AccountSession[] = [
  * Profile, password, two-step sign-in and signed-in devices. The Kit ships
  * the screen; wire each "save" to your auth provider (Auth.js, Clerk, Better
  * Auth). In the demo, changes show a confirmation and are not stored.
+ *
+ * Owned here, not in kit/: Kit 1.0.8's copy drops `user.avatar` and shows
+ * initials, so the signed-in user lost the portrait every other screen shows.
+ * kit.lock.json excludes `account/**`, so a Kit sync leaves this file alone.
  */
 export function AccountPage({
   user,
@@ -110,6 +114,7 @@ export function AccountPage({
           <div className="flex items-center gap-4">
             <div className="relative">
               <Avatar className="size-16 text-lg ring-4 ring-primary/10">
+                {user.avatar && <AvatarImage src={user.avatar} alt="" />}
                 <AvatarFallback className="bg-gradient-to-br from-primary to-chart-2 font-semibold text-primary-foreground">{initials || "?"}</AvatarFallback>
               </Avatar>
               <span className="absolute -end-0.5 -bottom-0.5 size-4 rounded-full bg-success ring-3 ring-card" title="Online" />

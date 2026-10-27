@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 import { SITE } from "@/config/site"
-import { AccountPage } from "@/kit/account/account-page"
+import { AccountPage } from "@/features/settings/account-page"
 
 export const metadata: Metadata = { title: "Account and security" }
 

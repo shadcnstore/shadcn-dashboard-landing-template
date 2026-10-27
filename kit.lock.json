@@ -10,10 +10,10 @@
     "auth/shader-backdrop.tsx",
     "auth/auth-showcase.tsx",
     "auth/auth-layout.tsx",
-    "auth/auth-forms.tsx"
+    "auth/auth-forms.tsx",
+    "account/**"
   ],
   "files": {
-    "account/account-page.tsx": "a2594fc2d2048c8a40760c274bde158a90908750c296d2d0fbad989f4bb996f5",
     "auth/auth-client.ts": "b7ffcef48979e72269274f746ef23366c50506b00bfc92006b00356ea73513ba",
     "auth/brand-marks.tsx": "01185bc8acc934351655357511026ece1495a5b817c1e5652b4c6c2f67765b6a",
     "auth/password-strength.tsx": "c0932e08e055d9591a0fc6eeb046080a2634a9b414c89c5c8d168ae566684380",

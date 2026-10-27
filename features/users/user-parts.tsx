@@ -1,6 +1,5 @@
 "use client"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { PLANS } from "@/data/generate"
@@ -10,20 +9,6 @@ import { cn } from "@/lib/utils"
 
 export const ROLE_LABELS: Record<UserRole, string> = { owner: "Owner", admin: "Admin", member: "Member", viewer: "Viewer" }
 const EDITABLE_ROLES = { admin: "Admin", member: "Member", viewer: "Viewer" }
-
-/** Two letters on a quiet tile. No photos of real people anywhere in the template. */
-export function Initials({ name, className }: { name: string; className?: string }) {
-  const letters = name
-    .split(" ")
-    .map((part) => part[0])
-    .slice(0, 2)
-    .join("")
-  return (
-    <Avatar aria-hidden className={cn("size-8", className)}>
-      <AvatarFallback className="bg-accent text-xs font-semibold text-accent-foreground">{letters}</AvatarFallback>
-    </Avatar>
-  )
-}
 
 export function PlanBadge({ plan }: { plan: PlanId }) {
   return (

@@ -27,6 +27,10 @@ Dev server: `PORT=3300 pnpm dev`, http://localhost:3300 (not 127.0.0.1). Demo bu
 - [x] Code review high (10, 9 fixed) and one medium pass (10, fixed); cap reached
 - Lighthouse mobile (demo build, gzip, Kit 1.0.8): / 82-83, /landing 91, /users 82-83, /go-further 87; a11y 100 on all four
 
+## Owner review round 3 (2026-10-27)
+- [x] Needs attention rows show the account owner's portrait and name (an active admin when that face is already on a row above); customers never use a reserved portrait (customerAvatarFor, lib/avatars.test.ts)
+- [x] Settings > Account and security shows the signed-in user's portrait (Kit finding 10)
+
 ## Kit findings (for upstream)
 1. `customizer-provider` imports `shader/colour`; colour parsing belongs in `theme/`.
 2. `auth-forms` imports `auth-layout` (AuthHeading, useAuthCopy), which imports the shader showcase.
@@ -37,3 +41,4 @@ Dev server: `PORT=3300 pnpm dev`, http://localhost:3300 (not 127.0.0.1). Demo bu
 7. Adapter: no "all rows" query, no optimistic updates in useKitMutation, `useList` needs explicit generics.
 8. Shell JS weight: ⌘K (cmdk), customizer panel and notification bell load on first paint on every route; lazy-loading them is the main lever for Lighthouse 90 on dashboard routes.
 9. SettingsHero switches to two columns at the viewport `md`, so inside the settings frame (sidebar + settings nav) its two-fifths column is ~180px at 768-1279px; it should use a container query.
+10. AccountPage takes a `ShellUser` but ignores `user.avatar`, so the signed-in user shows initials there and a photo everywhere else. Chronicle owns a fixed copy in features/settings/account-page.tsx and excludes `account/**` in kit.lock.json; drop both once the Kit renders the avatar.

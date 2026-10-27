@@ -6,6 +6,7 @@
  * A person gets the same photo everywhere: their name picks one from the
  * pool that matches their first name, by a stable hash. Names the template
  * does not know (a company, a name you add) get no photo and show initials.
+ * Customer accounts show their owner's photo (accountContact in data/generate.ts).
  * Replace this file to use your users' own avatars.
  */
 
@@ -53,6 +54,19 @@ export function avatarFor(name: string): string | null {
   if (named) {
     return path(named)
   }
+  return pooled(name)
+}
+
+/**
+ * The photo for a generated customer. A customer can share a name with
+ * someone on the team ("Priya Iyer" at a customer account), so the hand-picked
+ * faces are skipped and the name always draws from the unreserved pool.
+ */
+export function customerAvatarFor(name: string): string | null {
+  return pooled(name)
+}
+
+function pooled(name: string): string | null {
   const first = name.trim().split(/\s+/)[0] ?? ""
   const pool = (FEMININE.has(first) ? POOLS.f : MASCULINE.has(first) ? POOLS.m : EITHER.has(first) ? [...POOLS.f, ...POOLS.m] : null)?.filter((number) => !RESERVED.has(number))
   if (!pool || pool.length === 0) {
