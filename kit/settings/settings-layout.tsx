@@ -1,12 +1,11 @@
 "use client"
 
-import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
 import { useLayoutEffect, useRef, useState } from "react"
 
 import { NativeSelect, NativeSelectOptGroup, NativeSelectOption } from "@/components/ui/native-select"
 import { cn } from "@/lib/utils"
 
+import { Link, usePathname, useRouter } from "../framework"
 import { useBreadcrumbLabel } from "../shell/breadcrumbs"
 import { activeHref } from "../shell/nav-active"
 import type { NavLink } from "../shell/types"

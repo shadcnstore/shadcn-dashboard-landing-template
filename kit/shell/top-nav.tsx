@@ -1,8 +1,5 @@
 "use client"
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,6 +10,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 
+import { Link, usePathname } from "../framework"
 import { activeHref } from "./nav-active"
 import type { NavGroup } from "./types"
 

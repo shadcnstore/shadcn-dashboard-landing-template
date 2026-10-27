@@ -1,12 +1,13 @@
 "use client"
 
 import { CheckIcon } from "lucide-react"
-import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Spinner } from "@/components/ui/spinner"
 import { cn } from "@/lib/utils"
+
+import { Link } from "../framework"
 
 export interface WizardStep {
   id: string

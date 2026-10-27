@@ -1,10 +1,9 @@
 "use client"
 
 import type { LucideIcon } from "lucide-react"
-import { useRouter } from "next/navigation"
 import { createContext, lazy, Suspense, useContext, useEffect, useMemo, useState } from "react"
 
-
+import { useRouter } from "../framework"
 import type { NavLink } from "../shell/types"
 import { pressedKey } from "../shortcuts/key"
 import { whenIdle } from "../ui-patterns/when-idle"

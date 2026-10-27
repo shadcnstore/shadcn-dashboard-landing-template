@@ -1,12 +1,13 @@
 "use client"
 
-import { useParams, usePathname } from "next/navigation"
 import { useSyncExternalStore } from "react"
+
+import { useParams, usePathname } from "../framework"
 
 /**
  * The id of the record a detail page shows, e.g. `1042` on `/orders/1042`.
  *
- * In a normal Next.js build this is simply the route param. The static demo
+ * In a normal build this is simply the route param. The static demo
  * pre-renders one placeholder page per detail route (`/orders/_`) and the web
  * server serves it for every id, so there the param is always `_` and the real
  * id comes from the pathname instead. The pathname is only trusted after
@@ -28,10 +29,10 @@ function useHydrated() {
 }
 
 export function useRouteId(param = "id"): string | null {
-  const params = useParams<Record<string, string>>()
+  const params = useParams()
   const pathname = usePathname()
   const hydrated = useHydrated()
-  const fromRoute = params[param] ?? null
+  const fromRoute = (params[param] as string | undefined) ?? null
 
   if (fromRoute !== null && fromRoute !== PLACEHOLDER_ID) {
     return fromRoute

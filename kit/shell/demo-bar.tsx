@@ -1,11 +1,12 @@
 "use client"
 
 import { ArrowUpRightIcon, XIcon } from "lucide-react"
-import Script from "next/script"
 import { useState, useSyncExternalStore } from "react"
 
 import { Button, buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+
+import { InlineScript } from "../framework"
 
 const STORAGE_KEY = "kit-demo-bar-hidden"
 const noop = () => () => {}
@@ -40,9 +41,9 @@ export function trackDemoEvent(name: string, params: Record<string, unknown>): v
  */
 export function DemoAnalytics({ gtmId }: { gtmId: string }) {
   return (
-    <Script id="kit-demo-gtm" strategy="afterInteractive">
+    <InlineScript id="kit-demo-gtm">
       {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',${JSON.stringify(gtmId)});`}
-    </Script>
+    </InlineScript>
   )
 }
 

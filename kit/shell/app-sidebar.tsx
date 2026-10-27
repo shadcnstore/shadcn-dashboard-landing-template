@@ -1,8 +1,5 @@
 "use client"
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-
 import {
   Sidebar,
   SidebarContent,
@@ -17,6 +14,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 
+import { Link, usePathname } from "../framework"
 import { useCustomizer } from "../customizer/customizer-provider"
 import { isActive } from "./nav-active"
 import { NavMain } from "./nav-main"

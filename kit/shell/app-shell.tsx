@@ -1,7 +1,6 @@
 "use client"
 
 import { MenuIcon, SearchIcon } from "lucide-react"
-import Link from "next/link"
 import { useState } from "react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -13,6 +12,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
 
+import { Link } from "../framework"
 import { useCommandMenu } from "../command/command-menu"
 import { useCustomizer } from "../customizer/customizer-provider"
 import { CustomizerPanel } from "../customizer/customizer-panel"

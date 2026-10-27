@@ -1,7 +1,6 @@
 "use client"
 
 import { ArrowRightIcon, BellIcon, CheckCheckIcon, SettingsIcon } from "lucide-react"
-import Link from "next/link"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -13,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 
+import { Link } from "../framework"
 import { formatRelative } from "../data/format"
 import { currentTime } from "@/lib/clock"
 

@@ -1,7 +1,5 @@
 "use client"
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
 import { createContext, Fragment, useContext, useEffect, useState, useSyncExternalStore } from "react"
 
 import {
@@ -13,6 +11,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
+import { Link, usePathname } from "../framework"
 import type { NavLink } from "./types"
 
 type Setter = (label: string | null) => void

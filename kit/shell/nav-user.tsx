@@ -1,7 +1,6 @@
 "use client"
 
 import { BadgeCheckIcon, BellIcon, ChevronsUpDownIcon, LogOutIcon, SettingsIcon } from "lucide-react"
-import Link from "next/link"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -15,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
 
+import { Link } from "../framework"
 import type { ShellUser } from "./types"
 
 export function initials(name: string): string {

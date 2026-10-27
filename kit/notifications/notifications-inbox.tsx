@@ -1,7 +1,6 @@
 "use client"
 
 import { ArrowRightIcon, BellIcon, BellOffIcon, CheckCheckIcon, CheckIcon } from "lucide-react"
-import Link from "next/link"
 import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -9,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 
+import { Link } from "../framework"
 import { formatDate, formatRelative } from "../data/format"
 import { IconTile, TILE_TONES, type TileTone } from "../ui-patterns/icon-tile"
 import { EmptyState, ErrorState } from "../ui-patterns/query-state"

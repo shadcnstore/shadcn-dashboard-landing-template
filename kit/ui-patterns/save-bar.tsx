@@ -1,6 +1,5 @@
 "use client"
 
-import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 import {
@@ -15,6 +14,8 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
+
+import { useBasePath, useRouter } from "../framework"
 
 /**
  * The bar every edit form shows while it has unsaved changes, plus the guard
@@ -80,10 +81,12 @@ export function SaveBar({
 /**
  * While `active`, warns before the page is closed and intercepts clicks on
  * in-app links. Next.js has no hook for blocking navigation, so links are
- * caught at the document before the router sees them.
+ * caught at the document before the router sees them (the same under
+ * React Router, so both frameworks share this code).
  */
 export function useUnsavedChangesGuard(active: boolean) {
   const router = useRouter()
+  const basePath = useBasePath()
   const [href, setHref] = useState<string | null>(null)
 
   useEffect(() => {
@@ -114,17 +117,22 @@ export function useUnsavedChangesGuard(active: boolean) {
     }
   }, [active])
 
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
   return {
     href,
     stay: () => setHref(null),
     leave: () => {
       const target = href
       setHref(null)
-      if (target) {
-        // The router adds the base path itself.
-        router.push(basePath && target.startsWith(basePath) ? target.slice(basePath.length) || "/" : target)
+      if (!target) {
+        return
       }
+      if (basePath && target !== basePath && !target.startsWith(`${basePath}/`) && !target.startsWith(`${basePath}?`)) {
+        // Same origin but outside this app (another demo on the same host): a full page load, not the router.
+        window.location.assign(target)
+        return
+      }
+      // The router adds the base path itself.
+      router.push(basePath ? target.slice(basePath.length) || "/" : target)
     },
   }
 }

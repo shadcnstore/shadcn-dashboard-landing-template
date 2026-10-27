@@ -1,11 +1,11 @@
 "use client"
 
-import { useRouter } from "next/navigation"
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react"
 
 import { Kbd, KbdGroup } from "@/components/ui/kbd"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 
+import { useRouter } from "../framework"
 import type { NavLink } from "../shell/types"
 import { pressedKey } from "./key"
 

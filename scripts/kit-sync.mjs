@@ -12,6 +12,9 @@
 //   --exclude <glob>   leave Kit files out (repeatable; `*` within a folder, `**` across folders,
 //                      paths relative to kit/). Saved in the lock, so later syncs and --check keep
 //                      the same edition. Pass --exclude none to clear the saved list.
+//   --framework <name> the app framework the Kit is vendored into: `next` (default) or `vite`
+//                      (Vite + React Router). Picks kit/framework/'s adapter for that framework
+//                      (kit.json -> frameworks). Saved in the lock like --exclude.
 //
 // Source, first that exists: --source <path or git URL>, $KIT_SOURCE, a
 // sibling ../dashboard-kit checkout, then git@github.com:shadcnstore/dashboard-kit.git.
@@ -28,7 +31,7 @@ const DEFAULT_REMOTE = "git@github.com:shadcnstore/dashboard-kit.git"
 const LOCK = "kit.lock.json"
 
 function parseArgs(argv) {
-  const args = { ref: null, source: null, check: false, dryRun: false, allowUntagged: false, exclude: null, root: process.cwd() }
+  const args = { ref: null, source: null, check: false, dryRun: false, allowUntagged: false, exclude: null, framework: null, root: process.cwd() }
   for (let index = 0; index < argv.length; index++) {
     const arg = argv[index]
     if (arg === "--ref") args.ref = argv[++index]
@@ -41,6 +44,10 @@ function parseArgs(argv) {
       const glob = argv[++index]
       if (!glob) throw new Error("--exclude needs a glob, e.g. --exclude 'shader/**'")
       args.exclude = glob === "none" ? [] : [...(args.exclude ?? []), glob]
+    }
+    else if (arg === "--framework") {
+      args.framework = argv[++index]
+      if (!args.framework) throw new Error("--framework needs a name, e.g. --framework vite")
     }
     else if (arg === "--help" || arg === "-h") args.help = true
     else throw new Error(`Unknown argument ${arg}. Try --help.`)
@@ -85,9 +92,12 @@ export function globToRegExp(glob) {
   for (let index = 0; index < glob.length; index++) {
     const char = glob[index]
     if (char === "*" && glob[index + 1] === "*") {
-      source += ".*"
       index++
-      if (glob[index + 1] === "/") index++
+      if (glob[index + 1] === "/") {
+        // `**/` is zero or more whole folders, never part of a file name.
+        source += "(?:.*/)?"
+        index++
+      } else source += ".*"
     } else if (char === "*") source += "[^/]*"
     else if (char === "?") source += "[^/]"
     else source += char.replace(/[.+^${}()|[\]\\]/g, "\\$&")
@@ -95,9 +105,40 @@ export function globToRegExp(glob) {
   return new RegExp(`^${source}$`)
 }
 
+const DEFAULT_FRAMEWORK = "next"
+
+/**
+ * The frameworks a Kit manifest supports. Each maps kit/-relative targets to
+ * the variant file that becomes them (`{ "framework/index.tsx":
+ * "framework/react-router.tsx" }`) and adds its own dependencies. A manifest
+ * from before v1.1.0 has no list, and supports Next.js only.
+ */
+export function frameworksOf(manifest) {
+  return manifest?.frameworks ?? { [DEFAULT_FRAMEWORK]: { files: {}, dependencies: {} } }
+}
+
+/**
+ * Turns an extracted kit/ into one framework's edition: each variant the
+ * framework names replaces its target, and every other framework's variant
+ * files are removed. One Kit source, one adapter per app, nothing forked.
+ */
+export function applyFramework(kitDir, framework) {
+  const frameworks = frameworksOf(JSON.parse(readFileSync(join(kitDir, "kit.json"), "utf8")))
+  const chosen = frameworks[framework]
+  if (!chosen) throw new Error(`This Kit has no "${framework}" framework. It supports: ${Object.keys(frameworks).join(", ")}.`)
+  const files = chosen.files ?? {}
+  for (const [target, variant] of Object.entries(files)) cpSync(join(kitDir, variant), join(kitDir, target))
+  const targets = new Set(Object.keys(files))
+  const variants = new Set(Object.values(frameworks).flatMap((entry) => Object.values(entry.files ?? {})))
+  for (const variant of variants) {
+    if (!targets.has(variant)) rmSync(join(kitDir, variant), { force: true })
+  }
+}
+
 /** Whether a kit/-relative file is left out by any of the globs. */
 export function isExcluded(file, globs) {
-  return globs.some((glob) => globToRegExp(glob).test(file))
+  const patterns = globs.map(globToRegExp)
+  return patterns.some((pattern) => pattern.test(file))
 }
 
 const isCheckout = (path) => existsSync(join(path, ".git")) || existsSync(join(path, "HEAD"))
@@ -170,10 +211,16 @@ function checkGlobals(root) {
 }
 
 /** What the Kit needs from the template, from kit/kit.json. Returns problems; empty means fine. */
-function checkRequirements(root) {
+function checkRequirements(root, framework = DEFAULT_FRAMEWORK) {
   const manifestPath = join(root, "kit", "kit.json")
   if (!existsSync(manifestPath)) return { errors: ["kit/kit.json is missing"], warnings: [] }
-  const { requires } = JSON.parse(readFileSync(manifestPath, "utf8"))
+  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"))
+  const { requires } = manifest
+  const frameworks = frameworksOf(manifest)
+  if (!frameworks[framework]) {
+    return { errors: [`kit.lock.json names the "${framework}" framework, which this Kit does not support (${Object.keys(frameworks).join(", ")})`], warnings: [] }
+  }
+  const dependencies = { ...requires.dependencies, ...frameworks[framework].dependencies }
   const errors = []
   const warnings = []
   for (const [file, what] of Object.entries(requires.modules ?? {})) {
@@ -184,7 +231,7 @@ function checkRequirements(root) {
   const pkgPath = join(root, "package.json")
   const pkg = existsSync(pkgPath) ? JSON.parse(readFileSync(pkgPath, "utf8")) : {}
   const installed = { ...pkg.dependencies, ...pkg.devDependencies }
-  for (const [name, range] of Object.entries(requires.dependencies ?? {})) {
+  for (const [name, range] of Object.entries(dependencies)) {
     if (!installed[name]) errors.push(`package.json lacks ${name} (Kit needs ${range})`)
     else if (!satisfies(installed[name], range)) warnings.push(`${name} is ${installed[name]}, outside the ${range} the Kit was built against`)
   }
@@ -208,7 +255,7 @@ function check(root) {
   for (const file of Object.keys(actual)) {
     if (!lock.files[file]) drift.push(`added     kit/${file}`)
   }
-  const { errors, warnings } = checkRequirements(root)
+  const { errors, warnings } = checkRequirements(root, lock.framework ?? DEFAULT_FRAMEWORK)
   for (const warning of warnings) console.warn(`warning: ${warning}`)
   if (drift.length || errors.length) {
     if (drift.length) {
@@ -218,18 +265,20 @@ function check(root) {
     for (const error of errors) console.error(`error: ${error}`)
     return 1
   }
-  console.log(`kit/ matches ${lock.ref} (${lock.commit.slice(0, 7)}), ${Object.keys(lock.files).length} files.`)
+  const edition = lock.framework && lock.framework !== DEFAULT_FRAMEWORK ? `, ${lock.framework} edition` : ""
+  console.log(`kit/ matches ${lock.ref} (${lock.commit.slice(0, 7)}${edition}), ${Object.keys(lock.files).length} files.`)
   return 0
 }
 
-function sync({ ref, source, root, dryRun, allowUntagged, exclude: excludeArg }) {
+function sync({ ref, source, root, dryRun, allowUntagged, exclude: excludeArg, framework: frameworkArg }) {
   if (!ref) throw new Error("--ref <tag or commit> is required, e.g. --ref v1.0.0")
   const kitDir = join(root, "kit")
   const lockPath = join(root, LOCK)
   const previous = existsSync(lockPath) ? JSON.parse(readFileSync(lockPath, "utf8")) : null
   const exclude = excludeArg ?? previous?.exclude ?? []
-  if (existsSync(lockPath) && existsSync(kitDir)) {
-    const lock = JSON.parse(readFileSync(lockPath, "utf8"))
+  const framework = frameworkArg ?? previous?.framework ?? DEFAULT_FRAMEWORK
+  if (previous && existsSync(kitDir)) {
+    const lock = previous
     const actual = hashes(kitDir)
     const edited = [
       ...Object.keys(lock.files).filter((file) => actual[file] && actual[file] !== lock.files[file]),
@@ -257,7 +306,18 @@ function sync({ ref, source, root, dryRun, allowUntagged, exclude: excludeArg })
     try {
       const archive = execFileSync("git", ["archive", "--format=tar", commit, "kit"], { cwd: origin.dir, maxBuffer: 256 * 1024 * 1024 })
       execFileSync("tar", ["-x", "-C", staging], { input: archive })
-      const left = Object.keys(hashes(join(staging, "kit"))).filter((file) => isExcluded(file, exclude))
+      applyFramework(join(staging, "kit"), framework)
+      if (framework !== DEFAULT_FRAMEWORK) console.log(`Framework: ${framework}.`)
+      const self = execFileSync("git", ["show", `${commit}:bin/kit-sync.mjs`], { cwd: origin.dir, encoding: "utf8" })
+      const own = join(root, "scripts", "kit-sync.mjs")
+      if (existsSync(own) && readFileSync(own, "utf8") !== self) {
+        // An older script would vendor this Kit wrongly (before 1.1.0 it copied every framework's adapter), so stop before writing.
+        throw new Error(`scripts/kit-sync.mjs differs from ${ref}'s bin/kit-sync.mjs. Copy that one over (cp <dashboard-kit>/bin/kit-sync.mjs scripts/), then sync again.`)
+      }
+      const patterns = exclude.map(globToRegExp)
+      const left = Object.keys(hashes(join(staging, "kit"))).filter((file) => patterns.some((pattern) => pattern.test(file)))
+      const protectedFiles = ["kit.json", "framework/index.tsx", "framework/types.ts"].filter((file) => left.includes(file))
+      if (protectedFiles.length) throw new Error(`--exclude may not remove ${protectedFiles.join(", ")}: the Kit cannot work without them.`)
       for (const file of left) rmSync(join(staging, "kit", file))
       if (exclude.length) console.log(`Excluding ${left.length} file(s) matching ${exclude.join(", ")}.`)
       const incoming = hashes(join(staging, "kit"))
@@ -272,18 +332,14 @@ function sync({ ref, source, root, dryRun, allowUntagged, exclude: excludeArg })
       mkdirSync(kitDir, { recursive: true })
       cpSync(join(staging, "kit"), kitDir, { recursive: true })
       removeEmptyDirs(kitDir)
-      writeFileSync(lockPath, JSON.stringify({ ref, commit, ...(exclude.length ? { exclude } : {}), files: incoming }, null, 2) + "\n")
-      const self = execFileSync("git", ["show", `${commit}:bin/kit-sync.mjs`], { cwd: origin.dir, encoding: "utf8" })
-      if (existsSync(join(root, "scripts", "kit-sync.mjs")) && readFileSync(join(root, "scripts", "kit-sync.mjs"), "utf8") !== self) {
-        console.warn(`warning: scripts/kit-sync.mjs differs from ${ref}'s bin/kit-sync.mjs. Copy the new one over.`)
-      }
+      writeFileSync(lockPath, JSON.stringify({ ref, commit, ...(framework !== DEFAULT_FRAMEWORK ? { framework } : {}), ...(exclude.length ? { exclude } : {}), files: incoming }, null, 2) + "\n")
     } finally {
       rmSync(staging, { recursive: true, force: true })
     }
   } finally {
     origin.cleanup()
   }
-  const { errors, warnings } = checkRequirements(root)
+  const { errors, warnings } = checkRequirements(root, framework)
   for (const warning of warnings) console.warn(`warning: ${warning}`)
   for (const error of errors) console.error(`error: ${error}`)
   if (errors.length) return 1

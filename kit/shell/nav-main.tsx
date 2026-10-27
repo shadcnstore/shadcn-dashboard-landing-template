@@ -1,8 +1,6 @@
 "use client"
 
 import { ChevronRightIcon } from "lucide-react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
 import { useState } from "react"
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
@@ -20,6 +18,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 
+import { Link, usePathname } from "../framework"
 import { activeHref, isActive } from "./nav-active"
 import type { NavGroup, NavLink } from "./types"
 
