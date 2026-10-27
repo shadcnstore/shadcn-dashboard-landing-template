@@ -18,14 +18,16 @@ Chronicle is rebuilt on the ShadcnStore Dashboard Kit, the base of ShadcnStore's
 
 - The app now lives at the repository root. `nextjs-version/` and `vite-version/` are gone from 3.0; both remain in [v2.0.0](https://github.com/shadcnstore/shadcn-dashboard-landing-template/tree/v2.0.0).
 - **Next.js only.** The Vite version stays on 2.x, because the Kit uses the Next.js router.
-- Sign-in pages are one calm set (sign-in, sign-up, forgot password) instead of three variants each.
+- Sign-in, sign-up and forgot password each come in three layouts (split with art, centered card, full-bleed art), built on one set of forms: `/sign-in`, `/sign-in-2`, `/sign-in-3` and so on.
+- Pricing (monthly and yearly, with a comparison table) and FAQs (topics and search) are example pages for the product the dashboard runs, priced from the same plans as every MRR figure.
+- Settings gains Connections: the tools the business reads revenue from and sends alerts to, plus webhooks.
 - The documentation is plain Markdown in `docs/`.
 - Routes: `/dashboard` is now `/`, `/dashboard-2` is `/analytics`, `/auth/sign-in` is `/sign-in`, `/settings/user` is `/settings/profile`.
 - Next.js 16.4.3.
 
 ### Removed
 
-- The Vite version, the second and third sign-in, sign-up and forgot-password variants, the pricing and FAQ pages inside the app, and the VitePress docs site. The landing page keeps its pricing and FAQ sections.
+- The Vite version and the VitePress docs site.
 
 ## 2.0.0 : 2026-10-08
 

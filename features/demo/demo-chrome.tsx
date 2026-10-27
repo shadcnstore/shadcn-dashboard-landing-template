@@ -1,14 +1,15 @@
 "use client"
 
-import { ArrowUpRightIcon, StarIcon, XIcon } from "lucide-react"
+import { StarIcon, XIcon } from "lucide-react"
 import { useState, useSyncExternalStore } from "react"
 
 import { Button, buttonVariants } from "@/components/ui/button"
 import { DemoAnalytics } from "@/kit/shell/demo-bar"
 import { cn } from "@/lib/utils"
 
-import { REPO, STORE } from "./config"
+import { REPO } from "./config"
 import { trackFunnel } from "./track"
+import { UpgradeCard } from "./upgrade-card"
 
 const STORAGE_KEY = "chronicle-demo-bar-hidden"
 const noop = () => () => {}
@@ -23,7 +24,8 @@ function readHidden(): boolean {
 
 /**
  * The public demo's only persistent marketing: a small pill that says what
- * Chronicle is and offers two ways on. Closing it hides it for the visit.
+ * Chronicle is and offers two ways on: a GitHub star, and a card with the
+ * paid templates (upgrade-card.tsx). Closing it hides it for the visit.
  * Rendered by app/layout only when DEMO_BUILD=1.
  */
 function DemoBar() {
@@ -68,24 +70,10 @@ function DemoBar() {
           onClick={() => trackFunnel("bar-github")}
         >
           <StarIcon data-icon="inline-start" />
-          Star on GitHub
+          <span className="sm:hidden">Star</span>
+          <span className="hidden sm:inline">Star on GitHub</span>
         </a>
-        <a
-          href={`${STORE}/templates/dashboards`}
-          target="_blank"
-          rel="noopener"
-          className={cn(
-            buttonVariants({ size: "sm", variant: "ghost" }),
-            "hidden shrink-0 md:inline-flex"
-          )}
-          onClick={() => trackFunnel("bar-templates")}
-        >
-          Paid templates
-          <ArrowUpRightIcon
-            data-icon="inline-end"
-            className="rtl:-scale-x-100"
-          />
-        </a>
+        <UpgradeCard />
         <Button
           variant="ghost"
           size="icon-sm"

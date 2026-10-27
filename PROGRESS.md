@@ -31,6 +31,12 @@ Dev server: `PORT=3300 pnpm dev`, http://localhost:3300 (not 127.0.0.1). Demo bu
 - [x] Needs attention rows show the account owner's portrait and name (an active admin when that face is already on a row above); customers never use a reserved portrait (customerAvatarFor, lib/avatars.test.ts)
 - [x] Settings > Account and security shows the signed-in user's portrait (Kit finding 10)
 
+## Owner review round 4 (2026-10-27)
+- [x] v2 breadth back: sign-in, sign-up and forgot password in three layouts each (split, card, full-bleed; features/auth/auth-shell.tsx), Pricing and FAQs as Tidewell example pages, Settings > Connections (free; neither Emporium nor Rapport has one). Sidebar "Pages" group with folding Auth pages and Errors.
+- [x] Demo bar: "Paid templates" opens a card on hover, tap or Enter (features/demo/upgrade-card.tsx), placements bar-card-open, bar-card-emporium, bar-card-pro
+- [x] Profile hero keyed to the page width (FIT_HERO), so the preview is no longer clipped at 1024
+- Lighthouse mobile (demo build): / 78-83, /landing 90-91, a11y 100
+
 ## Kit findings (for upstream)
 1. `customizer-provider` imports `shader/colour`; colour parsing belongs in `theme/`.
 2. `auth-forms` imports `auth-layout` (AuthHeading, useAuthCopy), which imports the shader showcase.
@@ -42,3 +48,4 @@ Dev server: `PORT=3300 pnpm dev`, http://localhost:3300 (not 127.0.0.1). Demo bu
 8. Shell JS weight: ⌘K (cmdk), customizer panel and notification bell load on first paint on every route; lazy-loading them is the main lever for Lighthouse 90 on dashboard routes.
 9. SettingsHero switches to two columns at the viewport `md`, so inside the settings frame (sidebar + settings nav) its two-fifths column is ~180px at 768-1279px; it should use a container query.
 10. AccountPage takes a `ShellUser` but ignores `user.avatar`, so the signed-in user shows initials there and a photo everywhere else. Chronicle owns a fixed copy in features/settings/account-page.tsx and excludes `account/**` in kit.lock.json; drop both once the Kit renders the avatar.
+11. NavMain: labeled groups cannot fold, and a link with `items` opens only when the path is under the parent's own href, not when the path matches one of its items (Chronicle's Auth pages and Errors live outside the shell, so it does not bite yet).

@@ -15,12 +15,14 @@ import { authClient } from "@/kit/auth/auth-client"
 import { AuthHeader } from "./auth-shell"
 import { PasswordInput } from "./password-input"
 import { SocialButtons } from "./social-buttons"
+import { useAuthHref } from "./auth-variant"
 import { emailError, messageOf } from "./validate"
 
 type Errors = { email?: string; password?: string }
 
 export function SignInForm() {
   const router = useRouter()
+  const authHref = useAuthHref()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [errors, setErrors] = useState<Errors>({})
@@ -54,7 +56,7 @@ export function SignInForm() {
         description={
           <>
             New here?{" "}
-            <Link href="/sign-up" className="font-medium text-primary underline-offset-4 hover:underline">
+            <Link href={authHref("sign-up")} className="font-medium text-primary underline-offset-4 hover:underline">
               Create an account
             </Link>
           </>
@@ -92,7 +94,7 @@ export function SignInForm() {
           <Field data-invalid={!!errors.password || undefined}>
             <div className="flex items-center justify-between">
               <FieldLabel htmlFor="sign-in-password">Password</FieldLabel>
-              <Link href="/forgot-password" className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
+              <Link href={authHref("forgot-password")} className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
                 Forgot password?
               </Link>
             </div>

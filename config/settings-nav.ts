@@ -1,4 +1,4 @@
-import { BellIcon, CreditCardIcon, KeyRoundIcon, PaletteIcon, ShieldCheckIcon, UserIcon, UsersIcon } from "lucide-react"
+import { BellIcon, CreditCardIcon, KeyRoundIcon, PaletteIcon, PlugIcon, ShieldCheckIcon, UserIcon, UsersIcon } from "lucide-react"
 
 import type { SettingsGroup } from "@/kit/settings/settings-layout"
 
@@ -25,6 +25,10 @@ export const SETTINGS_NAV: SettingsGroup[] = [
         icon: BellIcon,
       },
     ],
+  },
+  {
+    label: "Workspace",
+    items: [{ title: "Connections", href: "/settings/connections", icon: PlugIcon }],
   },
   // The public demo only: previews of screens the paid templates ship (features/demo). Your build never lists them.
   ...(process.env.NEXT_PUBLIC_DEMO === "1"

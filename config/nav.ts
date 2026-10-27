@@ -3,20 +3,47 @@ import {
   BellIcon,
   CalendarDaysIcon,
   CheckSquareIcon,
+  CircleHelpIcon,
+  GlobeIcon,
   LayoutDashboardIcon,
+  LockKeyholeIcon,
   MailIcon,
   MessagesSquareIcon,
   SettingsIcon,
   SparklesIcon,
+  TagIcon,
+  TriangleAlertIcon,
   UsersIcon,
 } from "lucide-react"
 
+import { authPath, type AuthScreen, type AuthVariant } from "@/features/auth/auth-paths"
 import type { NavGroup, NavLink } from "@/kit/shell/types"
+
+const AUTH_SCREENS: [AuthScreen, string][] = [
+  ["sign-in", "Sign in"],
+  ["sign-up", "Sign up"],
+  ["forgot-password", "Forgot password"],
+]
+const AUTH_LAYOUTS: AuthVariant[] = [1, 2, 3]
+
+/** Every auth screen in each of its three layouts (features/auth/auth-variant.tsx). */
+const AUTH_PAGES: NavLink[] = AUTH_SCREENS.flatMap(([screen, title]) =>
+  AUTH_LAYOUTS.map((variant) => ({ title: `${title} ${variant}`, href: authPath(screen, variant) }))
+)
+
+const ERROR_PAGES: NavLink[] = [
+  { title: "Unauthorized", href: "/errors/unauthorized" },
+  { title: "Forbidden", href: "/errors/forbidden" },
+  { title: "Not found", href: "/errors/not-found" },
+  { title: "Server error", href: "/errors/internal-server-error" },
+  { title: "Maintenance", href: "/errors/under-maintenance" },
+]
 
 /**
  * One list drives the sidebar, the top nav, ⌘K and the G shortcuts
  * (G then the letter jumps to the page). Add a page here and it appears
- * everywhere at once.
+ * everywhere at once. A link with `items` folds in the sidebar and opens
+ * by itself on any page inside it.
  */
 export const NAV: NavGroup[] = [
   {
@@ -38,6 +65,16 @@ export const NAV: NavGroup[] = [
       { title: "Mail", href: "/mail", icon: MailIcon, shortcut: "m", badge: "mail" },
       { title: "Chat", href: "/chat", icon: MessagesSquareIcon, shortcut: "c" },
       { title: "Calendar", href: "/calendar", icon: CalendarDaysIcon, shortcut: "l" },
+    ],
+  },
+  {
+    label: "Pages",
+    items: [
+      { title: "Pricing", href: "/pricing", icon: TagIcon, shortcut: "p" },
+      { title: "FAQs", href: "/faqs", icon: CircleHelpIcon, shortcut: "f" },
+      { title: "Landing", href: "/landing", icon: GlobeIcon },
+      { title: "Auth pages", href: "/sign-in", icon: LockKeyholeIcon, items: AUTH_PAGES },
+      { title: "Errors", href: "/errors/not-found", icon: TriangleAlertIcon, items: ERROR_PAGES },
     ],
   },
 ]

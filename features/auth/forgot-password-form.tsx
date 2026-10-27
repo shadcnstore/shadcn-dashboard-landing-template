@@ -13,11 +13,13 @@ import { authClient } from "@/kit/auth/auth-client"
 import { cn } from "@/lib/utils"
 
 import { AuthHeader } from "./auth-shell"
+import { useAuthHref } from "./auth-variant"
 import { emailError, messageOf } from "./validate"
 
 function BackToSignIn() {
+  const authHref = useAuthHref()
   return (
-    <Link href="/sign-in" className={cn(buttonVariants({ variant: "ghost" }), "mt-6 w-full text-muted-foreground")}>
+    <Link href={authHref("sign-in")} className={cn(buttonVariants({ variant: "ghost" }), "mt-6 w-full text-muted-foreground")}>
       <ArrowLeftIcon data-icon="inline-start" />
       Back to sign in
     </Link>

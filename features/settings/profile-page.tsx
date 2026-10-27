@@ -30,6 +30,7 @@ import { SaveBar } from "@/kit/ui-patterns/save-bar"
 import { StatusBadge } from "@/kit/ui-patterns/status-badge"
 import { cn } from "@/lib/utils"
 
+import { FIT_HERO, SETTINGS_PAGE } from "./fit-hero"
 import { useSettingsStore, type Profile } from "./stores"
 
 const BIO_MAX = 200
@@ -150,12 +151,13 @@ export function ProfileSettingsPage() {
   })
 
   return (
-    <>
+    <div className={SETTINGS_PAGE}>
       {/* `contents`, so the cards stay direct children of the settings column and keep its spacing. */}
       <form onSubmit={save} noValidate className="contents">
-        <SettingsHero aside={<Preview profile={values} />}>
-          {/* The Kit's hero puts this beside the preview from md, in two fifths of the card: stack until there is room. */}
-          <div className="flex items-center gap-4 md:flex-col md:items-start 2xl:flex-row 2xl:items-center">
+        {/* FIT_HERO: the preview sits beside the profile only when the page itself is 768px wide, so it is never clipped. */}
+        <SettingsHero aside={<Preview profile={values} />} className={FIT_HERO}>
+          {/* Beside the preview this column is two fifths wide: stack until there is room. */}
+          <div className="flex items-center gap-4 @3xl/settings:flex-col @3xl/settings:items-start @6xl/settings:flex-row @6xl/settings:items-center">
             <ProfileAvatar profile={values} />
             <div className="flex min-w-0 flex-col">
               <span className="truncate text-lg font-semibold">
@@ -311,6 +313,6 @@ export function ProfileSettingsPage() {
         onDiscard={() => form.reset(saved)}
         saveLabel="Save profile"
       />
-    </>
+    </div>
   )
 }

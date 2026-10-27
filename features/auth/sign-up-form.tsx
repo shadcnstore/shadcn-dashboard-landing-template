@@ -16,6 +16,7 @@ import { StrengthMeter } from "@/kit/auth/password-strength"
 import { AuthHeader } from "./auth-shell"
 import { PasswordInput } from "./password-input"
 import { SocialButtons } from "./social-buttons"
+import { useAuthHref } from "./auth-variant"
 import { emailError, messageOf, PASSWORD_MINIMUM, passwordError } from "./validate"
 
 type Values = { name: string; email: string; password: string }
@@ -23,6 +24,7 @@ type Errors = Partial<Record<keyof Values, string>>
 
 export function SignUpForm() {
   const router = useRouter()
+  const authHref = useAuthHref()
   const [values, setValues] = useState<Values>({ name: "", email: "", password: "" })
   const [errors, setErrors] = useState<Errors>({})
   const [formError, setFormError] = useState<string>()
@@ -67,7 +69,7 @@ export function SignUpForm() {
         description={
           <>
             Already have one?{" "}
-            <Link href="/sign-in" className="font-medium text-primary underline-offset-4 hover:underline">
+            <Link href={authHref("sign-in")} className="font-medium text-primary underline-offset-4 hover:underline">
               Sign in
             </Link>
           </>
