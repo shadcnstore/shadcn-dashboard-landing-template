@@ -22,7 +22,7 @@ export function BrandCredit({ label = "Template by", className }: { label?: stri
   return (
     <a href={BRAND.credits.href} target="_blank" rel="noopener" className={cn("inline-flex w-fit items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground", className)}>
       {label}
-      <ShadcnStoreMark className="size-3.5" />
+      <ShadcnStoreMark className="size-4" />
       <span className="font-medium">{BRAND.credits.by}</span>
     </a>
   )
