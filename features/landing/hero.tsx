@@ -1,57 +1,64 @@
-import { ArrowRightIcon } from "lucide-react"
+import { ArrowRightIcon, SparklesIcon } from "lucide-react"
 import Link from "next/link"
 
 import { buttonVariants } from "@/components/ui/button"
 import { TRIAL_DAYS } from "@/data/generate"
 import { cn } from "@/lib/utils"
 
-import { ProductPreview } from "./product-preview"
+import { DotGrid, Screenshot } from "./section-heading"
+
+const HERO_SIZES = "(min-width: 1200px) 1152px, 96vw"
 
 export function Hero() {
   return (
-    <section id="top" className="relative isolate overflow-hidden pt-16 pb-12 sm:pt-24 sm:pb-20">
-      {/* A hairline grid that fades out under the headline; tokens only, no image. */}
-      <div
-        aria-hidden
-        className="absolute inset-0 -z-10 [background-image:linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] [background-size:56px_56px] opacity-60 [mask-image:radial-gradient(ellipse_70%_55%_at_50%_0%,black,transparent)]"
-      />
-      <div aria-hidden className="absolute inset-x-0 top-[34rem] -z-10 mx-auto h-72 max-w-4xl rounded-full bg-primary/15 blur-3xl" />
+    <section id="top" className="relative isolate overflow-hidden pt-20 pb-16 sm:pt-24 sm:pb-24">
+      <DotGrid />
 
-      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-          <a
-            href="#features"
-            className="mb-8 inline-flex items-center gap-2 rounded-full border bg-card/80 py-1 ps-1 pe-3 text-xs text-muted-foreground shadow-(--surface-shadow) transition-colors hover:text-foreground"
-          >
-            <span className="rounded-full bg-primary/10 px-2 py-0.5 font-medium text-primary">New</span>
-            Cohort retention, split by plan
-            <ArrowRightIcon className="size-3" />
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
+          <a href="#features" className="mb-8 inline-flex items-center gap-2 rounded-full border border-foreground/80 bg-background px-4 py-1.5 text-sm font-medium transition-colors hover:bg-muted">
+            <SparklesIcon className="size-3.5" aria-hidden />
+            New: cohort retention, split by plan
+            <ArrowRightIcon className="size-3.5" aria-hidden />
           </a>
 
-          <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-6xl">
-            Know where every dollar of recurring revenue <span className="text-primary">comes from</span>
+          <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-6xl lg:text-7xl">
+            Run your subscription business{" "}
+            <span className="bg-linear-to-r from-foreground to-foreground/45 bg-clip-text text-transparent">from one screen</span>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-lg text-pretty text-muted-foreground">
-            Tidewell turns your billing data into MRR, churn and retention you can trust, reconciled to the cent and ready the
-            morning after you connect.
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-pretty text-muted-foreground sm:text-xl">
+            Tidewell puts revenue, accounts, seats and your team&rsquo;s work side by side: MRR you can reconcile to the cent, the accounts that need you today, and the tasks that fix them.
           </p>
 
           <div className="mt-10 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-            <Link href="/" className={cn(buttonVariants({ size: "lg" }), "h-10 px-4")}>
-              Open the dashboard
+            <Link href="/sign-up" className={cn(buttonVariants({ size: "lg" }), "h-11 px-5 text-base")}>
+              Start a free trial
               <ArrowRightIcon data-icon="inline-end" />
             </Link>
-            <a href="#pricing" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-10 bg-card px-4")}>
-              See pricing
-            </a>
+            <Link href="/" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-11 bg-background px-5 text-base")}>
+              Open the live dashboard
+            </Link>
           </div>
-          <p className="mt-4 text-xs text-muted-foreground">{TRIAL_DAYS}-day free trial on every plan. No card needed.</p>
+          <p className="mt-4 text-sm text-muted-foreground">{TRIAL_DAYS}-day free trial on every plan. No card needed.</p>
         </div>
 
-        <div className="relative mx-auto mt-16 max-w-5xl sm:mt-20">
-          <ProductPreview />
-          <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-b from-transparent to-background" />
+        {/* The demo bar stays out of the way while this is on screen (data-demo-bar-clear, features/demo/demo-chrome.tsx).
+            Lazy on purpose: on phones it sits below the fold, and on wide screens a lazy image in view still loads at once. */}
+        <div data-demo-bar-clear className="relative mx-auto mt-20 max-w-6xl">
+          <div aria-hidden className="absolute -top-8 left-1/2 -z-10 h-40 w-[85%] -translate-x-1/2 rounded-full bg-foreground/15 blur-3xl lg:h-72" />
+          <div className="relative overflow-hidden rounded-xl border bg-card p-1.5 shadow-(--surface-shadow-raised) sm:rounded-2xl sm:p-2">
+            <Screenshot
+              name="overview"
+              alt="Tidewell's overview: monthly recurring revenue, sign-ups, retention and paying accounts"
+              widths={[960, 1600]}
+              width={1600}
+              height={1000}
+              sizes={HERO_SIZES}
+              className="rounded-lg sm:rounded-xl"
+            />
+            <div aria-hidden className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-b from-transparent to-background sm:h-40" />
+          </div>
         </div>
       </div>
     </section>

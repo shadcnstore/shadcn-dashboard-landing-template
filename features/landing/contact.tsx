@@ -27,7 +27,7 @@ const OPTIONS = [
 
 export function Contact() {
   return (
-    <Section id="contact" className="bg-muted/40">
+    <Section id="contact">
       <SectionHeading eyebrow="Contact" title="Talk to the people who build it" lede="Questions about pricing, a migration, or a metric that looks off? Send a note." />
       <div className="mt-14 grid gap-6 lg:grid-cols-[1fr_1.6fr]">
         <ul className="flex flex-col gap-4">

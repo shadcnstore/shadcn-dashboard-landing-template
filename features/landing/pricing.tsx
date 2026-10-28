@@ -16,12 +16,12 @@ export function Pricing() {
   const cards = planCards(billing)
 
   return (
-    <section id="pricing" className="scroll-mt-16 py-20 sm:py-28">
-      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
-          <p className="font-mono text-xs font-medium tracking-wider text-primary uppercase">Pricing</p>
-          <h2 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">Pay for the seats your team uses</h2>
-          <p className="text-base text-pretty text-muted-foreground sm:text-lg">{`${TRIAL_DAYS}-day free trial on every plan. Each plan includes seats; add more as your team grows.`}</p>
+    <section id="pricing" aria-labelledby="pricing-title" className="scroll-mt-16 bg-muted/50 py-20 sm:py-28 lg:py-32">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 text-center">
+          <p className="w-fit rounded-full border bg-background px-3 py-1 text-xs font-medium">Pricing</p>
+          <h2 id="pricing-title" className="text-3xl font-bold tracking-tight text-balance sm:text-4xl lg:text-5xl">Choose your plan</h2>
+          <p className="text-lg text-pretty text-muted-foreground">{`${TRIAL_DAYS}-day free trial on every plan. Each plan includes seats; add more as your team grows.`}</p>
           <ToggleGroup
             aria-label="Billing period"
             value={[billing]}
@@ -40,13 +40,13 @@ export function Pricing() {
           </ToggleGroup>
         </div>
 
-        <ul className="mt-14 grid gap-4 lg:grid-cols-3">
+        <ul className="mx-auto mt-16 grid max-w-6xl items-center gap-6 lg:grid-cols-3">
           {cards.map((plan) => (
             <li
               key={plan.id}
               className={cn(
-                "relative flex flex-col gap-6 rounded-xl border bg-card p-6 shadow-(--surface-shadow) sm:p-8",
-                plan.featured && "border-primary/40 shadow-(--surface-shadow-raised) ring-1 ring-primary/30"
+                "relative flex flex-col gap-6 rounded-2xl border bg-card p-6 shadow-(--surface-shadow) sm:p-8",
+                plan.featured && "border-foreground/20 shadow-(--surface-shadow-raised) lg:py-12"
               )}
             >
               <div className="flex flex-col gap-2">

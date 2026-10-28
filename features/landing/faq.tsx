@@ -1,31 +1,37 @@
+import { CircleHelpIcon } from "lucide-react"
+
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { buttonVariants } from "@/components/ui/button"
 import { LANDING_FAQS } from "@/features/faqs/data"
 
-import { SectionHeading } from "./section-heading"
+import { Section, SectionHeading } from "./section-heading"
 
+/** Six questions from Tidewell's help centre (features/faqs/data.ts), the same answers the in-app FAQs page gives. */
 export function Faq() {
   return (
-    <section id="faq" className="scroll-mt-16 py-20 sm:py-28">
-      <div className="mx-auto grid w-full max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.6fr] lg:px-8">
-        <div className="flex flex-col gap-6">
-          <SectionHeading align="start" eyebrow="FAQ" title="Questions, answered" lede="The things finance and growth teams ask before they connect billing." />
-          <p className="text-sm text-muted-foreground">
-            Something else?{" "}
-            <a href="#contact" className="font-medium text-primary underline-offset-4 hover:underline">
-              Send us a note
-            </a>
-            .
-          </p>
-        </div>
-        <Accordion className="rounded-xl border bg-card px-5 shadow-(--surface-shadow)">
-          {LANDING_FAQS.map((item) => (
-            <AccordionItem key={item.question} value={item.question}>
-              <AccordionTrigger className="py-4 text-base">{item.question}</AccordionTrigger>
-              <AccordionContent className="text-pretty text-muted-foreground">{item.answer}</AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+    <Section id="faq" labelledBy="faq-title">
+      <SectionHeading id="faq-title" eyebrow="FAQ" title="Frequently asked questions" lede="What finance and success teams ask before they connect billing. Still curious? We are a message away." />
+      <Accordion className="mx-auto mt-16 flex max-w-3xl flex-col gap-3">
+        {LANDING_FAQS.map((item) => (
+          <AccordionItem key={item.question} value={item.question} className="rounded-xl border bg-card px-5 shadow-(--surface-shadow) not-last:border-b">
+            <AccordionTrigger className="items-center gap-3 py-4 text-base hover:no-underline">
+              <span className="flex flex-1 items-center gap-3">
+                <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-muted">
+                  <CircleHelpIcon className="size-4" aria-hidden />
+                </span>
+                {item.question}
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="ps-10 text-pretty text-muted-foreground">{item.answer}</AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
+      <div className="mt-10 flex flex-col items-center gap-3 text-center">
+        <p className="text-muted-foreground">Still have questions? We are here to help.</p>
+        <a href="#contact" className={buttonVariants()}>
+          Contact support
+        </a>
       </div>
-    </section>
+    </Section>
   )
 }

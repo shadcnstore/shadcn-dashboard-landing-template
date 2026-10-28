@@ -15,12 +15,13 @@ import { Testimonials } from "./testimonials"
 
 /**
  * Frontier, the landing page that ships with Chronicle, selling the fictional
- * Tidewell. A server component: only the navbar, pricing toggle, FAQ and the
+ * Tidewell, on v2's layout: monochrome, a dot grid behind a real screenshot
+ * of the dashboard, then the full section set. A server component: only the navbar, pricing toggle, FAQ and the
  * two forms hydrate.
  */
 export function LandingPage() {
   return (
-    <div className="min-h-svh bg-background">
+    <div className="landing-mono min-h-svh bg-background text-foreground">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-background focus:px-3 focus:py-2 focus:text-sm focus:shadow-(--surface-shadow-raised)"
@@ -34,15 +35,13 @@ export function LandingPage() {
         <Stats />
         <About />
         <Features />
-        <Testimonials />
-        <Pricing />
         <Team />
+        <Pricing />
+        <Testimonials />
         <Blog />
         <Faq />
+        <Cta />
         <Contact />
-        <div className="pt-20 sm:pt-28">
-          <Cta />
-        </div>
       </main>
       <Footer />
     </div>

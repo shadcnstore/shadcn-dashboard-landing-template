@@ -32,7 +32,7 @@ const POSTS = [
 
 export function Blog() {
   return (
-    <Section id="journal" className="bg-muted/40">
+    <Section id="journal" className="bg-muted/50">
       <SectionHeading eyebrow="Journal" title="Notes on subscription metrics" lede="Practical writing from the team, for people who own the revenue number." />
       <ul className="mt-14 grid gap-4 lg:grid-cols-3">
         {POSTS.map((post) => (

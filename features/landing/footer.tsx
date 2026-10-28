@@ -54,7 +54,7 @@ function FooterAnchor({ link }: { link: FooterLink }) {
 export function Footer() {
   return (
     <footer className="border-t bg-card/60">
-      <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
           <div className="flex max-w-sm flex-col gap-4">
             <TidewellLogo />

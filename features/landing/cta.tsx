@@ -2,33 +2,30 @@ import { ArrowRightIcon } from "lucide-react"
 import Link from "next/link"
 
 import { buttonVariants } from "@/components/ui/button"
+import { TRIAL_DAYS } from "@/data/generate"
 import { cn } from "@/lib/utils"
+
+import { DotGrid } from "./section-heading"
 
 export function Cta() {
   return (
-    <section aria-labelledby="cta-title" className="px-4 pb-20 sm:px-6 sm:pb-28 lg:px-8">
-      <div className="relative isolate mx-auto max-w-6xl overflow-hidden rounded-2xl bg-(--auth-panel) px-6 py-16 text-center text-(--auth-panel-foreground) sm:px-12 sm:py-20">
-        <div
-          aria-hidden
-          className="absolute inset-0 -z-10 [background-image:linear-gradient(to_right,color-mix(in_oklch,var(--auth-panel-foreground)_8%,transparent)_1px,transparent_1px),linear-gradient(to_bottom,color-mix(in_oklch,var(--auth-panel-foreground)_8%,transparent)_1px,transparent_1px)] [background-size:48px_48px] [mask-image:radial-gradient(ellipse_60%_80%_at_50%_100%,black,transparent)]"
-        />
-        <h2 id="cta-title" className="mx-auto max-w-2xl text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-          Close next month with numbers everyone trusts
+    <section aria-labelledby="cta-title" className="relative isolate overflow-hidden bg-muted/50 py-24 sm:py-32">
+      <DotGrid className="[mask-image:radial-gradient(ellipse_50%_60%_at_50%_50%,black,transparent)]" />
+      <div className="mx-auto flex max-w-4xl flex-col items-center px-4 text-center sm:px-6 lg:px-8">
+        <h2 id="cta-title" className="text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
+          Close next month with numbers{" "}
+          <span className="bg-linear-to-r from-foreground to-foreground/45 bg-clip-text text-transparent">everyone trusts</span>
         </h2>
-        <p className="mx-auto mt-4 max-w-xl text-pretty opacity-75">Explore the dashboard with sample data, or start a free trial and connect your own billing in minutes.</p>
-        <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <Link href="/" className={cn(buttonVariants({ size: "lg" }), "h-10 px-4")}>
-            Open the dashboard
+        <p className="mt-6 max-w-2xl text-lg text-pretty text-muted-foreground">
+          Explore the dashboard with sample data, or start a {TRIAL_DAYS}-day free trial and connect your own billing in minutes.
+        </p>
+        <div className="mt-10 flex w-full flex-col justify-center gap-3 sm:w-auto sm:flex-row">
+          <Link href="/sign-up" className={cn(buttonVariants({ size: "lg" }), "h-11 px-5 text-base")}>
+            Start a free trial
             <ArrowRightIcon data-icon="inline-end" />
           </Link>
-          <Link
-            href="/sign-up"
-            className={cn(
-              buttonVariants({ variant: "outline", size: "lg" }),
-              "h-10 border-(--auth-panel-foreground)/20 bg-transparent px-4 text-(--auth-panel-foreground) hover:bg-(--auth-panel-foreground)/10 hover:text-(--auth-panel-foreground) dark:border-(--auth-panel-foreground)/20 dark:bg-transparent"
-            )}
-          >
-            Create an account
+          <Link href="/" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-11 bg-background px-5 text-base")}>
+            Open the live dashboard
           </Link>
         </div>
       </div>

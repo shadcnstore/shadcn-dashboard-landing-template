@@ -39,15 +39,15 @@ const QUOTES = [
 
 export function Testimonials() {
   return (
-    <Section id="customers">
-      <SectionHeading eyebrow="Customers" title="Teams that stopped arguing about the numbers" />
-      <ul className="mt-14 columns-1 gap-4 md:columns-2 lg:columns-3">
+    <Section id="customers" labelledBy="customers-title">
+      <SectionHeading id="customers-title" eyebrow="Customers" title="Teams that stopped arguing about the numbers" lede="Finance, growth and success teams on how Tidewell changed their month." />
+      <ul className="mt-16 columns-1 gap-6 md:columns-2 lg:columns-3">
         {QUOTES.map((item) => (
-          <li key={item.name} className="mb-4 break-inside-avoid">
-            <figure className="flex flex-col gap-5 rounded-xl border bg-card p-6 shadow-(--surface-shadow)">
+          <li key={item.name} className="mb-6 break-inside-avoid">
+            <figure className="flex flex-col-reverse gap-5 rounded-2xl border bg-card p-6 shadow-(--surface-shadow)">
               <blockquote className="text-pretty">&ldquo;{item.quote}&rdquo;</blockquote>
               <figcaption className="flex items-center gap-3">
-                <PersonAvatar name={item.name} className="size-9" />
+                <PersonAvatar name={item.name} className="size-11" />
                 <div className="flex flex-col">
                   <span className="text-sm font-medium">{item.name}</span>
                   <span className="text-xs text-muted-foreground">{item.role}</span>

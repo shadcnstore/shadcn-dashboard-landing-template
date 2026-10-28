@@ -35,7 +35,7 @@ export function LandingNavbar() {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-6 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-14 w-full max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-8">
         <a href="#top" className="rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/50" aria-label="Tidewell home">
           <TidewellLogo />
         </a>

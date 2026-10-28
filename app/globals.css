@@ -153,6 +153,55 @@
   --sidebar-ring: oklch(0.67 0.16 262);
 }
 
+/*
+ * Frontier (/landing) is monochrome, like the v2 landing it replaces: neutral
+ * greys instead of Chronicle's slate, and near-black as the primary. Scoped to
+ * the landing's wrapper, so the dashboard keeps its cobalt theme.
+ */
+.landing-mono {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.52 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --surface-shadow: 0 0 0 1px oklch(0 0 0 / 4%), 0 1px 2px oklch(0 0 0 / 5%);
+  --surface-shadow-raised: 0 0 0 1px oklch(0 0 0 / 5%), 0 24px 48px -24px oklch(0 0 0 / 25%);
+}
+
+.dark .landing-mono {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.18 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.22 0 0);
+  --muted-foreground: oklch(0.72 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --surface-shadow: 0 0 0 1px oklch(1 0 0 / 6%);
+  --surface-shadow-raised: 0 0 0 1px oklch(1 0 0 / 8%), 0 24px 48px -24px oklch(0 0 0 / 60%);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
