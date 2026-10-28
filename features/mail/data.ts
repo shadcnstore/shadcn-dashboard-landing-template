@@ -1,7 +1,7 @@
 import { DATA_NOW } from "@/lib/clock"
 
 /**
- * Maya Okafor's mailbox at Tidewell. Every timestamp is built back from
+ * Maya Okafor's mailbox at Chronicle. Every timestamp is built back from
  * DATA_NOW, so the inbox reads the same on every visit. Customer accounts are
  * fictional two-word names; every address ends in example.com.
  */
@@ -93,7 +93,7 @@ export const MAILS: Mail[] = [
   {
     id: "m03",
     folder: "inbox",
-    from: { name: "Tidewell Billing", email: "billing@tidewell.example.com" },
+    from: { name: "Chronicle Billing", email: "billing@chronicle.example.com" },
     to: ME.email,
     subject: "3 card payments failed for Scale accounts",
     date: at(0, "09:15"),
@@ -270,7 +270,7 @@ export const MAILS: Mail[] = [
     account: { name: "Northgate Logistics", plan: "Scale", mrrCents: 156000, seats: 18, seatLimit: 40, renewsOn: "Nov 9, 2026" },
     body: [
       "Hello Maya,",
-      "After the restructure we are down to 18 people who use Tidewell, so we plan to move to Growth at our next renewal. We would like to keep our saved views and the exports history.",
+      "After the restructure we are down to 18 people who use Chronicle, so we plan to move to Growth at our next renewal. We would like to keep our saved views and the exports history.",
       "Can you confirm nothing is lost in the switch?",
       "Kai",
     ],
@@ -278,9 +278,9 @@ export const MAILS: Mail[] = [
   {
     id: "m14",
     folder: "inbox",
-    from: { name: "Tidewell Security", email: "security@tidewell.example.com" },
+    from: { name: "Chronicle Security", email: "security@chronicle.example.com" },
     to: ME.email,
-    subject: "New sign-in to the Tidewell admin",
+    subject: "New sign-in to the Chronicle admin",
     date: at(8, "06:58"),
     read: true,
     starred: false,

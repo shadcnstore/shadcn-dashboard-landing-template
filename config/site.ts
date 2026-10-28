@@ -1,17 +1,17 @@
-import { ChronicleMark } from "@/components/chronicle/logo"
+import { BRAND } from "@/config/brand"
 import type { ShellConfig } from "@/kit/shell/types"
 import { avatarFor } from "@/lib/avatars"
 
 import { NAV, SECONDARY_NAV } from "./nav"
 
-/** The sample business: Tidewell, a subscription-analytics company. Replace with your own. */
+/** The shell around every dashboard page. The name and mark come from config/brand.ts. */
 export const SITE: ShellConfig = {
-  brand: { name: "Chronicle", logo: ChronicleMark },
+  brand: { name: BRAND.name, logo: BRAND.mark },
   nav: NAV,
   secondary: SECONDARY_NAV,
   workspaces: [
-    { id: "tidewell", name: "Tidewell", description: "Production", logo: ChronicleMark },
-    { id: "tidewell-staging", name: "Tidewell Staging", description: "Sandbox", logo: ChronicleMark },
+    { id: "production", name: BRAND.name, description: "Production", logo: BRAND.mark },
+    { id: "staging", name: `${BRAND.name} Staging`, description: "Sandbox", logo: BRAND.mark },
   ],
   workspaceLabels: { group: "Workspaces", add: "Add workspace" },
   user: { name: "Maya Okafor", email: "maya.okafor@example.com", avatar: avatarFor("Maya Okafor") ?? undefined },

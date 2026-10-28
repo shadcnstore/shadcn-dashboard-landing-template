@@ -32,7 +32,7 @@ export const LAST_NAMES = [
   "Saarinen", "Sato", "Silva", "Takahashi", "Tran", "Varga", "Velasco", "Wada", "Weiss", "Yilmaz", "Zielinski",
 ] as const
 
-/** Tidewell's own team. Owners of customer accounts and assignees of tasks. */
+/** Chronicle's own team. Owners of customer accounts and assignees of tasks. */
 export const TEAM: TeamMember[] = [
   { id: "tm_maya", name: "Maya Okafor", email: "maya.okafor@example.com", title: "Head of Operations" },
   { id: "tm_soren", name: "Soren Lindqvist", email: "soren.lindqvist@example.com", title: "Engineering Lead" },
@@ -44,7 +44,7 @@ export const TEAM: TeamMember[] = [
   { id: "tm_emeka", name: "Emeka Bello", email: "emeka.bello@example.com", title: "Frontend Engineer" },
 ]
 
-/** Tidewell's product backlog. A label here overrides the random one. */
+/** Chronicle's product backlog. A label here overrides the random one. */
 export const TASK_TITLES: [string, TaskLabel | null][] = [
   ["Retry failed card payments after 24 hours", "feature"],
   ["Seat limit banner overlaps the header on mobile", "bug"],

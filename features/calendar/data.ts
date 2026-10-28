@@ -1,7 +1,7 @@
 import { addDays, TODAY } from "./dates"
 
 /**
- * Maya Okafor's October at Tidewell. Every event is placed a fixed number of
+ * Maya Okafor's October at Chronicle. Every event is placed a fixed number of
  * days from the demo's today, so the calendar looks the same on every visit.
  * Times are UTC.
  */
@@ -24,7 +24,7 @@ export interface CalendarEvent {
   end: string | null
   calendar: CalendarId
   location?: string
-  /** Tidewell team member ids. */
+  /** Chronicle team member ids. */
   attendees: string[]
 }
 

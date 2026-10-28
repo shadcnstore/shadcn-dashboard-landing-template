@@ -100,11 +100,9 @@ function DemoBar() {
         className="fixed transition-[translate,opacity] duration-300 ease-out data-clear:pointer-events-none data-clear:translate-y-[calc(100%+1rem)] data-clear:opacity-0 inset-x-3 bottom-3 z-40 mx-auto flex max-w-md items-center gap-2 rounded-2xl border bg-popover/95 p-2 ps-4 text-popover-foreground shadow-lg backdrop-blur sm:inset-x-auto sm:start-1/2 sm:w-max sm:max-w-none sm:-translate-x-1/2 rtl:sm:translate-x-1/2 motion-reduce:transition-none"
       >
         <p className="me-1 min-w-0 text-sm leading-tight">
+          <span className="hidden text-muted-foreground sm:inline">This is the </span>
           <span className="font-semibold">Chronicle</span>
-          <span className="hidden text-muted-foreground sm:inline">
-            {" "}
-            is a free, MIT-licensed shadcn admin template.
-          </span>
+          <span className="hidden text-muted-foreground sm:inline"> template: free and MIT.</span>
         </p>
         <a
           href={REPO}

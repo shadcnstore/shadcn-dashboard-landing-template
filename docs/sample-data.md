@@ -1,6 +1,6 @@
 # Sample data
 
-The demo company is **Tidewell**, a fictional subscription-analytics business with customer accounts on three plans (Starter, Growth, Scale). `data/generate.ts` builds two years of it from one seed: accounts, users, tasks, monthly MRR movements and an activity feed.
+The demo company is **Chronicle**, a fictional subscription-analytics business with customer accounts on three plans (Starter, Growth, Scale). `data/generate.ts` builds two years of it from one seed: accounts, users, tasks, monthly MRR movements and an activity feed.
 
 ## Why the numbers never change
 

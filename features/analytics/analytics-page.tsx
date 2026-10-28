@@ -715,7 +715,7 @@ export function AnalyticsPage() {
     <>
       <PageHeader
         title="Analytics"
-        description={`Where Tidewell's recurring revenue comes from, who stays and when customers use it. Compared with the ${PERIOD_LABEL[period]} before.`}
+        description={`Where Chronicle's recurring revenue comes from, who stays and when customers use it. Compared with the ${PERIOD_LABEL[period]} before.`}
         actions={
           <Segmented
             aria-label="Period"

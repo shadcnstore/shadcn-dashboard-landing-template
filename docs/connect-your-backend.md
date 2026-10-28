@@ -1,6 +1,6 @@
 # Connect your backend
 
-Every screen reads and writes through one **data adapter**, defined in `lib/data.ts`. In the template it is the Kit's in-memory adapter over the Tidewell sample data, so the app runs with no server. Your edits last until you reload.
+Every screen reads and writes through one **data adapter**, defined in `lib/data.ts`. In the template it is the Kit's in-memory adapter over the Chronicle sample data, so the app runs with no server. Your edits last until you reload.
 
 ## The contract
 

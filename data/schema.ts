@@ -1,5 +1,5 @@
 /**
- * Tidewell, the sample business: a subscription-analytics company with
+ * Chronicle, the sample business: a subscription-analytics company with
  * customer accounts on three plans. Money is integer cents, dates are ISO
  * strings in UTC. Every total on screen is a sum of these records, and
  * data/generate.test.ts proves it.
@@ -76,7 +76,7 @@ export interface Task {
   rank: number
 }
 
-/** Someone on Tidewell's own team: account owners and task assignees. */
+/** Someone on Chronicle's own team: account owners and task assignees. */
 export interface TeamMember {
   id: string
   name: string

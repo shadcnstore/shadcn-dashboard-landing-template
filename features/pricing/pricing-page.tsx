@@ -70,7 +70,7 @@ function CellValue({ value }: { value: Cell }) {
 }
 
 /**
- * An example pricing page for the product the dashboard runs: Tidewell's own
+ * An example pricing page for the product the dashboard runs: Chronicle's own
  * plans, read from data/generate.ts so the prices match every MRR figure in
  * the app. Replace PLANS and the copy here with yours.
  */

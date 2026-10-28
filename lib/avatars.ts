@@ -28,7 +28,7 @@ const POOLS: Record<"f" | "m", number[]> = {
 
 /**
  * Named people get a portrait chosen by hand, so no two of them share a face:
- * Tidewell's team (data/names.ts) and the people on the landing page.
+ * Chronicle's team (data/names.ts) and the people on the landing page.
  */
 const NAMED: Record<string, number> = {
   "Maya Okafor": 7, "Soren Lindqvist": 3, "Priya Iyer": 4, "Diego Marquez": 6, "Hana Sato": 2, "Tariq Haddad": 26, "Freya Dahl": 22, "Emeka Bello": 1,

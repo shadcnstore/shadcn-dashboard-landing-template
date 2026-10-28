@@ -1,7 +1,7 @@
 import Link from "next/link"
 
 import { buttonVariants } from "@/components/ui/button"
-import { ChronicleMark } from "@/components/chronicle/logo"
+import { BrandLogo } from "@/components/chronicle/brand-logo"
 import { StatusPage } from "@/kit/states/status-page"
 import { cn } from "@/lib/utils"
 
@@ -29,9 +29,8 @@ export function ErrorScreen({
         className="absolute inset-0 -z-10 [background-image:linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] [background-size:48px_48px] opacity-50 [mask-image:radial-gradient(ellipse_50%_45%_at_50%_45%,black,transparent)]"
       />
       <header className="px-4 py-6 sm:px-8">
-        <Link href="/" className="flex w-fit items-center gap-2 font-semibold tracking-tight">
-          <ChronicleMark className="size-6" />
-          Chronicle
+        <Link href="/" className="w-fit">
+          <BrandLogo />
         </Link>
       </header>
       <main className="flex flex-1 flex-col">

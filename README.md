@@ -27,7 +27,7 @@ Open http://localhost:3000. No environment variables, no API keys, no database: 
 | **Screens** | 31 pages: Overview, Analytics, Users (list and detail), Tasks (board and table), Mail, Chat, Calendar, Notifications, Pricing, FAQs, Settings (profile, account, appearance, notifications, connections), sign-in, sign-up and forgot password in three layouts each, five error pages, and a full SaaS landing page |
 | **Signature screen** | Users: saved views, faceted filters and search kept in the address bar, sort, column menu, inline role editing, bulk actions with undo, CSV export, a record sheet |
 | **Theme** | Slate and cobalt, light and dark, plus eight more presets that restyle every surface. A customizer changes preset, radius, font, scale, sidebar style, layout (sidebar or top nav) and direction (LTR or RTL) live |
-| **Data** | One fictional company, Tidewell, generated from a seed and pinned to 20 October 2026, so the dashboard looks the same every day. Tests prove the totals equal the sum of their rows |
+| **Data** | One fictional company, named Chronicle like the template, generated from a seed and pinned to 20 October 2026, so the dashboard looks the same every day. Tests prove the totals equal the sum of their rows |
 | **Backend-ready** | Every screen reads and writes through one data adapter (`lib/data.ts`). Swap the in-memory adapter for your API and the screens keep working: [docs/connect-your-backend.md](./docs/connect-your-backend.md) |
 | **Keyboard** | ⌘K search and actions, `G` then a letter to jump between pages, `?` for every shortcut, `D` for dark mode |
 | **Licence** | MIT, including commercial use |
@@ -56,8 +56,9 @@ app/                 Routes: (shell) for the dashboard, (auth), errors, landing
 features/<screen>/   Each screen's components and logic
 kit/                 The Dashboard Kit (vendored, do not edit: see docs/kit.md)
 components/ui/       shadcn/ui components, exactly as the CLI installs them
+config/brand.ts      Name, mark, tagline and the ShadcnStore credits: rebrand here
 config/              Navigation, site, theme and settings menus
-data/                The Tidewell sample data generator and its tests
+data/                The Chronicle sample data generator and its tests
 lib/data.ts          The data adapter every screen uses
 lib/clock.ts         The pinned "now" the sample data is built from
 docs/                Guides

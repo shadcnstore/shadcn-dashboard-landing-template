@@ -40,7 +40,7 @@ const QUOTES = [
 export function Testimonials() {
   return (
     <Section id="customers" labelledBy="customers-title">
-      <SectionHeading id="customers-title" eyebrow="Customers" title="Teams that stopped arguing about the numbers" lede="Finance, growth and success teams on how Tidewell changed their month." />
+      <SectionHeading id="customers-title" eyebrow="Customers" title="Teams that stopped arguing about the numbers" lede="Finance, growth and success teams on how Chronicle changed their month." />
       <ul className="mt-16 columns-1 gap-6 md:columns-2 lg:columns-3">
         {QUOTES.map((item) => (
           <li key={item.name} className="mb-6 break-inside-avoid">

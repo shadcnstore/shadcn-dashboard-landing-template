@@ -302,7 +302,7 @@ export function UsersPage() {
     })
     const rows = ids ? all.rows.filter((row) => ids.includes(row.id)) : all.rows
     downloadCsv(
-      "tidewell-users.csv",
+      "chronicle-users.csv",
       [
         "Name",
         "Email",

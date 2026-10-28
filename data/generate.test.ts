@@ -8,7 +8,7 @@ const workspace = generateWorkspace()
 const paying = workspace.accounts.filter((account) => account.status === "active" || account.status === "past_due")
 const sum = (values: number[]) => values.reduce((total, value) => total + value, 0)
 
-describe("Tidewell sample workspace", () => {
+describe("Chronicle sample workspace", () => {
   it("is the same on every run", () => {
     expect(generateWorkspace()).toEqual(workspace)
   })

@@ -282,7 +282,7 @@ export function generateWorkspace(seed = 20261020, now: Date = DATA_NOW): Worksp
     signupsByDay.push({ day, users: usersPerDay.get(day) ?? 0, accounts: accountsPerDay.get(day) ?? 0 })
   }
 
-  // Tasks: Tidewell's own product backlog.
+  // Tasks: Chronicle's own product backlog.
   const STATUSES: TaskStatus[] = ["backlog", "todo", "in_progress", "review", "done"]
   const PRIORITIES: TaskPriority[] = ["urgent", "high", "medium", "low"]
   const LABELS: TaskLabel[] = ["bug", "feature", "improvement", "docs", "chore"]

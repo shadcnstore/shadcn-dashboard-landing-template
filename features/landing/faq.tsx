@@ -6,7 +6,7 @@ import { LANDING_FAQS } from "@/features/faqs/data"
 
 import { Section, SectionHeading } from "./section-heading"
 
-/** Six questions from Tidewell's help centre (features/faqs/data.ts), the same answers the in-app FAQs page gives. */
+/** Six questions from Chronicle's help centre (features/faqs/data.ts), the same answers the in-app FAQs page gives. */
 export function Faq() {
   return (
     <Section id="faq" labelledBy="faq-title">
@@ -16,7 +16,7 @@ export function Faq() {
           <AccordionItem key={item.question} value={item.question} className="rounded-xl border bg-card px-5 shadow-(--surface-shadow) not-last:border-b">
             <AccordionTrigger className="items-center gap-3 py-4 text-base hover:no-underline">
               <span className="flex flex-1 items-center gap-3">
-                <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-muted">
+                <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <CircleHelpIcon className="size-4" aria-hidden />
                 </span>
                 {item.question}

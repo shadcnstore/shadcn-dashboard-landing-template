@@ -114,8 +114,8 @@ export function TasksPage() {
         title="Tasks"
         description={
           all.data
-            ? `${open} open · ${overdue} overdue · Tidewell's product backlog`
-            : "Tidewell's product backlog"
+            ? `${open} open · ${overdue} overdue · Chronicle's product backlog`
+            : "Chronicle's product backlog"
         }
         actions={
           <>

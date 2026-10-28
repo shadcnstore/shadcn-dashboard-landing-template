@@ -8,9 +8,10 @@ import { useState } from "react"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { LandingCustomizer } from "./landing-customizer"
 import { cn } from "@/lib/utils"
 
-import { TidewellLogo } from "./tidewell-mark"
+import { BrandLogo } from "@/components/chronicle/brand-logo"
 
 export const NAV_LINKS = [
   { label: "Product", href: "#features" },
@@ -36,8 +37,8 @@ export function LandingNavbar() {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-14 w-full max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-8">
-        <a href="#top" className="rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/50" aria-label="Tidewell home">
-          <TidewellLogo />
+        <a href="#top" className="rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/50" aria-label="Chronicle home">
+          <BrandLogo />
         </a>
 
         <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
@@ -52,26 +53,26 @@ export function LandingNavbar() {
           ))}
         </nav>
 
-        <div className="ms-auto hidden items-center gap-1 lg:flex">
+        <div className="ms-auto flex items-center gap-1">
+          {/* The Kit customizer, the same one as the dashboard: a preset picked here carries over there and back. Its controls load on first open. */}
+          <LandingCustomizer />
           <ThemeToggle />
-          <Link href="/sign-in" className={buttonVariants({ variant: "ghost" })}>
-            Sign in
-          </Link>
-          <Link href="/" className={buttonVariants()}>
-            Open the dashboard
-          </Link>
-        </div>
-
-        <div className="ms-auto flex items-center gap-1 lg:hidden">
-          <ThemeToggle />
+          <div className="hidden items-center gap-1 lg:flex">
+            <Link href="/sign-in" className={buttonVariants({ variant: "ghost" })}>
+              Sign in
+            </Link>
+            <Link href="/" className={buttonVariants()}>
+              Open the dashboard
+            </Link>
+          </div>
           <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger render={<Button variant="ghost" size="icon" aria-label="Open menu" />}>
+            <SheetTrigger render={<Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open menu" />}>
               <MenuIcon />
             </SheetTrigger>
             <SheetContent side="right" className="w-full gap-0 sm:max-w-sm">
               <SheetHeader className="border-b">
                 <SheetTitle>
-                  <TidewellLogo />
+                  <BrandLogo />
                 </SheetTitle>
               </SheetHeader>
               <nav aria-label="Mobile" className="flex flex-col p-2">

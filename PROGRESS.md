@@ -6,7 +6,7 @@ Dev server: `PORT=3300 pnpm dev`, http://localhost:3300 (not 127.0.0.1). Demo bu
 
 ## Done
 - [x] Phase A: three prototypes scored, P3 "Workbench" won (plan §11).
-- [x] Foundations: root Next.js 16.4.3 app, shadcn base-nova RTL, Kit v1.0.6 free edition (kit.lock.json excludes; local `--exclude` patch in scripts/kit-sync.mjs), slate and cobalt theme passing the contract for every preset, Tidewell generator with reconciliation tests, DataAdapter (users, accounts, tasks).
+- [x] Foundations: root Next.js 16.4.3 app, shadcn base-nova RTL, Kit v1.0.6 free edition (kit.lock.json excludes; local `--exclude` patch in scripts/kit-sync.mjs), slate and cobalt theme passing the contract for every preset, Chronicle generator with reconciliation tests, DataAdapter (users, accounts, tasks).
 - [x] Screens: Overview, Analytics, Users (+ detail, sheet, invite), Tasks (board + table), Mail, Chat, Calendar, Notifications, Settings (profile, account, appearance, notifications), sign-in, sign-up, forgot password, 5 error pages, not-found, /landing (Frontier).
 - [x] Demo funnel (demo build only): bar, ⌘K group, Go further page, paid-screen previews (team, billing, API keys), GA4 `demo_bar_click` with placements.
 - [x] Docs, README, CHANGELOG 3.0.0, LICENSE, workflows (deploy-demo manual, ci on PRs).
@@ -32,10 +32,16 @@ Dev server: `PORT=3300 pnpm dev`, http://localhost:3300 (not 127.0.0.1). Demo bu
 - [x] Settings > Account and security shows the signed-in user's portrait (Kit finding 10)
 
 ## Owner review round 4 (2026-10-27)
-- [x] v2 breadth back: sign-in, sign-up and forgot password in three layouts each (split, card, full-bleed; features/auth/auth-shell.tsx), Pricing and FAQs as Tidewell example pages, Settings > Connections (free; neither Emporium nor Rapport has one). Sidebar "Pages" group with folding Auth pages and Errors.
+- [x] v2 breadth back: sign-in, sign-up and forgot password in three layouts each (split, card, full-bleed; features/auth/auth-shell.tsx), Pricing and FAQs as Chronicle example pages, Settings > Connections (free; neither Emporium nor Rapport has one). Sidebar "Pages" group with folding Auth pages and Errors.
 - [x] Demo bar: "Paid templates" opens a card on hover, tap or Enter (features/demo/upgrade-card.tsx), placements bar-card-open, bar-card-emporium, bar-card-pro
 - [x] Profile hero keyed to the page width (FIT_HERO), so the preview is no longer clipped at 1024
 - Lighthouse mobile (demo build): / 78-83, /landing 90-91, a11y 100
+
+## Owner review round 5 (2026-10-28)
+- [x] Landing pricing and FAQ read the in-app plans and help centre (features/pricing/plans.ts, features/faqs/data.ts); launch copy says a Vite edition is planned
+- [x] /landing rebuilt on v2's layout in Chronicle's theme: real 2x screenshots, journal covers built from real widget cards over token backdrops, Kit customizer in the header (shares state with the dashboard), demo bar steps aside over the hero shot
+- [x] Sample company renamed Tidewell to Chronicle; config/brand.ts holds name, mark, tagline and removable ShadcnStore credits (landing footer, sidebar, auth); new mark and favicon
+- Lighthouse mobile /landing 89 to 91 (simulated LCP is the tight spot)
 
 ## Kit findings (for upstream)
 1. `customizer-provider` imports `shader/colour`; colour parsing belongs in `theme/`.

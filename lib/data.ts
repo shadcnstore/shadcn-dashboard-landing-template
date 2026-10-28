@@ -4,7 +4,7 @@ import { createMemoryAdapter } from "@/kit/data/memory-adapter"
 
 /**
  * Every screen reads and writes through this adapter. Today it is the Kit's
- * in-memory adapter over the Tidewell sample data, so the demo runs with no
+ * in-memory adapter over the Chronicle sample data, so the demo runs with no
  * backend and edits last until you reload. To go live, replace it with an
  * object that has the same six methods (list, get, create, update, remove,
  * action) calling your API: see docs/connect-your-backend.md.

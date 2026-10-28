@@ -9,7 +9,7 @@ const OPTIONS = [
     icon: MailIcon,
     title: "Email the team",
     description: "A person replies within one business day.",
-    link: { label: "hello@tidewell.example", href: "mailto:hello@tidewell.example" },
+    link: { label: "hello@chronicle.example", href: "mailto:hello@chronicle.example" },
   },
   {
     icon: PlayCircleIcon,

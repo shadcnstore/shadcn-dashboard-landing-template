@@ -9,7 +9,7 @@ import { planCards, YEARLY_MONTHS_PAID } from "./plans"
 
 const read = (path: string) => readFileSync(new URL(`../../${path}`, import.meta.url), "utf8")
 
-describe("Tidewell's price list", () => {
+describe("Chronicle's price list", () => {
   it("prices every plan from the app's plan data", () => {
     const monthly = planCards("monthly")
     const yearly = planCards("yearly")

@@ -3,7 +3,7 @@ import type { TeamMember } from "@/data/schema"
 import { DATA_NOW } from "@/lib/clock"
 
 /**
- * Tidewell's team chat, seen by Maya Okafor. Timestamps are built back from
+ * Chronicle's team chat, seen by Maya Okafor. Timestamps are built back from
  * DATA_NOW so every visit shows the same history.
  */
 

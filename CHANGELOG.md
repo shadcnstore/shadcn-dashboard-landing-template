@@ -7,7 +7,7 @@ Chronicle is rebuilt on the ShadcnStore Dashboard Kit, the base of ShadcnStore's
 ### Highlights
 
 - **A new look:** cool slate and cobalt in light and dark, Hanken Grotesk with JetBrains Mono numbers, soft cards on a tinted page. Eight more presets restyle every surface.
-- **Real data that adds up:** one fictional company, Tidewell, generated from a seed and pinned to 20 October 2026. Tests prove MRR, plans, seats and sign-ups reconcile.
+- **Real data that adds up:** one fictional company, named Chronicle like the template, generated from a seed and pinned to 20 October 2026. Tests prove MRR, plans, seats and sign-ups reconcile.
 - **One data adapter for every screen** (`lib/data.ts`): swap the in-memory adapter for your API and the screens keep working.
 - **Users workbench:** saved views, faceted filters and search in the address bar, inline role editing, bulk actions with undo, CSV export, a record sheet and a detail page.
 - **Overview rebuilt** around MRR, retention, sign-ups, accounts that need attention (with working actions) and product usage.

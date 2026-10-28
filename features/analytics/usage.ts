@@ -1,7 +1,7 @@
 import type { PunchCell } from "@/kit/charts/punch-card"
 
 /**
- * Reports opened in Tidewell, by weekday and UTC hour, averaged over a typical
+ * Reports opened in Chronicle, by weekday and UTC hour, averaged over a typical
  * week. Hand-shaped and fixed, so the punch card looks the same on every
  * visit: quiet nights, a morning ramp as Europe signs in, a second lift when
  * North America does, and a light weekend.

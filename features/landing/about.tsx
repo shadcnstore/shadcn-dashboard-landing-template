@@ -20,7 +20,7 @@ const VALUES = [
   {
     icon: ScaleIcon,
     title: "Definitions you can read",
-    description: "MRR, churn and retention follow written rules. Change one and Tidewell shows you exactly what moved.",
+    description: "MRR, churn and retention follow written rules. Change one and Chronicle shows you exactly what moved.",
   },
   {
     icon: LockIcon,
@@ -34,16 +34,16 @@ export function About() {
     <Section id="about" labelledBy="about-title">
       <SectionHeading
         id="about-title"
-        eyebrow="Why Tidewell"
+        eyebrow="Why Chronicle"
         title="Built by people who ran the spreadsheet"
-        lede="We spent years stitching billing exports, CRM notes and a task list together every month. Tidewell is the tool we wanted: exact numbers, and the work they point to, in one place."
+        lede="We spent years stitching billing exports, CRM notes and a task list together every month. Chronicle is the tool we wanted: exact numbers, and the work they point to, in one place."
       />
       <ul className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {VALUES.map((value) => (
           <li key={value.title} className="flex flex-col items-center gap-4 rounded-2xl border bg-card px-6 py-10 text-center shadow-(--surface-shadow)">
             <span className="relative flex size-20 items-center justify-center">
-              <span aria-hidden className="absolute inset-0 [background-image:radial-gradient(color-mix(in_oklch,var(--foreground)_25%,transparent)_1px,transparent_1px)] [background-size:8px_8px] [mask-image:radial-gradient(circle,black,transparent_70%)]" />
-              <span className="relative flex size-11 items-center justify-center rounded-xl border bg-background shadow-(--surface-shadow)">
+              <span aria-hidden className="absolute inset-0 [background-image:radial-gradient(color-mix(in_oklch,var(--primary)_35%,transparent)_1px,transparent_1px)] [background-size:8px_8px] [mask-image:radial-gradient(circle,black,transparent_70%)]" />
+              <span className="relative flex size-11 items-center justify-center rounded-xl border border-primary/15 bg-background text-primary shadow-(--surface-shadow)">
                 <value.icon className="size-5" aria-hidden />
               </span>
             </span>

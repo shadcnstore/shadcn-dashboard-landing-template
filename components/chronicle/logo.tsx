@@ -1,11 +1,17 @@
 import { cn } from "@/lib/utils"
 
-/** Chronicle's mark: a cobalt tile with three ruled lines, a page of a log book. */
+/**
+ * Chronicle's mark: a tile in the theme's primary colour holding an open "C"
+ * that closes on a dot, a timeline that ends today. Drawn with the primary
+ * tokens, so it follows the customizer. config/brand.ts says which mark the
+ * app uses; swap it there.
+ */
 export function ChronicleMark({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden className={cn("size-4", className)}>
-      <rect width="24" height="24" rx="6" className="fill-primary" />
-      <path d="M7 8h10M7 12h7M7 16h4" strokeWidth="2" strokeLinecap="round" className="stroke-primary-foreground" />
+    <svg viewBox="0 0 24 24" aria-hidden className={cn("size-4 shrink-0", className)}>
+      <rect width="24" height="24" rx="6.5" className="fill-primary" />
+      <path d="M16.6 8.4A6 6 0 1 0 16.6 15.6" fill="none" strokeWidth="2.4" strokeLinecap="round" className="stroke-primary-foreground" />
+      <circle cx="12" cy="12" r="1.9" className="fill-primary-foreground" />
     </svg>
   )
 }

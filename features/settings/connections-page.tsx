@@ -25,7 +25,7 @@ import { FIT_HERO, SETTINGS_PAGE } from "./fit-hero"
 interface Connection {
   id: string
   name: string
-  /** What it does for Tidewell, in one line. */
+  /** What it does for Chronicle, in one line. */
   purpose: string
   icon: React.ComponentType<{ className?: string }>
   tone: TileTone
@@ -35,7 +35,7 @@ interface Connection {
 }
 
 /**
- * The tools Tidewell reads from and writes to. Names are generic on purpose:
+ * The tools Chronicle reads from and writes to. Names are generic on purpose:
  * swap in your own providers and wire Connect to their OAuth flow.
  */
 const CONNECTIONS: Connection[] = [
@@ -51,7 +51,7 @@ const CONNECTIONS: Connection[] = [
 const GROUPS = ["Revenue data", "Where alerts go", "Customer context"] as const
 
 const WEBHOOKS = [
-  { url: "https://hooks.example.com/tidewell/revenue", events: "payment_failed, churn", status: "Delivering", last: "200 OK, 9 min ago" },
+  { url: "https://hooks.example.com/chronicle/revenue", events: "payment_failed, churn", status: "Delivering", last: "200 OK, 9 min ago" },
   { url: "https://ops.example.com/webhooks/seats", events: "seat_limit_exceeded", status: "Delivering", last: "200 OK, 2 hours ago" },
 ]
 
@@ -126,7 +126,7 @@ export function ConnectionsSettingsPage() {
       >
         <HeroTitle icon={PlugIcon} label="Connections" title={count === CONNECTIONS.length ? "Everything is connected" : `${CONNECTIONS.length - count} available to add`} />
         <HeroFigure value={count} unit={` / ${CONNECTIONS.length}`} />
-        <p className="text-sm text-muted-foreground">Tools Tidewell reads revenue from and sends alerts to. The billing provider is the one every number depends on.</p>
+        <p className="text-sm text-muted-foreground">Tools Chronicle reads revenue from and sends alerts to. The billing provider is the one every number depends on.</p>
       </SettingsHero>
 
       {GROUPS.map((group) => (
@@ -139,7 +139,7 @@ export function ConnectionsSettingsPage() {
         </SettingsCard>
       ))}
 
-      <SettingsCard icon={WebhookIcon} title="Webhooks" description="Tidewell posts these events to your endpoints, signed with your workspace secret.">
+      <SettingsCard icon={WebhookIcon} title="Webhooks" description="Chronicle posts these events to your endpoints, signed with your workspace secret.">
         <ul className="flex flex-col divide-y">
           {WEBHOOKS.map((hook) => (
             <li key={hook.url} className="flex flex-col gap-2 py-3 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:gap-4">

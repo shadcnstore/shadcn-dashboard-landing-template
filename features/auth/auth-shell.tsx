@@ -2,7 +2,7 @@ import { CheckIcon } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
-import { ChronicleMark } from "@/components/chronicle/logo"
+import { BrandCredit, BrandLogo } from "@/components/chronicle/brand-logo"
 
 import type { AuthVariant } from "./auth-paths"
 import { AuthVariantProvider } from "./auth-variant"
@@ -20,9 +20,8 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
     <div className="grid min-h-svh bg-background lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
       <aside className="relative isolate hidden flex-col justify-between overflow-hidden bg-(--auth-panel) p-10 text-(--auth-panel-foreground) lg:flex">
         <Image src={PANEL} alt="" fill sizes="42vw" className="-z-10 object-cover" />
-        <Link href="/landing" className="flex w-fit items-center gap-2 font-semibold tracking-tight">
-          <ChronicleMark className="size-6" />
-          Chronicle
+        <Link href="/landing" className="w-fit">
+          <BrandLogo />
         </Link>
         <div className="mt-auto flex max-w-md flex-col gap-6 pb-10">
           <p className="text-3xl leading-tight font-semibold tracking-tight text-balance">Every number in Chronicle adds up.</p>
@@ -35,18 +34,23 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
             ))}
           </ul>
         </div>
-        <p className="text-xs opacity-60">{DEMO_NOTE}</p>
+        <div className="flex items-end justify-between gap-4 text-xs">
+          <p className="opacity-60">{DEMO_NOTE}</p>
+          <BrandCredit className="text-(--auth-panel-foreground)/70 hover:text-(--auth-panel-foreground)" />
+        </div>
       </aside>
 
       <main className="flex flex-col px-4 py-8 sm:px-8">
-        <Link href="/landing" className="flex w-fit items-center gap-2 font-semibold tracking-tight lg:hidden">
-          <ChronicleMark className="size-6" />
-          Chronicle
+        <Link href="/landing" className="w-fit lg:hidden">
+          <BrandLogo />
         </Link>
         <div className="flex flex-1 items-center justify-center py-10">
           <div className="w-full max-w-sm">{children}</div>
         </div>
-        <p className="text-center text-xs text-muted-foreground lg:hidden">{DEMO_NOTE}</p>
+        <div className="flex flex-col items-center gap-2 lg:hidden">
+          <p className="text-center text-xs text-muted-foreground">{DEMO_NOTE}</p>
+          <BrandCredit />
+        </div>
       </main>
     </div>
   )
@@ -70,9 +74,8 @@ export function AuthCardShell({ children }: { children: React.ReactNode }) {
         className="absolute inset-0 -z-10 [background-image:linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] [background-size:40px_40px] opacity-60 [mask-image:radial-gradient(ellipse_60%_55%_at_50%_40%,black,transparent)]"
       />
       <header className="flex items-center justify-between gap-4 px-4 py-5 sm:px-8">
-        <Link href="/landing" className="flex w-fit items-center gap-2 font-semibold tracking-tight">
-          <ChronicleMark className="size-6" />
-          Chronicle
+        <Link href="/landing" className="w-fit">
+          <BrandLogo />
         </Link>
         <Link href="/landing" className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
           Back to the site
@@ -81,7 +84,10 @@ export function AuthCardShell({ children }: { children: React.ReactNode }) {
       <main className="flex flex-1 items-start justify-center px-4 pt-4 pb-10 sm:items-center sm:pt-0">
         <div className="w-full max-w-md rounded-2xl border bg-card p-6 text-card-foreground shadow-(--surface-shadow) sm:p-8 [&_[data-slot=field-separator-content]]:bg-card">{children}</div>
       </main>
-      <p className="px-4 pb-6 text-center text-xs text-muted-foreground">{DEMO_NOTE}</p>
+      <div className="flex flex-col items-center gap-2 px-4 pb-6">
+        <p className="text-center text-xs text-muted-foreground">{DEMO_NOTE}</p>
+        <BrandCredit />
+      </div>
     </div>
   )
 }
@@ -93,9 +99,8 @@ export function AuthFullBleedShell({ children }: { children: React.ReactNode }) 
       <Image src={PANEL} alt="" fill sizes="100vw" className="-z-10 object-cover object-top-right" />
       <div aria-hidden className="absolute inset-0 -z-10 bg-linear-to-t from-(--auth-panel) via-transparent to-transparent" />
       <header className="px-4 py-5 sm:px-10">
-        <Link href="/landing" className="flex w-fit items-center gap-2 font-semibold tracking-tight">
-          <ChronicleMark className="size-6" />
-          Chronicle
+        <Link href="/landing" className="w-fit">
+          <BrandLogo />
         </Link>
       </header>
       <main className="flex flex-1 items-center justify-center gap-16 px-4 py-8 sm:px-10 lg:justify-between">
@@ -112,7 +117,10 @@ export function AuthFullBleedShell({ children }: { children: React.ReactNode }) 
           </ul>
         </div>
       </main>
-      <p className="px-4 pb-6 text-center text-xs opacity-70 sm:px-10 lg:text-start">{DEMO_NOTE}</p>
+      <div className="flex flex-col items-center justify-between gap-2 px-4 pb-6 text-xs sm:px-10 lg:flex-row">
+        <p className="text-center opacity-70 lg:text-start">{DEMO_NOTE}</p>
+        <BrandCredit className="text-(--auth-panel-foreground)/70 hover:text-(--auth-panel-foreground)" />
+      </div>
     </div>
   )
 }

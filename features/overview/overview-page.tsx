@@ -59,7 +59,7 @@ function MrrWidget({ metrics }: { metrics: ReturnType<typeof overviewMetrics> })
 
   const exportCsv = () =>
     downloadCsv(
-      "tidewell-mrr-12-months.csv",
+      "chronicle-mrr-12-months.csv",
       ["Month", "MRR (USD)"],
       history.map((row) => [row.month, (row.mrrCents / 100).toFixed(2)])
     )
@@ -480,7 +480,7 @@ export function OverviewPage() {
   const metrics = useMemo(() => overviewMetrics(workspace(), DATA_NOW), [])
   const exportReport = () =>
     downloadCsv(
-      "tidewell-overview.csv",
+      "chronicle-overview.csv",
       ["Metric", "Value"],
       [
         ["MRR (USD)", (metrics.mrr.now / 100).toFixed(2)],

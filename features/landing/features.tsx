@@ -53,7 +53,7 @@ const ROWS: { screen: string; alt: string; title: string; lede: string; href: st
   },
   {
     screen: "tasks",
-    alt: "Tasks: Tidewell's backlog as a board with backlog, to do, in progress and review columns",
+    alt: "Tasks: Chronicle's backlog as a board with backlog, to do, in progress and review columns",
     title: "The work that follows the numbers",
     lede: "A failed payment or a seat overage becomes a task with an owner and a due date, on a board or a table.",
     href: "/tasks",
@@ -80,8 +80,8 @@ export function Features() {
         {ROWS.map((row, index) => (
           <div key={row.screen} className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             <figure className={cn("relative", index % 2 === 1 && "lg:order-2")}>
-              <div aria-hidden className="absolute inset-x-6 -bottom-3 h-full rounded-2xl border bg-card/60" />
-              <div className="relative overflow-hidden rounded-2xl border bg-card p-1.5 shadow-(--surface-shadow-raised)">
+              <div aria-hidden className="absolute inset-x-6 -bottom-3 h-full rounded-2xl border border-primary/10 bg-primary/5" />
+              <div className="relative overflow-hidden rounded-2xl border border-primary/15 bg-card p-1.5 shadow-(--surface-shadow-raised)">
                 <Screenshot name={row.screen} alt={row.alt} widths={[720, 1200]} width={1200} height={811} sizes="(min-width: 1024px) 600px, 94vw" className="rounded-xl" />
               </div>
             </figure>
@@ -91,7 +91,7 @@ export function Features() {
               <ul className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
                 {row.features.map((feature) => (
                   <li key={feature.title} className="flex gap-3">
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg border bg-background">
+                    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                       <feature.icon className="size-4" aria-hidden />
                     </span>
                     <div className="flex flex-col gap-1">

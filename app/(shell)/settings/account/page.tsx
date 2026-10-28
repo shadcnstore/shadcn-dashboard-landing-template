@@ -29,7 +29,7 @@ export default function Page() {
     <div className={`@container/account flex min-w-0 flex-col gap-4 ${FIT_TO_WIDTH}`}>
       <AccountPage
         user={SITE.user}
-        profileNote="Your profile is how the rest of the Tidewell team sees you on tasks, account notes and the activity log."
+        profileNote="Your profile is how the rest of the Chronicle team sees you on tasks, account notes and the activity log."
       />
     </div>
   )

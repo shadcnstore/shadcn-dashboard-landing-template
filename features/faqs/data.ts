@@ -4,7 +4,7 @@ import type { ComponentType } from "react"
 import { TRIAL_DAYS } from "@/data/generate"
 
 /**
- * Tidewell's help centre: one list for the FAQs page and the landing page's
+ * Chronicle's help centre: one list for the FAQs page and the landing page's
  * FAQ section, so the two never disagree with each other or with the plans
  * in data/generate.ts.
  */
@@ -17,7 +17,7 @@ export const CATEGORIES: { id: CategoryId; label: string; icon: ComponentType<{ 
   { id: "account", label: "Your account", icon: UserCogIcon },
 ]
 
-/** The questions Tidewell's customers actually ask. Replace with your product's. */
+/** The questions Chronicle's customers actually ask. Replace with your product's. */
 export const FAQS: { category: CategoryId; question: string; answer: string }[] = [
   { category: "billing", question: "When am I charged?", answer: `Your first charge is at the end of the ${TRIAL_DAYS}-day trial, and then on the same day each month, or each year on yearly billing. Seats you add mid-cycle are charged on the next invoice.` },
   { category: "billing", question: "What happens when a card payment fails?", answer: "We retry the card after 24 hours, then after three and seven days. In the meantime the account shows as past due on the Overview and the owner gets an email with a link to update the card. Nothing is locked while we retry." },
@@ -28,8 +28,8 @@ export const FAQS: { category: CategoryId; question: string; answer: string }[] 
   { category: "plans", question: "Can I change plans later?", answer: "Any time. An upgrade starts straight away and you pay the difference for the rest of the period. A downgrade starts at the end of the period, so you keep what you paid for." },
   { category: "plans", question: "Is there a free trial?", answer: `Every plan starts with a ${TRIAL_DAYS}-day trial with no card needed. At the end of the trial you choose a plan, or the account pauses and keeps your data for 30 days.` },
   { category: "data", question: "Where does my revenue data come from?", answer: "From your billing provider, connected read-only under Settings, Connections. Subscriptions, invoices and failed payments sync every few minutes, and every figure on the dashboard traces back to them." },
-  { category: "data", question: "Which billing platforms does Tidewell connect to?", answer: "Tidewell connects read-only to the major subscription billing platforms and payment processors, and imports a CSV for anything else. Most teams are connected in under fifteen minutes." },
-  { category: "data", question: "Will the numbers match my accounting system?", answer: "Yes. Every metric reconciles to invoices, credit notes and refunds, and the exports tie back to the totals on screen. When something cannot reconcile, Tidewell flags the invoice instead of guessing." },
+  { category: "data", question: "Which billing platforms does Chronicle connect to?", answer: "Chronicle connects read-only to the major subscription billing platforms and payment processors, and imports a CSV for anything else. Most teams are connected in under fifteen minutes." },
+  { category: "data", question: "Will the numbers match my accounting system?", answer: "Yes. Every metric reconciles to invoices, credit notes and refunds, and the exports tie back to the totals on screen. When something cannot reconcile, Chronicle flags the invoice instead of guessing." },
   { category: "data", question: "How is MRR calculated?", answer: "MRR is the monthly value of every active subscription after discounts and before tax. Yearly plans are spread evenly over twelve months, trials count as zero and one-off charges are left out." },
   { category: "data", question: "Do you support single sign-on?", answer: "Yes, on the Scale plan, together with an audit log of every sign-in, role change and export. Two-step sign-in is available on every plan." },
   { category: "data", question: "Can I export my data?", answer: "Growth and Scale export any table as CSV. Scale also syncs accounts, users and MRR movement to your data warehouse every night." },
@@ -41,7 +41,7 @@ export const FAQS: { category: CategoryId; question: string; answer: string }[] 
 
 /** The six the landing page shows, in its order. Each must be a question above (features/faqs/data.test.ts). */
 export const LANDING_QUESTIONS = [
-  "Which billing platforms does Tidewell connect to?",
+  "Which billing platforms does Chronicle connect to?",
   "How is MRR calculated?",
   "Will the numbers match my accounting system?",
   "What counts as a seat?",

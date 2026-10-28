@@ -16,7 +16,7 @@ export function LogoWall() {
     <section aria-labelledby="logos-title" className="pt-4 pb-16 sm:pb-24">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <p id="logos-title" className="text-center text-sm text-muted-foreground">
-          Finance and customer success teams at subscription companies run on Tidewell
+          Finance and customer success teams at subscription companies run on Chronicle
         </p>
         <ul className="mt-10 grid grid-cols-2 items-center gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-6">
           {COMPANIES.map((company) => (

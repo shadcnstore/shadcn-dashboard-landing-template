@@ -2,7 +2,7 @@ import { PLAN_IDS, PLANS } from "@/data/generate"
 import type { PlanId } from "@/data/schema"
 
 /**
- * Tidewell's price list, one source for the in-app Pricing page and the
+ * Chronicle's price list, one source for the in-app Pricing page and the
  * landing page's pricing section. Prices and seats come from PLANS in
  * data/generate.ts, the same plans every MRR figure in the app is built on,
  * so a price on a marketing page can never disagree with the dashboard.

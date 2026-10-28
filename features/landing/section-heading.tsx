@@ -18,7 +18,7 @@ export function SectionHeading({
 }) {
   return (
     <div className={cn("flex max-w-3xl flex-col gap-5", align === "center" && "mx-auto items-center text-center", className)}>
-      <p className="w-fit rounded-full border bg-background px-3 py-1 text-xs font-medium">{eyebrow}</p>
+      <p className="w-fit rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">{eyebrow}</p>
       <h2 id={id} className="text-3xl font-bold tracking-tight text-balance sm:text-4xl lg:text-5xl">
         {title}
       </h2>
@@ -42,7 +42,7 @@ export function DotGrid({ className }: { className?: string }) {
     <div
       aria-hidden
       className={cn(
-        "pointer-events-none absolute inset-0 -z-10 [background-image:radial-gradient(color-mix(in_oklch,var(--foreground)_22%,transparent)_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_30%,black,transparent)]",
+        "pointer-events-none absolute inset-0 -z-10 [background-image:radial-gradient(color-mix(in_oklch,var(--primary)_30%,transparent)_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_30%,black,transparent)]",
         className
       )}
     />

@@ -89,7 +89,7 @@ export function NotificationsView() {
     <>
       <PageHeader
         title="Notifications"
-        description="Payments, upgrades and cancellations across every Tidewell account."
+        description="Payments, upgrades and cancellations across every Chronicle account."
         actions={
           <Button
             variant="outline"
