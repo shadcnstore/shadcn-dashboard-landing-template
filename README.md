@@ -69,7 +69,7 @@ docs/                Guides
 
 **Does it use Radix UI?** No. Every component is shadcn/ui on Base UI (`base-nova`). Compose with the `render` prop, not `asChild`.
 
-**Is there a Vite version?** Version 2 (tag [`v2.0.0`](https://github.com/shadcnstore/shadcn-dashboard-landing-template/tree/v2.0.0)) has both Vite and Next.js and stays available. Version 3 is Next.js only, because the Dashboard Kit it is built on uses the Next.js router.
+**Is there a Vite version?** Version 2 (tag [`v2.0.0`](https://github.com/shadcnstore/shadcn-dashboard-landing-template/tree/v2.0.0)) has both Vite and Next.js and stays available. A Vite edition of version 3 is planned next, on the same screens; until it ships, version 2 is the Vite option.
 
 **How do I connect my own API?** Replace the in-memory adapter in `lib/data.ts` with an object that has six methods (`list`, `get`, `create`, `update`, `remove`, `action`). See [docs/connect-your-backend.md](./docs/connect-your-backend.md).
 
