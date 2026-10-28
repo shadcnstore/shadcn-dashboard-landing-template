@@ -32,9 +32,10 @@ function Badge({ value, beforeAction }: { value: number | undefined; beforeActio
 
 function Entry({ link, current, badges }: { link: NavLink; current: string | null; badges: Record<string, number> }) {
   const pathname = usePathname()
-  const { setOpenMobile } = useSidebar()
+  const { setOpenMobile, state, isMobile } = useSidebar()
   const Icon = link.icon
-  const inSection = isActive(pathname, link.href)
+  // A section is open on its own page and on any of its sub-pages, wherever they live.
+  const inSection = isActive(pathname, link.href) || (link.items ?? []).some((item) => isActive(pathname, item.href))
   const close = () => setOpenMobile(false)
   // Controlled, so moving between sections can open and close it after the
   // first render (Base UI warns if `defaultOpen` changes). Like Shopify's
@@ -63,12 +64,53 @@ function Entry({ link, current, badges }: { link: NavLink; current: string | nul
     )
   }
 
+  const subPages = (
+    <CollapsibleContent>
+      <SidebarMenuSub>
+        {link.items.map((item) => (
+          <SidebarMenuSubItem key={item.href}>
+            <SidebarMenuSubButton isActive={current === item.href} render={<Link href={item.href} onClick={close} />}>
+              <span>{item.title}</span>
+            </SidebarMenuSubButton>
+          </SidebarMenuSubItem>
+        ))}
+      </SidebarMenuSub>
+    </CollapsibleContent>
+  )
+
+  // The icon-only sidebar hides sub-pages, so there the row stays a link to `href`.
+  if (link.expandOnly && (isMobile || state === "expanded")) {
+    return (
+      <Collapsible open={open} onOpenChange={setOpen} render={<SidebarMenuItem />}>
+        <SidebarMenuButton
+          tooltip={link.title}
+          render={<CollapsibleTrigger />}
+        >
+          {Icon && <Icon />}
+          <span>{link.title}</span>
+          <ChevronRightIcon data-chevron="" className="ms-auto transition-[rotate] duration-250 ease-smooth-out group-aria-expanded/menu-button:rotate-90 rtl:rotate-180 rtl:group-aria-expanded/menu-button:rotate-90" />
+        </SidebarMenuButton>
+        {link.badge && <Badge value={badges[link.badge]} beforeAction />}
+        {subPages}
+      </Collapsible>
+    )
+  }
+
   return (
     <Collapsible open={open} onOpenChange={setOpen} render={<SidebarMenuItem />}>
       <SidebarMenuButton
         isActive={current === link.href}
         tooltip={link.title}
-        render={<Link href={link.href} onClick={close} />}
+        render={
+          <Link
+            href={link.href}
+            onClick={() => {
+              // Going to the section also opens its sub-pages.
+              setOpen(true)
+              close()
+            }}
+          />
+        }
       >
         {Icon && <Icon />}
         <span>{link.title}</span>
@@ -79,17 +121,7 @@ function Entry({ link, current, badges }: { link: NavLink; current: string | nul
       >
         <ChevronRightIcon className="rtl:rotate-180" />
       </CollapsibleTrigger>
-      <CollapsibleContent>
-        <SidebarMenuSub>
-          {link.items.map((item) => (
-            <SidebarMenuSubItem key={item.href}>
-              <SidebarMenuSubButton isActive={current === item.href} render={<Link href={item.href} onClick={close} />}>
-                <span>{item.title}</span>
-              </SidebarMenuSubButton>
-            </SidebarMenuSubItem>
-          ))}
-        </SidebarMenuSub>
-      </CollapsibleContent>
+      {subPages}
     </Collapsible>
   )
 }
@@ -105,7 +137,7 @@ export function NavMain({ groups, badges }: { groups: NavGroup[]; badges: Record
       {groups.map((group, index) => (
         <SidebarGroup key={group.label ?? index}>
           {group.label && <SidebarGroupLabel>{group.label}</SidebarGroupLabel>}
-          <SidebarMenu>
+          <SidebarMenu className="gap-0.5">
             {group.items.map((link) => (
               <Entry key={link.href} link={link} current={current} badges={badges} />
             ))}

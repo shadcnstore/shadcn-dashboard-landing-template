@@ -43,6 +43,8 @@ Dev server: `PORT=3300 pnpm dev`, http://localhost:3300 (not 127.0.0.1). Demo bu
 - [x] Sample company renamed Tidewell to Chronicle; config/brand.ts holds name, mark, tagline and removable ShadcnStore credits (landing footer, sidebar, auth); new mark and favicon
 - Lighthouse mobile /landing 89 to 91 (simulated LCP is the tight spot)
 
+- [x] Kit v1.1.1 synced: 2px gap between sidebar items; Auth pages and Errors use `expandOnly`
+
 ## Kit findings (for upstream)
 1. `customizer-provider` imports `shader/colour`; colour parsing belongs in `theme/`.
 2. `auth-forms` imports `auth-layout` (AuthHeading, useAuthCopy), which imports the shader showcase.
@@ -54,4 +56,4 @@ Dev server: `PORT=3300 pnpm dev`, http://localhost:3300 (not 127.0.0.1). Demo bu
 8. Shell JS weight: ⌘K (cmdk), customizer panel and notification bell load on first paint on every route; lazy-loading them is the main lever for Lighthouse 90 on dashboard routes.
 9. SettingsHero switches to two columns at the viewport `md`, so inside the settings frame (sidebar + settings nav) its two-fifths column is ~180px at 768-1279px; it should use a container query.
 10. AccountPage takes a `ShellUser` but ignores `user.avatar`, so the signed-in user shows initials there and a photo everywhere else. Chronicle owns a fixed copy in features/settings/account-page.tsx and excludes `account/**` in kit.lock.json; drop both once the Kit renders the avatar.
-11. NavMain: labeled groups cannot fold, and a link with `items` opens only when the path is under the parent's own href, not when the path matches one of its items (Chronicle's Auth pages and Errors live outside the shell, so it does not bite yet).
+11. NavMain: labeled groups cannot fold. (Fixed in v1.1.1: a parent now opens when one of its items is active, and `expandOnly` makes the whole row the toggle.)

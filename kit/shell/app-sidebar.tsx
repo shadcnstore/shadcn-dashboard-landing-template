@@ -40,7 +40,7 @@ export function AppSidebar({ config, badges }: { config: ShellConfig; badges: Re
           <NavMain groups={config.nav} badges={badges} />
           <SidebarGroup className="mt-auto">
             <SidebarGroupContent>
-              <SidebarMenu>
+              <SidebarMenu className="gap-0.5">
                 {config.secondary.map((link) => {
                   const Icon = link.icon
                   return (

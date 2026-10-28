@@ -76,8 +76,8 @@ export const NAV: NavGroup[] = [
       { title: "Pricing", href: "/pricing", icon: TagIcon, shortcut: "p" },
       { title: "FAQs", href: "/faqs", icon: CircleHelpIcon, shortcut: "f" },
       { title: "Landing", href: "/landing", icon: GlobeIcon },
-      { title: "Auth pages", href: "/sign-in", icon: LockKeyholeIcon, items: AUTH_PAGES },
-      { title: "Errors", href: "/errors/not-found", icon: TriangleAlertIcon, items: ERROR_PAGES },
+      { title: "Auth pages", href: "/sign-in", icon: LockKeyholeIcon, items: AUTH_PAGES, expandOnly: true },
+      { title: "Errors", href: "/errors/not-found", icon: TriangleAlertIcon, items: ERROR_PAGES, expandOnly: true },
     ],
   },
 ]
