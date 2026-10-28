@@ -15,7 +15,7 @@ export function Cta() {
         <h2 id="cta-title" className="mx-auto max-w-2xl text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
           Close next month with numbers everyone trusts
         </h2>
-        <p className="mx-auto mt-4 max-w-xl text-pretty opacity-75">Explore the dashboard with sample data, or start free and connect your own billing in minutes.</p>
+        <p className="mx-auto mt-4 max-w-xl text-pretty opacity-75">Explore the dashboard with sample data, or start a free trial and connect your own billing in minutes.</p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <Link href="/" className={cn(buttonVariants({ size: "lg" }), "h-10 px-4")}>
             Open the dashboard

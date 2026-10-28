@@ -2,6 +2,7 @@ import { ArrowRightIcon } from "lucide-react"
 import Link from "next/link"
 
 import { buttonVariants } from "@/components/ui/button"
+import { TRIAL_DAYS } from "@/data/generate"
 import { cn } from "@/lib/utils"
 
 import { ProductPreview } from "./product-preview"
@@ -45,7 +46,7 @@ export function Hero() {
               See pricing
             </a>
           </div>
-          <p className="mt-4 text-xs text-muted-foreground">Free for your first $10k MRR. No card needed.</p>
+          <p className="mt-4 text-xs text-muted-foreground">{TRIAL_DAYS}-day free trial on every plan. No card needed.</p>
         </div>
 
         <div className="relative mx-auto mt-16 max-w-5xl sm:mt-20">
