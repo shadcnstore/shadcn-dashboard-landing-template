@@ -13,6 +13,9 @@ const basePath = isDemoBuild ? "/chronicle" : (process.env.BASE_PATH ?? "")
 
 const nextConfig: NextConfig = {
   devIndicators: { position: "bottom-right" },
+  // next build type-checks with tsconfig.build.json, which leaves the tests out:
+  // vitest is a devDependency, and installs that skip those must still build.
+  typescript: { tsconfigPath: "tsconfig.build.json" },
   // Keep `next dev` from writing its own AGENTS.md; docs/ already covers the project.
   agentRules: false,
   pageExtensions: isDemoBuild ? ["tsx", "ts", "demo.tsx"] : ["tsx", "ts"],

@@ -1,0 +1,42 @@
+name: Package check
+
+# Installs and builds the buyer zip the ways buyers and marketplaces do. Our own
+# CI uses pnpm with every devDependency, which hid two breaks that 21st.dev hit
+# on its first Emporium upload (2026-11-17):
+#   - npm: @types/node ^20 clashed with vitest's peer range, so `npm install`
+#     stopped with ERESOLVE.
+#   - NODE_ENV=production: devDependencies are skipped, so @tailwindcss/postcss
+#     was missing and `next build` failed. Anything `next build` needs belongs
+#     in dependencies (tailwindcss, @tailwindcss/postcss, typescript, @types/*).
+# The tree is cut with `git archive`, so export-ignore applies as in the zip.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        installer: [npm, npm-production, pnpm]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Cut the buyer tree
+        run: mkdir ../zip && git archive HEAD | tar -x -C ../zip
+      - name: Install with ${{ matrix.installer }}
+        working-directory: ../zip
+        run: |
+          case "${{ matrix.installer }}" in
+            npm) npm install --no-audit --no-fund ;;
+            npm-production) NODE_ENV=production npm install --no-audit --no-fund ;;
+            pnpm) npx -y pnpm@latest install --frozen-lockfile ;;
+          esac
+      - name: Build
+        working-directory: ../zip
+        run: npm run build
