@@ -42,6 +42,5 @@ pnpm-lock.yaml text eol=lf
 # Maintainer tooling: not part of the template you download
 scripts/kit-sync.mjs export-ignore
 kit.lock.json export-ignore
-PROGRESS.md export-ignore
 .github/screenshots export-ignore
 public/demo export-ignore
