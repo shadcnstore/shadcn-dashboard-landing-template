@@ -23,7 +23,7 @@ Chronicle is rebuilt on the ShadcnStore Dashboard Kit, the base of ShadcnStore's
 - Settings gains Connections: the tools the business reads revenue from and sends alerts to, plus webhooks.
 - The documentation is plain Markdown in `docs/`.
 - Routes: `/dashboard` is now `/`, `/dashboard-2` is `/analytics`, `/auth/sign-in` is `/sign-in`, `/settings/user` is `/settings/profile`.
-- Next.js 16.4.3.
+- Next.js 16.4.6.
 
 ### Removed
 
