@@ -44,3 +44,5 @@ scripts/kit-sync.mjs export-ignore
 kit.lock.json export-ignore
 .github/screenshots export-ignore
 public/demo export-ignore
+vite-version export-ignore
+nextjs-version export-ignore

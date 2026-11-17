@@ -19,6 +19,7 @@ import {
 import { ShadcnStoreMark } from "@/components/chronicle/shadcnstore-mark"
 import { BRAND } from "@/config/brand"
 import { authPath, type AuthScreen, type AuthVariant } from "@/features/auth/auth-paths"
+import { showGoFurther } from "@/features/demo/config"
 import type { NavGroup, NavLink } from "@/kit/shell/types"
 import type { LucideIcon } from "lucide-react"
 
@@ -85,8 +86,8 @@ export const NAV: NavGroup[] = [
 export const SECONDARY_NAV: NavLink[] = [
   { title: "Notifications", href: "/notifications", icon: BellIcon, shortcut: "n" },
   { title: "Settings", href: "/settings", icon: SettingsIcon, shortcut: "s" },
-  // The public demo only: what the paid templates add (features/demo). Your build never shows it.
-  ...(process.env.NEXT_PUBLIC_DEMO === "1" ? [{ title: "Go further", href: "/go-further", icon: SparklesIcon }] : []),
+  // The public demo and `pnpm dev` only: what the paid templates add (features/demo). `pnpm build` never shows it.
+  ...(showGoFurther ? [{ title: "Go further", href: "/go-further", icon: SparklesIcon }] : []),
   // The template credit (config/brand.ts, credits.show). A plain link, so it never gets a G shortcut.
   ...(BRAND.credits.show ? [{ title: `Built with ${BRAND.credits.by}`, href: BRAND.credits.href, icon: ShadcnStoreMark as unknown as LucideIcon }] : []),
 ]

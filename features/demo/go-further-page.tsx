@@ -2,7 +2,7 @@
 
 import { StarIcon } from "lucide-react"
 
-import { PAID_TEMPLATES, PRO, REPO, STORE } from "./config"
+import { isDemo, PAID_TEMPLATES, PRO, REPO, STORE } from "./config"
 import { CompareTable, OutLink, ProBand, ProductCard, Screenshot, StatusBadge } from "./further-parts"
 import { trackFunnel } from "./track"
 
@@ -19,10 +19,15 @@ export function GoFurtherPage() {
   return (
     <div className="flex flex-col gap-10">
       <header className="flex flex-col gap-4">
+        {!isDemo && (
+          <p className="w-fit rounded-md border border-dashed px-2.5 py-1.5 text-xs text-muted-foreground">
+            Only <code className="font-mono">pnpm dev</code> shows this page and its sidebar link. <code className="font-mono">pnpm build</code> leaves both out.
+          </p>
+        )}
         <p className="text-xs font-medium tracking-wide text-primary uppercase">From the makers of Chronicle</p>
-        <h1 className="max-w-3xl font-heading text-3xl font-semibold tracking-tight text-balance sm:text-4xl">Chronicle is the frame. These templates are whole products built on it.</h1>
+        <h1 className="max-w-3xl font-heading text-3xl font-semibold tracking-tight text-balance sm:text-4xl">Chronicle is the frame. These templates are whole products.</h1>
         <p className="max-w-2xl text-muted-foreground">
-          Each one uses the same Dashboard Kit as Chronicle, adds the screens and data of a real business, and is sold as a one-time purchase. Pro includes all of them.
+          The dashboards use the same Dashboard Kit as Chronicle and add the screens and data of a real business. The landing pages and the storefront are made to sit beside them. Each is a one-time purchase, and Pro includes all of them.
         </p>
         <div className="flex flex-wrap items-center gap-2">
           <OutLink href={PRO.href} placement="further-hero-pro">

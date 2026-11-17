@@ -6,8 +6,12 @@ import type { NextConfig } from "next"
  * - `STATIC_EXPORT=1 pnpm build`: a static site in `out/` (set BASE_PATH if it lives under a path).
  * - `pnpm build:demo` (DEMO_BUILD=1): the public demo at demo.shadcnstore.com/chronicle, a static
  *   export plus the demo-only pages (`*.demo.tsx`) and the bar that links back to ShadcnStore.
+ *
+ * `*.further.tsx` (the "Go further" page about the paid templates) is in the demo and in
+ * `pnpm dev`, never in `pnpm build`, so the people who use your app never see it.
  */
 const isDemoBuild = process.env.DEMO_BUILD === "1"
+const isDev = process.env.NODE_ENV === "development"
 const isStatic = isDemoBuild || process.env.STATIC_EXPORT === "1"
 const basePath = isDemoBuild ? "/chronicle" : (process.env.BASE_PATH ?? "")
 
@@ -18,7 +22,7 @@ const nextConfig: NextConfig = {
   typescript: { tsconfigPath: "tsconfig.build.json" },
   // Keep `next dev` from writing its own AGENTS.md; docs/ already covers the project.
   agentRules: false,
-  pageExtensions: isDemoBuild ? ["tsx", "ts", "demo.tsx"] : ["tsx", "ts"],
+  pageExtensions: ["tsx", "ts", ...(isDemoBuild ? ["demo.tsx"] : []), ...(isDemoBuild || isDev ? ["further.tsx"] : [])],
   ...(isStatic
     ? {
         output: "export",

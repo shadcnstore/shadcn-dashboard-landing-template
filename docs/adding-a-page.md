@@ -14,6 +14,8 @@ It now appears in the sidebar, the top navigation, ⌘K, and `G` then `I` jumps 
 
 For a list, copy `features/users/users-page.tsx`: it shows URL state (`useListState`), saved views (`ViewTabs`), filters (`FacetedFilter`), the data table, pagination and bulk actions.
 
+Want a ready-made section to start from? ShadcnStore's application blocks are built on the same shadcn/ui on Base UI setup: [data tables](https://shadcnstore.com/blocks/application/datatables?utm_source=github&utm_medium=docs&utm_campaign=chronicle&utm_content=adding-a-page), [charts](https://shadcnstore.com/blocks/application/charts?utm_source=github&utm_medium=docs&utm_campaign=chronicle&utm_content=adding-a-page) and [dashboard widgets](https://shadcnstore.com/blocks/application/widgets?utm_source=github&utm_medium=docs&utm_campaign=chronicle&utm_content=adding-a-page).
+
 ## Detail pages in a static export
 
 A static export cannot pre-render one page per record. `app/(shell)/users/[id]/page.tsx` exports a single placeholder (`generateStaticParams` returns `[{ id: "_" }]`) and the page reads the real id with `useRouteId()`. A normal `next build` needs none of this.

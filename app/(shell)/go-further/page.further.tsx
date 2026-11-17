@@ -4,7 +4,7 @@ import { GoFurtherPage } from "@/features/demo/go-further-page"
 
 export const metadata: Metadata = { title: "Go further" }
 
-/** Demo build only (`*.demo.tsx`, see next.config.ts). */
+/** The demo build and `pnpm dev` only (`*.further.tsx`, see next.config.ts). */
 export default function Page() {
   return <GoFurtherPage />
 }

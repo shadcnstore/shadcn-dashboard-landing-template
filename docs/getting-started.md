@@ -17,7 +17,7 @@ Open http://localhost:3000. Chronicle needs Node.js 20.19 or newer and nothing e
 
 ## The landing page
 
-`/landing` is Frontier, a SaaS landing page that shares the dashboard's theme. Delete `app/landing` and `features/landing` if you do not need it.
+`/landing` is Frontier, a SaaS landing page that shares the dashboard's theme. Delete `app/landing` and `features/landing` if you do not need it. For more sections in the same style, see the [marketing blocks](https://shadcnstore.com/blocks/marketing?utm_source=github&utm_medium=docs&utm_campaign=chronicle&utm_content=getting-started) on ShadcnStore.
 
 ## Checks
 

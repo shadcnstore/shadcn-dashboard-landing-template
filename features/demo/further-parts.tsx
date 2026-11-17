@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-import { PAID_TEMPLATES, PRO, type PaidTemplate } from "./config"
+import { outHref, PAID_TEMPLATES, PRO, type PaidTemplate } from "./config"
 import { trackFunnel } from "./track"
 
 /** A link out to shadcnstore.com that records where it was clicked. */
@@ -28,7 +28,7 @@ export function OutLink({
   children: React.ReactNode
 }) {
   return (
-    <a href={href} target="_blank" rel="noopener" className={cn(buttonVariants({ variant, size }), className)} onClick={() => trackFunnel(placement, target ? { target } : {})}>
+    <a href={outHref(href, placement)} target="_blank" rel="noopener" className={cn(buttonVariants({ variant, size }), className)} onClick={() => trackFunnel(placement, target ? { target } : {})}>
       {children}
       <ArrowUpRightIcon data-icon="inline-end" className="rtl:-scale-x-100" />
     </a>

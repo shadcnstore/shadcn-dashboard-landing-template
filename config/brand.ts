@@ -16,6 +16,8 @@ export const BRAND = {
   credits: {
     show: true,
     by: "ShadcnStore",
-    href: "https://shadcnstore.com",
+    // Tagged so ShadcnStore can count visits from the credit; change or drop the tags freely.
+    // The public demo shares ShadcnStore's analytics, where tags would split the visit, so it links plain.
+    href: process.env.NEXT_PUBLIC_DEMO === "1" ? "https://shadcnstore.com" : "https://shadcnstore.com/?utm_source=chronicle&utm_medium=credit&utm_campaign=chronicle",
   },
 }

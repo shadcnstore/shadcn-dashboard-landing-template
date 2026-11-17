@@ -1,11 +1,29 @@
 /**
- * Where the public demo points people. Only the demo build (DEMO_BUILD=1)
- * shows any of it; your own build never renders these links.
+ * Where the public demo points people. The demo build (DEMO_BUILD=1) and
+ * `pnpm dev` show it; a production build (`pnpm build`) never renders these
+ * links, so nothing here reaches the people who use your app.
  */
 export const isDemo = process.env.NEXT_PUBLIC_DEMO === "1"
 
+/** The "Go further" page and its sidebar link: the public demo, and your own `pnpm dev`. */
+export const showGoFurther = isDemo || process.env.NODE_ENV === "development"
+
 export const STORE = "https://shadcnstore.com"
 export const REPO = "https://github.com/shadcnstore/shadcn-dashboard-landing-template"
+
+/**
+ * A link to ShadcnStore from inside the app. The public demo runs our analytics
+ * and records each click as an event, so its links stay clean. Anywhere else
+ * (`pnpm dev`) there are no analytics, so the link carries UTM tags instead.
+ */
+export function outHref(href: string, placement: string): string {
+  if (isDemo || !/^https:\/\/([a-z-]+\.)?shadcnstore\.com\//.test(href)) {
+    return href
+  }
+  const url = new URL(href)
+  url.search = new URLSearchParams({ utm_source: "chronicle", utm_medium: "app", utm_campaign: "go-further", utm_content: placement }).toString()
+  return url.toString()
+}
 
 export type TemplateStatus = "live" | "soon"
 
@@ -59,24 +77,24 @@ export const PAID_TEMPLATES: PaidTemplate[] = [
     image: `${IMAGES}/rapport.webp`,
   },
   {
-    slug: "plinth",
-    name: "Plinth",
+    slug: "awning",
+    name: "Awning",
     kind: "E-commerce storefront",
     pitch: "The shop your customers see, made as the storefront that pairs with Emporium.",
     adds: ["Editorial home, collections and product pages", "Bag, checkout and account", "Shoppable look-to-cart scenes", "The same catalogue as Emporium"],
     href: `${STORE}/templates`,
     status: "soon",
-    image: `${IMAGES}/plinth.webp`,
+    image: `${IMAGES}/awning.webp`,
   },
   {
-    slug: "synapse",
-    name: "Synapse",
+    slug: "runwell",
+    name: "Runwell",
     kind: "AI product site",
     pitch: "A multi-page marketing site for an AI agent product, with the product working in the hero.",
     adds: ["A scripted agent demo in the hero", "Product, customers, pricing and security pages", "Changelog and contact", "A dark, characterful theme"],
-    href: `${STORE}/templates/landing-pages/synapse`,
+    href: `${STORE}/templates/landing-pages/runwell`,
     status: "soon",
-    image: `${IMAGES}/synapse.webp`,
+    image: `${IMAGES}/runwell.webp`,
   },
   {
     slug: "momentum",
@@ -84,7 +102,7 @@ export const PAID_TEMPLATES: PaidTemplate[] = [
     kind: "Mobile app landing",
     pitch: "A landing page that shows a mobile app on screen and sends people to the stores.",
     adds: ["Phone mock with real app screens", "Features, how it works and pricing", "App Store and Google Play calls to action", "A soft, tactile theme"],
-    href: `${STORE}/templates`,
+    href: `${STORE}/templates/landing-pages/momentum`,
     status: "soon",
     image: `${IMAGES}/momentum.webp`,
   },

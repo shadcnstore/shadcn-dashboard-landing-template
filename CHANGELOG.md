@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- `pnpm dev` shows the "Go further" page about the paid templates, as the public demo does; `pnpm build` still leaves it out.
+- Awning and Runwell replace their working names (Plinth, Synapse) on the Go further page.
+- Installs with npm, pnpm or a production install: build tools are dependencies, `@types/node` is `^24`, and `next build` type-checks without the tests.
+- `vite-version/` and `nextjs-version/` hold a short note pointing old links to version 3 and the `v2` branch.
+
 ## 3.0.0 : 2026-11-17
 
 Chronicle is rebuilt on the ShadcnStore Dashboard Kit, the base of ShadcnStore's paid dashboard templates, and becomes one Next.js app at the root of the repository.
