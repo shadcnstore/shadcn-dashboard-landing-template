@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.0.0 (unreleased)
+## 3.0.0 : 2026-11-17
 
 Chronicle is rebuilt on the ShadcnStore Dashboard Kit, the base of ShadcnStore's paid dashboard templates, and becomes one Next.js app at the root of the repository.
 
